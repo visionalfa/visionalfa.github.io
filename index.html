@@ -104,6 +104,10 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--mostaza);outline-of
 .ya{background:var(--verde);color:var(--papel)}
 .pronto{background:var(--suave);color:var(--gris)}
 
+.libro .info{flex:1}
+.compra-libro{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:auto;padding-top:10px}
+.precio-libro{font-family:var(--titulos);font-weight:800;font-size:22px;color:var(--verde);font-variant-numeric:tabular-nums}
+.btn-chico{min-height:44px;padding:0 18px;font-size:15px}
 /* Destacado */
 .destacado .in{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;align-items:start}
 .indice{list-style:none;margin:0;padding:0;border-top:1px solid var(--linea)}
@@ -267,24 +271,24 @@ footer .legales{display:flex;flex-wrap:wrap;gap:8px 20px;width:100%;font-size:14
     <div class="cab">
       <div class="eyebrow">La colección</div>
       <h2 id="t-col">Cuatro guías para cada etapa de tu emprendimiento</h2>
-      <p>Empezá por la que más necesitás hoy. Cada una funciona sola.</p>
+      <p>Empezá por la que más necesitás hoy. Cada una funciona sola. Las cuatro ya están disponibles.</p>
     </div>
     <div class="libros">
       <article class="libro">
         <div class="cover c1"><div class="mini"><span>visión alfa</span><span>01</span></div><h3>IA para vender más</h3></div>
-        <div class="info"><span class="estado ya">Disponible</span><h3 style="font-size:20px;color:var(--verde)">IA para vender más</h3><p>Prompts, automatizaciones y estrategias para vender más usando inteligencia artificial.</p></div>
+        <div class="info"><span class="estado ya">Disponible</span><h3 style="font-size:20px;color:var(--verde)">IA para vender más</h3><p>Prompts, automatizaciones y estrategias para vender más usando inteligencia artificial.</p><div class="compra-libro"><span class="precio-libro">$25.000</span><a class="btn btn-borde btn-chico" href="cuenta.html?comprar=ia-para-vender-mas" data-comprar="ia-para-vender-mas">Comprar</a></div></div>
       </article>
       <article class="libro">
         <div class="cover c2"><div class="mini"><span>visión alfa</span><span>02</span></div><h3>Emprender desde cero</h3></div>
-        <div class="info"><span class="estado pronto">Próximamente</span><h3 style="font-size:20px;color:var(--verde)">Emprender desde cero</h3><p>De la idea a tu primera venta: validar, armar la oferta y conseguir tus primeros clientes.</p></div>
+        <div class="info"><span class="estado ya">Disponible</span><h3 style="font-size:20px;color:var(--verde)">Emprender desde cero</h3><p>De la idea a tu primera venta: validar, armar la oferta y conseguir tus primeros clientes.</p><div class="compra-libro"><span class="precio-libro">$25.000</span><a class="btn btn-borde btn-chico" href="cuenta.html?comprar=emprender-desde-cero" data-comprar="emprender-desde-cero">Comprar</a></div></div>
       </article>
       <article class="libro">
         <div class="cover c3"><div class="mini"><span>visión alfa</span><span>03</span></div><h3>Excel para emprendedores</h3></div>
-        <div class="info"><span class="estado pronto">Próximamente</span><h3 style="font-size:20px;color:var(--verde)">Excel para emprendedores</h3><p>Lo básico de Excel aplicado a tu negocio, con plantillas listas para ventas, stock y gastos.</p></div>
+        <div class="info"><span class="estado ya">Disponible</span><h3 style="font-size:20px;color:var(--verde)">Excel para emprendedores</h3><p>Lo básico de Excel aplicado a tu negocio, con plantillas listas para ventas, stock y gastos.</p><div class="compra-libro"><span class="precio-libro">$25.000</span><a class="btn btn-borde btn-chico" href="cuenta.html?comprar=excel-para-emprendedores" data-comprar="excel-para-emprendedores">Comprar</a></div></div>
       </article>
       <article class="libro">
         <div class="cover c4"><div class="mini"><span>visión alfa</span><span>04</span></div><h3>Precios que dejan ganancia</h3></div>
-        <div class="info"><span class="estado pronto">Próximamente</span><h3 style="font-size:20px;color:var(--verde)">Precios que dejan ganancia</h3><p>Cómo calcular cuánto cobrar sin regalar tu trabajo y sin espantar clientes.</p></div>
+        <div class="info"><span class="estado ya">Disponible</span><h3 style="font-size:20px;color:var(--verde)">Precios que dejan ganancia</h3><p>Cómo calcular cuánto cobrar sin regalar tu trabajo y sin espantar clientes.</p><div class="compra-libro"><span class="precio-libro">$25.000</span><a class="btn btn-borde btn-chico" href="cuenta.html?comprar=precios-que-dejan-ganancia" data-comprar="precios-que-dejan-ganancia">Comprar</a></div></div>
       </article>
     </div>
   </div>
