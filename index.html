@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Visión Alfa: ebooks prácticos para emprendedores. Vendé más, poné bien tus precios y usá la inteligencia artificial a tu favor.">
+<meta property="og:title" content="Visión Alfa · Guías prácticas para emprendedores">
+<meta property="og:description" content="Ebooks claros y aplicables para vender más, poner bien tus precios y usar la IA a tu favor.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://visionalfa.github.io/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>Visión Alfa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: bandas a todo el ancho (verde / papel / mostaza) con contenido centrado de 1100px; una sola estética clara de marca */
+:root{
+  --verde:#1F3D2B; --verde-hondo:#16301F; --mostaza:#E3A82B; --papel:#F4F3EE; --tinta:#16231B;
+  --gris:#4A5A50; --linea:#DAD8CF; --blanco:#FFFFFF; --suave:#E7EAE3;
+  --titulos:'Bricolage Grotesque','Arial Black',system-ui,sans-serif;
+  --texto:'Instrument Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--papel);color:var(--tinta);font-family:var(--texto);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--verde)}
+.in{max-width:1100px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--titulos);font-weight:800;letter-spacing:-0.025em;line-height:1.02;margin:0;text-wrap:balance}
+p{margin:0}
+a{color:inherit}
+a:focus-visible,button:focus-visible{outline:3px solid var(--mostaza);outline-offset:3px;border-radius:6px}
+.eyebrow{font-size:13px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase}
+
+/* Navegación */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--verde);color:var(--papel)}
+.nav .in{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:64px;flex-wrap:wrap;padding-block:8px}
+.marca{display:flex;align-items:center;gap:10px;font-family:var(--titulos);font-weight:800;font-size:22px;letter-spacing:-0.03em;text-decoration:none}
+.nav ul{display:flex;gap:6px;list-style:none;margin:0;padding:0;flex-wrap:wrap}
+.nav ul a{display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:15px;font-weight:500;text-decoration:none;color:var(--suave);border-radius:8px}
+.nav ul a:hover{color:var(--papel);background:rgba(244,243,238,0.08)}
+.nav ul a.cta{background:var(--mostaza);color:var(--verde);font-weight:600}
+.nav ul a.cta:hover{background:#EDB846;color:var(--verde)}
+
+/* Botones */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 26px;border-radius:999px;font-family:var(--texto);font-size:17px;font-weight:600;text-decoration:none;border:0;cursor:pointer}
+.btn-mostaza{background:var(--mostaza);color:var(--verde)}
+.btn-mostaza:hover{background:#EDB846}
+.btn-verde{background:var(--verde);color:var(--papel)}
+.btn-verde:hover{background:var(--verde-hondo)}
+.btn-linea{background:transparent;color:var(--papel);box-shadow:inset 0 0 0 2px rgba(244,243,238,0.45)}
+.btn-linea:hover{box-shadow:inset 0 0 0 2px var(--papel)}
+
+/* Hero */
+.hero{background:var(--verde);color:var(--papel);overflow:hidden}
+.hero .in{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,0.85fr);gap:48px;align-items:center;padding-block:72px 88px}
+.hero .eyebrow{color:var(--mostaza)}
+.hero h1{font-size:clamp(46px,7.4vw,88px);margin:18px 0 22px}
+.hero h1 span{color:var(--mostaza)}
+.hero .lead{font-size:clamp(18px,2.2vw,21px);color:var(--suave);max-width:540px;line-height:1.5}
+.hero .acciones{display:flex;gap:12px;flex-wrap:wrap;margin-top:34px}
+.pila{position:relative;height:440px}
+.tapa{position:absolute;width:250px;height:350px;border-radius:5px 14px 14px 5px;padding:24px 22px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 30px 60px rgba(0,0,0,0.35),inset 5px 0 0 rgba(0,0,0,0.18)}
+.tapa .mini{display:flex;align-items:center;gap:7px;font-family:var(--titulos);font-weight:800;font-size:15px;letter-spacing:-0.02em}
+.tapa h3{font-size:31px;line-height:1}
+.tapa .raya{width:40px;height:5px;border-radius:3px;margin-top:12px}
+.tapa .n{font-family:var(--titulos);font-weight:800;font-size:15px}
+.t1{background:var(--mostaza);color:var(--verde);right:8%;top:20px;transform:rotate(5deg);z-index:3}
+.t1 .raya{background:var(--verde)}
+.t2{background:var(--papel);color:var(--verde);right:30%;top:60px;transform:rotate(-6deg);z-index:2}
+.t2 .raya{background:var(--mostaza)}
+.t3{background:#2C5A40;color:var(--papel);right:48%;top:110px;transform:rotate(-14deg);z-index:1}
+.t3 .raya{background:var(--mostaza)}
+
+/* Bandas */
+.banda{padding-block:88px}
+.cab{display:flex;flex-direction:column;gap:14px;max-width:720px;margin-bottom:44px}
+.cab .eyebrow{color:var(--gris)}
+.cab h2{font-size:clamp(34px,5vw,54px);color:var(--verde)}
+.cab p{font-size:19px;color:var(--gris)}
+
+/* Por qué */
+.razones{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:36px}
+.razon{display:flex;flex-direction:column;gap:12px;padding-top:22px;border-top:3px solid var(--verde)}
+.razon h3{font-size:24px;color:var(--verde)}
+.razon p{color:var(--gris)}
+
+/* Colección */
+.col{background:var(--blanco);border-block:1px solid var(--linea)}
+.libros{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px}
+.libro{display:flex;flex-direction:column;gap:16px}
+.cover{aspect-ratio:5/7;max-width:100%;border-radius:4px 12px 12px 4px;padding:20px 18px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 16px 32px rgba(22,35,27,0.18),inset 5px 0 0 rgba(0,0,0,0.14)}
+.cover .mini{display:flex;align-items:center;justify-content:space-between;font-family:var(--titulos);font-weight:800;font-size:14px}
+.cover h3{font-size:clamp(22px,2.3vw,27px);line-height:1.02}
+.c1{background:var(--mostaza);color:var(--verde)}
+.c2{background:var(--verde);color:var(--papel)}
+.c3{background:#2C5A40;color:var(--papel)}
+.c4{background:var(--papel);color:var(--verde);box-shadow:0 16px 32px rgba(22,35,27,0.14),inset 5px 0 0 rgba(0,0,0,0.06),inset 0 0 0 1px var(--linea)}
+.libro .info{display:flex;flex-direction:column;gap:6px}
+.libro .info p{font-size:15.5px;color:var(--gris)}
+.estado{align-self:flex-start;font-size:13px;font-weight:600;padding:5px 12px;border-radius:999px}
+.ya{background:var(--verde);color:var(--papel)}
+.pronto{background:var(--suave);color:var(--gris)}
+
+/* Destacado */
+.destacado .in{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;align-items:start}
+.indice{list-style:none;margin:0;padding:0;border-top:1px solid var(--linea)}
+.indice li{display:flex;gap:16px;padding:14px 0;border-bottom:1px solid var(--linea);font-weight:500}
+.indice b{font-family:var(--titulos);font-weight:800;color:var(--mostaza);min-width:28px;font-variant-numeric:tabular-nums}
+.compra{background:var(--verde);color:var(--papel);border-radius:22px;padding:34px;display:flex;flex-direction:column;gap:20px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 84px)}
+.compra .eyebrow{color:var(--mostaza)}
+.compra h3{font-size:34px}
+.precio{font-family:var(--titulos);font-weight:800;font-size:52px;letter-spacing:-0.03em;line-height:1;font-variant-numeric:tabular-nums}
+.precio small{font-family:var(--texto);font-weight:500;font-size:16px;letter-spacing:0;color:var(--suave);margin-left:6px}
+.incluye{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.incluye li{display:flex;gap:12px;align-items:flex-start;color:var(--suave)}
+.incluye svg{flex-shrink:0;margin-top:3px}
+.nota{font-size:14px;color:#C9D0C6}
+
+/* Actualizaciones */
+.actual{background:var(--mostaza);color:var(--verde)}
+.actual .in{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:48px;align-items:center;padding-block:72px}
+.actual h2{font-size:clamp(32px,4.6vw,50px)}
+.actual p{font-size:19px;color:var(--tinta)}
+.ciclo{display:flex;flex-direction:column;gap:10px}
+.paso{display:flex;gap:16px;align-items:center;background:rgba(244,243,238,0.55);border-radius:14px;padding:16px 18px;font-weight:600}
+.paso span{font-family:var(--titulos);font-weight:800;font-size:22px;min-width:26px}
+
+/* Quién */
+.quien .in{display:grid;grid-template-columns:minmax(0,0.8fr) minmax(0,1.2fr);gap:56px;align-items:center}
+.avatar{max-width:100%}
+.avatar svg{display:block;width:100%;height:auto;border-radius:24px}
+.quien .texto{display:flex;flex-direction:column;gap:18px}
+.quien .texto p{font-size:18px}
+.firma{font-family:var(--titulos);font-weight:800;font-size:24px;color:var(--verde)}
+
+/* FAQ */
+.faq{max-width:780px}
+details{border-bottom:1px solid var(--linea)}
+summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:20px;min-height:64px;padding:14px 0;font-size:19px;font-weight:600;color:var(--verde)}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-family:var(--titulos);font-size:28px;color:var(--mostaza);line-height:1}
+details[open] summary::after{content:"–"}
+details p{padding:0 0 22px;color:var(--gris);max-width:680px}
+
+/* Cierre y pie */
+.final{background:var(--verde);color:var(--papel);text-align:left}
+.final .in{display:flex;flex-direction:column;gap:22px;align-items:flex-start;padding-block:88px}
+.final h2{font-size:clamp(38px,6vw,68px);max-width:820px}
+.final h2 span{color:var(--mostaza)}
+.final p{font-size:19px;color:var(--suave);max-width:560px}
+footer{background:var(--verde-hondo);color:#C9D0C6;font-size:15px}
+footer .in{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;padding-block:30px}
+footer .contacto{display:flex;gap:20px;flex-wrap:wrap}
+footer a{color:var(--papel)}
+
+@media (max-width:900px){
+  .hero .in,.destacado .in,.actual .in,.quien .in{grid-template-columns:minmax(0,1fr)}
+  .pila{height:400px;max-width:460px;width:100%}
+  .libros{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .razones{grid-template-columns:minmax(0,1fr);gap:28px}
+  .compra{position:static}
+  .avatar{max-width:340px}
+}
+@media (max-width:520px){
+  .nav ul a:not(.cta){display:none}
+  .hero .in{padding-block:52px 64px}
+  .pila{height:330px}
+  .tapa{width:190px;height:266px;padding:18px 16px}
+  .tapa h3{font-size:24px}
+  .banda{padding-block:64px}
+  .libros{gap:16px}
+  .compra{padding:26px}
+}
+</style>
+<style>body{margin:0}</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Principal">
+  <div class="in">
+    <a class="marca" href="#inicio">
+      <svg width="34" height="26" viewBox="0 8 64 48" aria-hidden="true"><path d="M4 14 L17 50 L30 14" fill="none" stroke="#F4F3EE" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 50 L47 14 L60 50" fill="none" stroke="#E3A82B" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      visión alfa
+    </a>
+    <ul>
+      <li><a href="#coleccion">Ebooks</a></li>
+      <li><a href="#quien">Quién soy</a></li>
+      <li><a href="#preguntas">Preguntas</a></li>
+      <li><a class="cta" href="#comprar">Comprar</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero" id="inicio">
+  <div class="in">
+    <div>
+      <div class="eyebrow">Guías prácticas para emprendedores</div>
+      <h1>Emprender no es tener una idea. <span>Es hacerla funcionar.</span></h1>
+      <p class="lead">Ebooks claros y aplicables para vender más, poner bien tus precios y usar la inteligencia artificial a tu favor. Sin humo y sin fórmulas mágicas.</p>
+      <div class="acciones">
+        <a class="btn btn-mostaza" href="#comprar">Ver el ebook de IA</a>
+        <a class="btn btn-linea" href="#coleccion">Conocer la colección</a>
+      </div>
+    </div>
+    <div class="pila" aria-hidden="true">
+      <div class="tapa t3"><div class="mini">visión alfa</div><div><h3>Excel para emprendedores</h3><div class="raya"></div></div><div class="n">N.º 3</div></div>
+      <div class="tapa t2"><div class="mini">visión alfa</div><div><h3>Emprender desde cero</h3><div class="raya"></div></div><div class="n">N.º 2</div></div>
+      <div class="tapa t1">
+        <div class="mini"><svg width="22" height="17" viewBox="0 8 64 48"><path d="M4 14 L17 50 L30 14" fill="none" stroke="#1F3D2B" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 50 L47 14 L60 50" fill="none" stroke="#F4F3EE" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>visión alfa</div>
+        <div><h3>IA para vender más</h3><div class="raya"></div></div>
+        <div class="n">N.º 1</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="banda" aria-labelledby="t-por">
+  <div class="in">
+    <div class="cab">
+      <div class="eyebrow">Por qué Visión Alfa</div>
+      <h2 id="t-por">Lo que funciona en la calle, explicado simple</h2>
+    </div>
+    <div class="razones">
+      <div class="razon"><h3>Para aplicar, no para leer</h3><p>Cada capítulo termina con un ejercicio y un paso a paso. Cerrás el ebook con tareas concretas para tu emprendimiento.</p></div>
+      <div class="razon"><h3>Hecho para Argentina</h3><p>Ejemplos de emprendimientos de acá, en nuestro idioma y con nuestra realidad: WhatsApp, Instagram, cuotas y envíos.</p></div>
+      <div class="razon"><h3>Siempre al día</h3><p>Los ebooks se revisan todos los meses. Comprás una vez y recibís las actualizaciones sin costo.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="banda col" id="coleccion" aria-labelledby="t-col">
+  <div class="in">
+    <div class="cab">
+      <div class="eyebrow">La colección</div>
+      <h2 id="t-col">Cuatro guías para cada etapa de tu emprendimiento</h2>
+      <p>Empezá por la que más necesitás hoy. Cada una funciona sola.</p>
+    </div>
+    <div class="libros">
+      <article class="libro">
+        <div class="cover c1"><div class="mini"><span>visión alfa</span><span>01</span></div><h3>IA para vender más</h3></div>
+        <div class="info"><span class="estado ya">Disponible</span><h3 style="font-size:20px;color:var(--verde)">IA para vender más</h3><p>Prompts, automatizaciones y estrategias para vender más usando inteligencia artificial.</p></div>
+      </article>
+      <article class="libro">
+        <div class="cover c2"><div class="mini"><span>visión alfa</span><span>02</span></div><h3>Emprender desde cero</h3></div>
+        <div class="info"><span class="estado pronto">Próximamente</span><h3 style="font-size:20px;color:var(--verde)">Emprender desde cero</h3><p>De la idea a tu primera venta: validar, armar la oferta y conseguir tus primeros clientes.</p></div>
+      </article>
+      <article class="libro">
+        <div class="cover c3"><div class="mini"><span>visión alfa</span><span>03</span></div><h3>Excel para emprendedores</h3></div>
+        <div class="info"><span class="estado pronto">Próximamente</span><h3 style="font-size:20px;color:var(--verde)">Excel para emprendedores</h3><p>Lo básico de Excel aplicado a tu negocio, con plantillas listas para ventas, stock y gastos.</p></div>
+      </article>
+      <article class="libro">
+        <div class="cover c4"><div class="mini"><span>visión alfa</span><span>04</span></div><h3>Precios que dejan ganancia</h3></div>
+        <div class="info"><span class="estado pronto">Próximamente</span><h3 style="font-size:20px;color:var(--verde)">Precios que dejan ganancia</h3><p>Cómo calcular cuánto cobrar sin regalar tu trabajo y sin espantar clientes.</p></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="banda destacado" id="comprar" aria-labelledby="t-ia">
+  <div class="in">
+    <div>
+      <div class="cab" style="margin-bottom:30px">
+        <div class="eyebrow">Ebook N.º 1</div>
+        <h2 id="t-ia">IA para vender más</h2>
+        <p>La guía práctica para usar inteligencia artificial en tu emprendimiento: conseguir clientes, crear contenido, responder mensajes y automatizar ventas. Sin saber de tecnología.</p>
+      </div>
+      <ol class="indice">
+        <li><b>01</b>Cómo hablarle a la IA: el método RCTF</li>
+        <li><b>02</b>Conocé a tu cliente mejor que nadie</li>
+        <li><b>03</b>Tu propuesta de valor en una frase</li>
+        <li><b>04</b>Contenido para redes en minutos</li>
+        <li><b>05</b>Vender por WhatsApp e Instagram</li>
+        <li><b>06</b>Automatizá sin programar</li>
+        <li><b>07</b>Precios, promociones y ofertas</li>
+        <li><b>08</b>Los límites de la IA: qué no delegar nunca</li>
+        <li><b>09</b>Plan de acción de 7 días</li>
+        <li><b>10</b>Banco de prompts listos para copiar</li>
+      </ol>
+    </div>
+    <aside class="compra" aria-label="Comprar IA para vender más">
+      <div class="eyebrow">Acceso inmediato</div>
+      <h3>IA para vender más</h3>
+      <div class="precio">$25.000<small>pago único</small></div>
+      <ul class="incluye">
+        <li><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5 L8.5 15 L16 5.5" fill="none" stroke="#E3A82B" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>10 capítulos con ejemplos y ejercicios</li>
+        <li><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5 L8.5 15 L16 5.5" fill="none" stroke="#E3A82B" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Más de 40 prompts listos para copiar</li>
+        <li><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5 L8.5 15 L16 5.5" fill="none" stroke="#E3A82B" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Plan de acción de 7 días</li>
+        <li><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5 L8.5 15 L16 5.5" fill="none" stroke="#E3A82B" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Actualizaciones mensuales sin costo</li>
+        <li><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5 L8.5 15 L16 5.5" fill="none" stroke="#E3A82B" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Se lee en el celular o en la compu</li>
+      </ul>
+      <a class="btn btn-mostaza" href="#comprar">Comprar ahora</a>
+      <p class="nota">Pago seguro con tarjeta, transferencia o Mercado Pago. Lo recibís al instante en tu mail.</p>
+    </aside>
+  </div>
+</section>
+
+<section class="actual" aria-labelledby="t-act">
+  <div class="in">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="eyebrow">Actualizaciones mensuales</div>
+      <h2 id="t-act">La IA cambia todos los meses. Tu ebook también.</h2>
+      <p>Cada mes revisamos el contenido, sumamos lo nuevo y corregimos lo que cambió. Vos siempre tenés la última versión, sin pagar de nuevo.</p>
+    </div>
+    <div class="ciclo">
+      <div class="paso"><span>1</span>Revisamos qué cambió en las herramientas</div>
+      <div class="paso"><span>2</span>Actualizamos capítulos y prompts</div>
+      <div class="paso"><span>3</span>Te llega la nueva versión</div>
+    </div>
+  </div>
+</section>
+
+<section class="banda quien" id="quien" aria-labelledby="t-quien">
+  <div class="in">
+    <div class="avatar">
+      <svg viewBox="0 0 400 500" role="img" aria-label="Ilustración de Flor saludando">
+        <rect width="400" height="500" rx="24" fill="#E3A82B"/>
+        <circle cx="200" cy="250" r="155" fill="#F4F3EE" opacity="0.45"/>
+        <path d="M108 232 C98 140 150 92 200 92 C255 92 304 140 292 232 L300 336 C262 352 138 352 100 336 Z" fill="#3B2A20"/>
+        <path d="M66 500 C72 410 124 372 200 372 C276 372 328 410 334 500 Z" fill="#1F3D2B"/>
+        <rect x="177" y="296" width="46" height="90" rx="20" fill="#DFA47E"/>
+        <path d="M168 374 L200 414 L232 374" fill="none" stroke="#E3A82B" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+        <ellipse cx="200" cy="232" rx="78" ry="92" fill="#EDBF9A"/>
+        <path d="M118 220 C116 152 160 124 206 126 C252 128 288 160 283 222 C262 190 232 168 204 166 C178 186 148 204 118 220 Z" fill="#3B2A20"/>
+        <path d="M160 226 Q172 218 184 224" fill="none" stroke="#3B2A20" stroke-width="5" stroke-linecap="round"/>
+        <path d="M216 224 Q228 218 240 226" fill="none" stroke="#3B2A20" stroke-width="5" stroke-linecap="round"/>
+        <ellipse cx="172" cy="248" rx="7" ry="9" fill="#16231B"/>
+        <ellipse cx="228" cy="248" rx="7" ry="9" fill="#16231B"/>
+        <circle cx="158" cy="276" r="13" fill="#E8857A" opacity="0.35"/>
+        <circle cx="242" cy="276" r="13" fill="#E8857A" opacity="0.35"/>
+        <path d="M201 254 Q208 270 198 274" fill="none" stroke="#B9805E" stroke-width="4" stroke-linecap="round"/>
+        <path d="M176 290 Q200 314 224 290 Z" fill="#16231B"/>
+        <path d="M184 296 Q200 306 216 296" fill="none" stroke="#F4F3EE" stroke-width="4" stroke-linecap="round"/>
+        <g transform="translate(236 440) scale(0.75)"><path d="M4 14 L17 50 L30 14" fill="none" stroke="#F4F3EE" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 50 L47 14 L60 50" fill="none" stroke="#E3A82B" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></g>
+        <rect x="252" y="52" width="124" height="58" rx="29" fill="#1F3D2B"/>
+        <path d="M276 106 L266 128 L296 108 Z" fill="#1F3D2B"/>
+        <text x="314" y="90" text-anchor="middle" font-family="'Bricolage Grotesque', 'Arial Black', sans-serif" font-weight="800" font-size="26" fill="#F4F3EE">¡Hola!</text>
+      </svg>
+    </div>
+    <div class="texto">
+      <div class="eyebrow" style="color:var(--gris)">Quién está detrás</div>
+      <h2 id="t-quien" style="font-size:clamp(34px,5vw,52px);color:var(--verde)">¡Hola, soy Flor!</h2>
+      <p>Trabajo en ventas y recorro comercios de la Patagonia todos los días. Ahí aprendí lo que de verdad hace que un negocio venda más: entender al cliente, tener los números claros y no dejar pasar ninguna oportunidad.</p>
+      <p>Creé Visión Alfa para compartir eso de forma simple, junto con las herramientas de inteligencia artificial que hoy cualquier emprendedor puede usar.</p>
+      <p class="firma">Flor · Visión Alfa</p>
+    </div>
+  </div>
+</section>
+
+<section class="banda col" id="preguntas" aria-labelledby="t-faq">
+  <div class="in">
+    <div class="cab"><div class="eyebrow">Preguntas frecuentes</div><h2 id="t-faq">Todo lo que tenés que saber</h2></div>
+    <div class="faq">
+      <details><summary>¿Cómo recibo el ebook?</summary><p>Apenas se acredita el pago te llega un mail con el acceso. Lo podés leer en el celular, la tablet o la compu, y descargarlo para tenerlo siempre.</p></details>
+      <details><summary>¿Necesito saber de tecnología?</summary><p>No. Está pensado para emprendedores sin conocimientos técnicos. Todo se explica paso a paso y los prompts están listos para copiar y pegar.</p></details>
+      <details><summary>¿Tengo que pagar alguna herramienta de IA?</summary><p>No. Todo lo que enseña la guía funciona con las versiones gratuitas de las herramientas de IA más conocidas.</p></details>
+      <details><summary>¿Cómo funcionan las actualizaciones?</summary><p>Revisamos el ebook todos los meses. Cuando hay cambios, la versión nueva queda disponible en tu acceso, sin costo extra.</p></details>
+      <details><summary>¿Qué medios de pago aceptan?</summary><p>Tarjeta de crédito y débito, transferencia y Mercado Pago. Con tarjeta podés pagar en cuotas.</p></details>
+      <details><summary>¿Y si no me sirve?</summary><p>Tenés [DÍAS] días de garantía. Si sentís que no te sirvió, pedís la devolución y te reintegramos el dinero.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="final" aria-labelledby="t-final">
+  <div class="in">
+    <h2 id="t-final">Tu emprendimiento puede vender más <span>desde esta semana.</span></h2>
+    <p>Empezá con el ebook de IA y aplicá el plan de 7 días. Sin vueltas.</p>
+    <a class="btn btn-mostaza" href="#comprar">Quiero el ebook · $25.000</a>
+  </div>
+</section>
+
+<footer>
+  <div class="in">
+    <span>© Visión Alfa · Guías prácticas para emprendedores</span>
+    <div class="contacto"><span>Instagram: <a href="#">[@TU_USUARIO]</a></span><span>visionalfa.arg@gmail.com</span></div>
+  </div>
+</footer>
+</body>
+</html>
