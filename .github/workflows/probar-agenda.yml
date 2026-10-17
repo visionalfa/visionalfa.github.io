@@ -21,7 +21,7 @@ jobs:
           echo "::notice::Turnos libres: $n · primero: $(jq -r '.turnos[0]' turnos.json) · último: $(jq -r '.turnos[-1]' turnos.json)"
           [ "$n" -gt 0 ] || { echo "::error::No devolvió turnos: $(head -c 300 turnos.json)"; exit 1; }
           ultimo=$(jq -r '.turnos[-1]' turnos.json)
-          jq -n --arg i "$ultimo" '{accion:"reservar", inicio:$i, nombre:"Prueba del sistema", email:"visionalfa.arg@gmail.com", whatsapp:"0000 0000 0000", tema:"Reserva de prueba automática: se cancela sola."}' > r.json
+          jq -n --arg i "$ultimo" '{accion:"reservar", inicio:$i, nombre:"Prueba del sistema", email:"cliente.prueba@example.com", whatsapp:"0000 0000 0000", tema:"Reserva de prueba automática: se cancela sola."}' > r.json
           curl -sS -X POST "$FN" -H "apikey: $CLAVE" -H "Content-Type: application/json" --data @r.json > res.json
           echo "::notice::Reserva: $(cat res.json)"
           url=$(jq -r '.url // empty' res.json)
