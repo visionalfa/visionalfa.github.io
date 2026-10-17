@@ -54,7 +54,7 @@ create policy "Cada cliente ve sus accesos" on public.accesos
 
 -- Los pagos no tienen políticas: solo el servidor puede leerlos o escribirlos.
 
--- Bucket privado para los ebooks: sin políticas, así que solo el servidor puede leerlos.
+-- Bucket privado (reservado; hoy los ebooks se publican cifrados en la web y los abre la función "leer").
 insert into storage.buckets (id, name, public)
 values ('ebooks', 'ebooks', false)
 on conflict (id) do nothing;

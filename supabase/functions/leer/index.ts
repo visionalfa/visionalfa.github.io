@@ -1,6 +1,8 @@
 // Entrega el contenido de un ebook solo si el cliente tiene acceso
 // (lo compró, tiene la membresía activa o el acceso de por vida).
-import { admin, cors, json, usuario } from "../_shared/comun.ts";
+// Los ebooks se publican cifrados en la web y solo esta función puede abrirlos.
+import { admin, cors, json, SITE_URL, usuario } from "../_shared/comun.ts";
+import { descifrar } from "../_shared/descifrar.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
@@ -27,10 +29,14 @@ Deno.serve(async (req) => {
     .limit(1);
   if (!accesos?.length) return json({ error: "Todavía no tenés acceso a este ebook" }, 403);
 
-  const { data: archivo, error } = await db.storage.from("ebooks").download(ebook.archivo);
-  if (error || !archivo) {
-    console.error("storage", error);
-    return json({ error: "El ebook no está disponible en este momento" }, 500);
+  try {
+    // Se agrega la fecha para leer siempre la última versión publicada.
+    const r = await fetch(`${SITE_URL}/ebooks/${encodeURIComponent(ebook.archivo)}.enc.json?v=${Date.now()}`);
+    if (!r.ok) throw new Error(`No se encontró el archivo (${r.status})`);
+    const html = await descifrar(await r.json());
+    return json({ html });
+  } catch (e) {
+    console.error("ebook", e);
+    return json({ error: "El ebook no está disponible en este momento. Probá de nuevo en unos minutos." }, 500);
   }
-  return json({ html: await archivo.text() });
 });
