@@ -18,6 +18,7 @@ jobs:
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+      GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
       PROJECT_REF: futhqkqfjuuemhcxzakn
     steps:
       - uses: actions/checkout@v4
@@ -39,9 +40,15 @@ jobs:
       - name: Actualizar la base de datos
         run: supabase db push
 
+      - name: Clave de Gmail para los avisos por mail
+        run: |
+          if [ -z "$GMAIL_APP_PASSWORD" ]; then echo "::warning::Falta GMAIL_APP_PASSWORD: no se van a enviar avisos"; exit 0; fi
+          supabase secrets set --project-ref "$PROJECT_REF" GMAIL_APP_PASSWORD="$(printf '%s' "$GMAIL_APP_PASSWORD" | tr -d ' ')" > /dev/null
+
       - name: Publicar funciones
         run: |
           supabase functions deploy checkout   --no-verify-jwt --project-ref "$PROJECT_REF"
           supabase functions deploy mp-webhook --no-verify-jwt --project-ref "$PROJECT_REF"
           supabase functions deploy leer       --no-verify-jwt --project-ref "$PROJECT_REF"
           supabase functions deploy arrepentimiento --no-verify-jwt --project-ref "$PROJECT_REF"
+          supabase functions deploy agenda     --no-verify-jwt --project-ref "$PROJECT_REF"

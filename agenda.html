@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reservar asesoría · Visión Alfa</title>
+<meta name="description" content="Reservá una asesoría de 1 hora por videollamada con Visión Alfa.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/legal.css">
+<style>
+[hidden]{display:none!important}
+.datos{display:flex;flex-wrap:wrap;gap:8px 22px;font-size:16px;color:var(--gris);margin:4px 0 26px}
+.datos b{color:var(--verde)}
+.paso{font-family:var(--titulos);font-weight:800;color:var(--verde);font-size:20px;margin:28px 0 12px;display:flex;align-items:center;gap:10px}
+.paso .n{width:30px;height:30px;border-radius:50%;background:var(--verde);color:var(--papel);display:inline-flex;align-items:center;justify-content:center;font-size:16px;flex:none}
+.dias{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px}
+.chip{font:inherit;cursor:pointer;background:var(--blanco);border:2px solid var(--linea);border-radius:14px;padding:10px 6px;min-height:52px;color:var(--tinta);text-align:center;line-height:1.25}
+.chip small{display:block;font-size:13px;color:var(--gris);text-transform:capitalize}
+.chip strong{font-size:17px}
+.chip:hover{border-color:var(--verde)}
+.chip[aria-pressed="true"]{background:var(--verde);border-color:var(--verde);color:var(--papel)}
+.chip[aria-pressed="true"] small{color:var(--suave)}
+.horas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-width:420px}
+.elegido{background:var(--blanco);border:2px solid var(--mostaza);border-radius:16px;padding:14px 18px;margin:0 0 6px;font-weight:600;color:var(--verde)}
+.trampa{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.vacio{color:var(--gris)}
+.cargando{color:var(--gris);font-size:16px}
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="Principal">
+  <div class="in">
+    <a class="marca" href="index.html">
+      <svg width="34" height="26" viewBox="0 8 64 48" aria-hidden="true"><path d="M4 14 L17 50 L30 14" fill="none" stroke="#F4F3EE" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 50 L47 14 L60 50" fill="none" stroke="#E3A82B" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      visión alfa
+    </a>
+    <a class="volver" href="index.html#planes">← Volver a la web</a>
+  </div>
+</nav>
+<main><div class="in">
+
+<section id="reservar">
+  <h1>Reservá tu asesoría</h1>
+  <p>Revisamos juntos tu emprendimiento y armamos los próximos pasos.</p>
+  <div class="datos"><span><b>1 hora</b> por videollamada</span><span><b>$60.000</b></span><span>Lunes a viernes de <b>17 a 20 hs</b></span></div>
+
+  <div class="paso"><span class="n">1</span>Elegí el día</div>
+  <p class="cargando" id="cargando">Buscando horarios disponibles…</p>
+  <div class="dias" id="dias" role="group" aria-label="Días disponibles"></div>
+  <p class="vacio" id="vacio" hidden>Por ahora no hay horarios libres. Escribinos a <a href="mailto:visionalfa.arg@gmail.com">visionalfa.arg@gmail.com</a> y buscamos un momento.</p>
+
+  <div id="bloqueHoras" hidden>
+    <div class="paso"><span class="n">2</span>Elegí el horario</div>
+    <div class="horas" id="horas" role="group" aria-label="Horarios disponibles"></div>
+    <p style="font-size:15px;color:var(--gris);margin-top:10px">Hora de Argentina. Se reserva con al menos un día de anticipación.</p>
+  </div>
+
+  <div id="bloqueForm" hidden>
+    <div class="paso"><span class="n">3</span>Completá tus datos</div>
+    <p class="elegido" id="elegido"></p>
+    <form id="form" novalidate>
+      <label for="nombre">Nombre y apellido
+        <input id="nombre" name="nombre" autocomplete="name" required maxlength="120">
+      </label>
+      <label for="email">Mail <span>Te llega la confirmación y el link de la videollamada.</span>
+        <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="160">
+      </label>
+      <label for="whatsapp">WhatsApp <span>Con código de área, por ejemplo 299 512 3456.</span>
+        <input id="whatsapp" name="whatsapp" type="tel" autocomplete="tel" inputmode="tel" required maxlength="40">
+      </label>
+      <label for="tema">¿Sobre qué querés hablar? <span>Opcional. Contanos de tu emprendimiento y qué te gustaría resolver.</span>
+        <textarea id="tema" name="tema" maxlength="1000"></textarea>
+      </label>
+      <div class="trampa" aria-hidden="true"><label>No completar <input name="sitio" tabindex="-1" autocomplete="off"></label></div>
+      <button class="btn" type="submit" id="enviar">Confirmar reserva</button>
+    </form>
+  </div>
+  <div id="error" class="mensaje error" hidden style="margin-top:18px"></div>
+</section>
+
+<section id="listo" hidden>
+  <h1>¡Listo, ya tenés tu turno!</h1>
+  <div class="mensaje ok"><p style="margin:0;font-size:19px" id="listoCuando"></p></div>
+  <p style="margin-top:18px">Te mandamos la confirmación a <strong id="listoMail"></strong>. Antes del encuentro te escribimos con el link de la videollamada y los datos para el pago.</p>
+  <p>Si no te llega, revisá la carpeta de spam o promociones.</p>
+  <a class="btn" href="index.html">Volver a la web</a>
+</section>
+
+<section id="cancelar" hidden>
+  <h1>Cancelar tu asesoría</h1>
+  <p id="cancTexto" class="cargando">Buscando tu reserva…</p>
+  <button class="btn" type="button" id="cancBoton" hidden>Sí, cancelar mi turno</button>
+  <div id="cancRes" hidden style="margin-top:18px"></div>
+</section>
+
+</div></main>
+<footer><div class="in">
+  <span>© Visión Alfa</span>
+  <a href="terminos.html">Términos y condiciones</a>
+  <a href="privacidad.html">Privacidad</a>
+  <a href="arrepentimiento.html">Botón de arrepentimiento</a>
+  <a href="https://www.argentina.gob.ar/produccion/defensadelconsumidor/formulario" target="_blank" rel="noopener">Defensa de las y los Consumidores. Para reclamos ingresá acá</a>
+</div></footer>
+<script>
+(function () {
+  var URL_FN = "https://futhqkqfjuuemhcxzakn.supabase.co/functions/v1/agenda";
+  var CLAVE = "sb_publishable_x20gCAkWL2NsZG84wiWgGQ_hlchdMOF";
+  var ZONA = "America/Argentina/Buenos_Aires";
+  var $ = function (id) { return document.getElementById(id); };
+  var fDia = new Intl.DateTimeFormat("es-AR", { timeZone: ZONA, weekday: "short" });
+  var fNum = new Intl.DateTimeFormat("es-AR", { timeZone: ZONA, day: "numeric", month: "short" });
+  var fClave = new Intl.DateTimeFormat("en-CA", { timeZone: ZONA, year: "numeric", month: "2-digit", day: "2-digit" });
+  var fHora = new Intl.DateTimeFormat("es-AR", { timeZone: ZONA, hour: "2-digit", minute: "2-digit", hour12: false });
+  var fLargo = new Intl.DateTimeFormat("es-AR", { timeZone: ZONA, weekday: "long", day: "numeric", month: "long" });
+  var elegido = null;
+
+  function llamar(metodo, query, cuerpo) {
+    return fetch(URL_FN + (query || ""), {
+      method: metodo,
+      headers: { "Content-Type": "application/json", apikey: CLAVE },
+      body: cuerpo ? JSON.stringify(cuerpo) : undefined
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        if (!r.ok) { var e = new Error(j.error || "Algo salió mal. Probá de nuevo."); e.status = r.status; throw e; }
+        return j;
+      });
+    });
+  }
+  function mostrarError(msg) { var e = $("error"); e.textContent = msg; e.hidden = false; }
+  function largo(iso) { var d = new Date(iso); return fLargo.format(d) + " a las " + fHora.format(d) + " hs"; }
+  function marcar(cont, boton) {
+    cont.querySelectorAll(".chip").forEach(function (b) { b.setAttribute("aria-pressed", b === boton ? "true" : "false"); });
+  }
+
+  function cargar(seleccion) {
+    $("cargando").hidden = false; $("dias").innerHTML = ""; $("vacio").hidden = true;
+    $("bloqueHoras").hidden = true; $("bloqueForm").hidden = true; elegido = null;
+    llamar("GET").then(function (j) {
+      $("cargando").hidden = true;
+      var porDia = {};
+      j.turnos.forEach(function (t) { var k = fClave.format(new Date(t)); (porDia[k] = porDia[k] || []).push(t); });
+      var claves = Object.keys(porDia).sort();
+      if (!claves.length) { $("vacio").hidden = false; return; }
+      claves.forEach(function (k) {
+        var t0 = new Date(porDia[k][0]);
+        var b = document.createElement("button");
+        b.type = "button"; b.className = "chip"; b.setAttribute("aria-pressed", "false");
+        var s = document.createElement("small"); s.textContent = fDia.format(t0).replace(".", "");
+        var st = document.createElement("strong"); st.textContent = fNum.format(t0).replace(".", "");
+        b.appendChild(s); b.appendChild(st);
+        b.addEventListener("click", function () { marcar($("dias"), b); mostrarHoras(porDia[k]); });
+        $("dias").appendChild(b);
+      });
+    }).catch(function (e) { $("cargando").hidden = true; mostrarError(e.message); });
+  }
+
+  function mostrarHoras(turnos) {
+    $("error").hidden = true; $("bloqueForm").hidden = true; elegido = null;
+    var cont = $("horas"); cont.innerHTML = "";
+    turnos.forEach(function (t) {
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "chip"; b.setAttribute("aria-pressed", "false");
+      var st = document.createElement("strong"); st.textContent = fHora.format(new Date(t)) + " hs";
+      b.appendChild(st);
+      b.addEventListener("click", function () {
+        marcar(cont, b); elegido = t;
+        $("elegido").textContent = "Tu turno: " + largo(t);
+        $("bloqueForm").hidden = false;
+        $("bloqueForm").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      cont.appendChild(b);
+    });
+    $("bloqueHoras").hidden = false;
+  }
+
+  $("form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    $("error").hidden = true;
+    var f = e.target, boton = $("enviar");
+    if (!elegido) { mostrarError("Elegí un día y un horario."); return; }
+    if (f.nombre.value.trim().length < 2) { mostrarError("Completá tu nombre."); f.nombre.focus(); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.value.trim())) { mostrarError("Revisá el mail: parece que le falta algo."); f.email.focus(); return; }
+    if (f.whatsapp.value.replace(/\D/g, "").length < 8) { mostrarError("Dejanos un WhatsApp con código de área."); f.whatsapp.focus(); return; }
+    boton.disabled = true; boton.textContent = "Reservando…";
+    llamar("POST", "", {
+      accion: "reservar", inicio: elegido,
+      nombre: f.nombre.value.trim(), email: f.email.value.trim(),
+      whatsapp: f.whatsapp.value.trim(), tema: f.tema.value.trim(), sitio: f.sitio.value
+    }).then(function () {
+      $("reservar").hidden = true;
+      $("listoCuando").textContent = largo(elegido) + " · 1 hora";
+      $("listoMail").textContent = f.email.value.trim();
+      $("listo").hidden = false; window.scrollTo(0, 0);
+    }).catch(function (err) {
+      boton.disabled = false; boton.textContent = "Confirmar reserva";
+      mostrarError(err.message);
+      if (err.status === 409) cargar();
+    });
+  });
+
+  // Cancelación desde el link del mail
+  var token = new URLSearchParams(location.search).get("cancelar");
+  if (token) {
+    $("reservar").hidden = true; $("cancelar").hidden = false;
+    llamar("GET", "?token=" + encodeURIComponent(token)).then(function (r) {
+      if (r.estado === "cancelada") { $("cancTexto").className = ""; $("cancTexto").textContent = "Este turno ya estaba cancelado."; return; }
+      if (new Date(r.inicio) < new Date()) { $("cancTexto").className = ""; $("cancTexto").textContent = "Ese turno ya pasó."; return; }
+      $("cancTexto").className = "";
+      $("cancTexto").textContent = "Hola, " + r.nombre + ". Tu asesoría es el " + r.cuando + ". ¿Querés cancelarla? El horario queda libre para otra persona.";
+      $("cancBoton").hidden = false;
+    }).catch(function (e) { $("cancTexto").className = ""; $("cancTexto").textContent = e.message; });
+    $("cancBoton").addEventListener("click", function () {
+      var b = $("cancBoton"); b.disabled = true; b.textContent = "Cancelando…";
+      llamar("POST", "", { accion: "cancelar", token: token }).then(function () {
+        b.hidden = true;
+        var r = $("cancRes"); r.className = "mensaje ok"; r.hidden = false;
+        r.innerHTML = 'Tu turno quedó cancelado. Si querés, <a href="agenda.html" style="color:inherit">elegí otro horario</a>.';
+      }).catch(function (e) {
+        b.disabled = false; b.textContent = "Sí, cancelar mi turno";
+        var r = $("cancRes"); r.className = "mensaje error"; r.textContent = e.message; r.hidden = false;
+      });
+    });
+  } else {
+    cargar();
+  }
+})();
+</script>
+</body>
+</html>

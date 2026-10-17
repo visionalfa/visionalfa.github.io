@@ -1,0 +1,38 @@
+name: Probar la agenda
+
+# Hace una reserva de prueba (a nombre de "Prueba del sistema"), revisa que salgan los mails y la cancela.
+on:
+  workflow_dispatch:
+
+jobs:
+  probar:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      PROJECT_REF: futhqkqfjuuemhcxzakn
+      FN: https://futhqkqfjuuemhcxzakn.supabase.co/functions/v1/agenda
+      CLAVE: sb_publishable_x20gCAkWL2NsZG84wiWgGQ_hlchdMOF
+    steps:
+      - name: Probar
+        run: |
+          set -e
+          curl -sS "$FN" -H "apikey: $CLAVE" > turnos.json
+          n=$(jq '.turnos | length' turnos.json || echo 0)
+          echo "::notice::Turnos libres: $n · primero: $(jq -r '.turnos[0]' turnos.json) · último: $(jq -r '.turnos[-1]' turnos.json)"
+          [ "$n" -gt 0 ] || { echo "::error::No devolvió turnos: $(head -c 300 turnos.json)"; exit 1; }
+          ultimo=$(jq -r '.turnos[-1]' turnos.json)
+          jq -n --arg i "$ultimo" '{accion:"reservar", inicio:$i, nombre:"Prueba del sistema", email:"visionalfa.arg@gmail.com", whatsapp:"0000 0000 0000", tema:"Reserva de prueba automática: se cancela sola."}' > r.json
+          curl -sS -X POST "$FN" -H "apikey: $CLAVE" -H "Content-Type: application/json" --data @r.json > res.json
+          echo "::notice::Reserva: $(cat res.json)"
+          jq -e '.ok' res.json > /dev/null || { echo "::error::Falló la reserva: $(cat res.json)"; exit 1; }
+          [ "$(jq -r '.avisado' res.json)" = "true" ] || echo "::error::La reserva se guardó pero NO salió el mail de aviso"
+          q="select token from public.reservas where nombre = 'Prueba del sistema' and estado = 'confirmada' order by creada desc limit 1;"
+          jq -n --arg q "$q" '{query:$q}' > c.json
+          token=$(curl -sS -X POST "https://api.supabase.com/v1/projects/$PROJECT_REF/database/query" \
+            -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -H "Content-Type: application/json" --data @c.json | jq -r '.[0].token')
+          curl -sS "$FN?token=$token" -H "apikey: $CLAVE" > info.json
+          echo "::notice::Página de cancelación: $(cat info.json)"
+          jq -n --arg t "$token" '{accion:"cancelar", token:$t}' > x.json
+          curl -sS -X POST "$FN" -H "apikey: $CLAVE" -H "Content-Type: application/json" --data @x.json > can.json
+          echo "::notice::Cancelación: $(cat can.json)"
+          jq -e '.ok' can.json > /dev/null

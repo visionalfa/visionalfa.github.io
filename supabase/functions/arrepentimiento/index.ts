@@ -1,5 +1,6 @@
 // Registra un pedido de arrepentimiento y devuelve el código de trámite.
 import { admin, cors, json } from "../_shared/comun.ts";
+import { AVISOS, enviar, escapar, plantilla } from "../_shared/mail.ts";
 
 function texto(v: unknown, max: number): string {
   return typeof v === "string" ? v.trim().slice(0, max) : "";
@@ -27,5 +28,11 @@ Deno.serve(async (req) => {
     console.error(error);
     return json({ error: "No pudimos registrar el pedido. Probá de nuevo o escribinos a visionalfa.arg@gmail.com." }, 500);
   }
+  await enviar({
+    para: AVISOS, responderA: email,
+    asunto: `Pedido de arrepentimiento ${codigo}: ${nombre}`,
+    texto: `Código: ${codigo}\nNombre: ${nombre}\nMail: ${email}\nOperación: ${operacion || "-"}\nDetalle: ${detalle || "-"}`,
+    html: plantilla("Nuevo pedido de arrepentimiento", `<p><strong>Código:</strong> ${codigo}<br><strong>Nombre:</strong> ${escapar(nombre)}<br><strong>Mail:</strong> ${escapar(email)}<br><strong>Operación:</strong> ${escapar(operacion || "-")}</p><p><strong>Detalle:</strong><br>${escapar(detalle || "-")}</p><p style="color:#6B7069;font-size:14px">Por ley hay que responderlo. Respondé este mail para escribirle directamente.</p>`),
+  });
   return json({ codigo });
 });
