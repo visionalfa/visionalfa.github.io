@@ -52,6 +52,7 @@ async function libres(db: DB): Promise<string[]> {
   return turnosPosibles(bloqueados).filter((t) => !ocupados.has(t));
 }
 
+let ultimoErrorMP = "";
 // deno-lint-ignore no-explicit-any
 async function linkDePago(r: Record<string, any>): Promise<string | null> {
   const vuelta = `${SITE_URL}/agenda.html?r=${r.token}`;
@@ -80,6 +81,7 @@ async function linkDePago(r: Record<string, any>): Promise<string | null> {
   const data = await res.json().catch(() => ({}));
   if (!res.ok || !data.init_point) {
     console.error("preference asesoria", res.status, data);
+    ultimoErrorMP = `${res.status} ${data.message ?? ""} ${JSON.stringify(data.cause ?? "")}`.slice(0, 300);
     return null;
   }
   return data.init_point;
@@ -186,7 +188,7 @@ Deno.serve(async (req) => {
   const url = await linkDePago(r);
   if (!url) {
     await db.from("reservas").update({ estado: "vencida" }).eq("id", r.id);
-    return json({ error: "No se pudo conectar con Mercado Pago. Probá de nuevo en unos minutos." }, 502);
+    return json({ error: "No se pudo conectar con Mercado Pago. Probá de nuevo en unos minutos.", detalle: ultimoErrorMP }, 502);
   }
   return json({ url, token: r.token, minutos: ESPERA_PAGO_MIN });
 });
