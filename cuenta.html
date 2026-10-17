@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Mi cuenta · Visión Alfa</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --verde:#1F3D2B; --verde-hondo:#16301F; --mostaza:#E3A82B; --papel:#F4F3EE; --tinta:#16231B;
+  --gris:#4A5A50; --linea:#DAD8CF; --blanco:#FFFFFF; --suave:#E7EAE3; --error:#8A2E1E;
+  --titulos:'Bricolage Grotesque','Arial Black',system-ui,sans-serif;
+  --texto:'Instrument Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--texto);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+.in{max-width:760px;margin:0 auto;width:100%;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+h1,h2{font-family:var(--titulos);font-weight:800;letter-spacing:-0.025em;line-height:1.05;margin:0;color:var(--verde);text-wrap:balance}
+p{margin:0}
+a{color:var(--verde)}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--mostaza);outline-offset:3px;border-radius:6px}
+.nav{background:var(--verde);color:var(--papel);padding-top:env(safe-area-inset-top,0px)}
+.nav .in{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:64px;flex-wrap:wrap}
+.marca{display:flex;align-items:center;gap:10px;font-family:var(--titulos);font-weight:800;font-size:22px;letter-spacing:-0.03em;text-decoration:none;color:var(--papel)}
+.nav .volver{color:var(--suave);font-size:15px;font-weight:500;text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
+.nav .volver:hover{color:var(--papel)}
+main{flex:1;padding-block:56px 80px}
+.bloque{display:flex;flex-direction:column;gap:22px}
+.eyebrow{font-size:13px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--gris)}
+h1{font-size:clamp(36px,6vw,52px)}
+.lead{font-size:19px;color:var(--gris);max-width:560px}
+form{display:flex;flex-direction:column;gap:12px;max-width:460px}
+label{font-weight:600;color:var(--verde)}
+input[type=email]{font:inherit;font-size:18px;padding:14px 16px;border-radius:14px;border:2px solid var(--linea);background:var(--blanco);color:var(--tinta);min-height:54px;width:100%}
+input[type=email]:focus{border-color:var(--verde);outline:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 26px;border-radius:999px;font-family:var(--texto);font-size:17px;font-weight:600;text-decoration:none;border:0;cursor:pointer}
+.btn-verde{background:var(--verde);color:var(--papel)}
+.btn-verde:hover{background:var(--verde-hondo)}
+.btn-mostaza{background:var(--mostaza);color:var(--verde)}
+.btn-borde{background:transparent;color:var(--verde);box-shadow:inset 0 0 0 2px var(--verde)}
+.btn[disabled]{opacity:.6;cursor:default}
+.nota{font-size:15px;color:var(--gris)}
+.mensaje{border-radius:16px;padding:16px 20px;font-weight:500}
+.mensaje.ok{background:var(--verde);color:var(--papel)}
+.mensaje.info{background:#FBF1DA;color:var(--tinta);border:1px solid #EBD7A3}
+.mensaje.error{background:var(--blanco);color:var(--error);border:2px solid var(--error)}
+.lista{display:flex;flex-direction:column;gap:14px}
+.item{display:flex;align-items:center;gap:18px;background:var(--blanco);border:1px solid var(--linea);border-radius:18px;padding:16px;flex-wrap:wrap}
+.mini{width:64px;aspect-ratio:5/7;border-radius:3px 8px 8px 3px;background:var(--mostaza);color:var(--verde);display:flex;align-items:flex-end;padding:6px;font-family:var(--titulos);font-weight:800;font-size:10px;line-height:1;flex-shrink:0;box-shadow:inset 3px 0 0 rgba(0,0,0,.14)}
+.item .datos{flex:1;min-width:160px;display:flex;flex-direction:column;gap:2px}
+.item h3{margin:0;font-family:var(--titulos);font-weight:800;font-size:21px;color:var(--verde);letter-spacing:-0.02em}
+.plan{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:var(--verde);color:var(--papel);border-radius:18px;padding:20px 22px}
+.plan strong{font-family:var(--titulos);font-size:22px;letter-spacing:-0.02em}
+.plan p{color:var(--suave);font-size:15px}
+.fila{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.salir{background:none;border:0;padding:0;font:inherit;color:var(--gris);text-decoration:underline;cursor:pointer;min-height:44px}
+footer{background:var(--verde-hondo);color:#C9D0C6;font-size:15px}
+footer .in{padding-block:24px calc(24px + env(safe-area-inset-bottom,0px))}
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="Principal">
+  <div class="in">
+    <a class="marca" href="index.html">
+      <svg width="34" height="26" viewBox="0 8 64 48" aria-hidden="true"><path d="M4 14 L17 50 L30 14" fill="none" stroke="#F4F3EE" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 50 L47 14 L60 50" fill="none" stroke="#E3A82B" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      visión alfa
+    </a>
+    <a class="volver" href="index.html">← Volver a la web</a>
+  </div>
+</nav>
+
+<main>
+  <div class="in">
+    <p id="cargando" class="nota">Cargando tu cuenta…</p>
+
+    <!-- Sin sesión -->
+    <section id="entrar" class="bloque" hidden aria-labelledby="t-entrar">
+      <div class="eyebrow">Mi cuenta</div>
+      <h1 id="t-entrar">Entrá con tu mail</h1>
+      <p class="lead" id="entrar-texto">Te mandamos un link a tu mail para entrar. Sin contraseñas.</p>
+      <form id="form-entrar" novalidate>
+        <label for="email">Tu mail</label>
+        <input type="email" id="email" name="email" autocomplete="email" inputmode="email" placeholder="nombre@gmail.com" required>
+        <button class="btn btn-verde" type="submit" id="btn-entrar">Enviarme el link</button>
+      </form>
+      <div id="entrar-msj" hidden></div>
+      <p class="nota">Usá el mismo mail con el que compraste.</p>
+    </section>
+
+    <!-- Con sesión -->
+    <section id="cuenta" class="bloque" hidden aria-labelledby="t-cuenta">
+      <div class="eyebrow">Mi cuenta</div>
+      <h1 id="t-cuenta">Tu biblioteca</h1>
+      <p class="nota" id="cuenta-mail"></p>
+      <div id="cuenta-msj" hidden></div>
+      <div id="plan" hidden></div>
+      <h2 style="font-size:28px;margin-top:8px">Tus ebooks</h2>
+      <div class="lista" id="lista"></div>
+      <div class="fila" style="margin-top:12px">
+        <a class="btn btn-borde" href="index.html#planes">Ver planes</a>
+        <button class="salir" type="button" id="salir">Cerrar sesión</button>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer><div class="in">© Visión Alfa · ¿Necesitás ayuda? Escribinos a visionalfa.arg@gmail.com o por Instagram a <a href="https://www.instagram.com/visionalfa.arg" target="_blank" rel="noopener" style="color:#F4F3EE">@visionalfa.arg</a></div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
+<script src="js/va.js"></script>
+<script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  var comprar = params.get("comprar");
+  var pago = params.get("pago");
+  var $ = function (id) { return document.getElementById(id); };
+
+  function mostrarMensaje(caja, tipo, texto) {
+    caja.className = "mensaje " + tipo;
+    caja.textContent = texto;
+    caja.hidden = false;
+  }
+
+  function limpiarUrl() {
+    history.replaceState(null, "", location.pathname);
+  }
+
+  // --- Sin sesión: pedir el mail ---
+  function pantallaEntrar() {
+    $("cargando").hidden = true;
+    $("cuenta").hidden = true;
+    $("entrar").hidden = false;
+    if (comprar) $("entrar-texto").textContent = "Para comprar, primero entrá con tu mail. Así tu compra queda guardada en tu cuenta y la podés leer cuando quieras.";
+    $("form-entrar").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      var email = $("email").value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        mostrarMensaje($("entrar-msj"), "error", "Revisá el mail: parece que le falta algo.");
+        return;
+      }
+      var boton = $("btn-entrar");
+      boton.disabled = true;
+      boton.textContent = "Enviando…";
+      var destino = location.origin + location.pathname + (comprar ? "?comprar=" + encodeURIComponent(comprar) : "");
+      var r = await VA.sb.auth.signInWithOtp({ email: email, options: { emailRedirectTo: destino } });
+      boton.disabled = false;
+      boton.textContent = "Enviarme el link";
+      if (r.error) {
+        mostrarMensaje($("entrar-msj"), "error", "No pudimos mandar el mail. Esperá un minuto y probá de nuevo.");
+        return;
+      }
+      mostrarMensaje($("entrar-msj"), "ok", "Listo. Te mandamos un link a " + email + ". Abrilo desde este mismo dispositivo para entrar. Si no lo ves, revisá la carpeta de spam.");
+    });
+  }
+
+  // --- Con sesión: mostrar la biblioteca ---
+  var mostrada = false;
+  async function pantallaCuenta(sesion) {
+    if (mostrada) return;
+    mostrada = true;
+    $("cargando").hidden = true;
+    $("entrar").hidden = true;
+    $("cuenta").hidden = false;
+    $("cuenta-mail").textContent = "Entraste como " + sesion.user.email;
+
+    if (comprar) {
+      mostrarMensaje($("cuenta-msj"), "info", "Te llevamos al pago con Mercado Pago…");
+      try {
+        await VA.comprar(comprar);
+        return;
+      } catch (err) {
+        mostrarMensaje($("cuenta-msj"), "error", err.message);
+        limpiarUrl();
+      }
+    } else if (pago === "ok" || pago === "suscripcion") {
+      mostrarMensaje($("cuenta-msj"), "ok", "¡Gracias por tu compra! Estamos confirmando el pago con Mercado Pago. Si todavía no ves tu acceso, actualizá esta página en unos minutos.");
+    } else if (pago === "pendiente") {
+      mostrarMensaje($("cuenta-msj"), "info", "Tu pago quedó pendiente. Cuando Mercado Pago lo apruebe, tu acceso aparece acá automáticamente.");
+    } else if (pago === "error") {
+      mostrarMensaje($("cuenta-msj"), "error", "El pago no se pudo completar. No se te cobró nada. Podés intentarlo de nuevo desde los planes.");
+    }
+
+    var productos = await VA.sb.from("productos").select("id, nombre, tipo").order("orden");
+    var accesos = await VA.sb.from("accesos").select("producto_id, estado").eq("estado", "activo");
+    if (productos.error || accesos.error) {
+      mostrarMensaje($("cuenta-msj"), "error", "No pudimos cargar tu biblioteca. Actualizá la página en un momento.");
+      return;
+    }
+    var activos = accesos.data.map(function (a) { return a.producto_id; });
+    var vitalicio = activos.indexOf("vitalicio") !== -1;
+    var membresia = activos.indexOf("membresia") !== -1;
+    var todo = vitalicio || membresia;
+
+    if (todo) {
+      var plan = $("plan");
+      plan.className = "plan";
+      plan.innerHTML = vitalicio
+        ? "<div><strong>Acceso de por vida</strong><p>Tenés todos los ebooks, incluidos los que salgan.</p></div>"
+        : "<div><strong>Membresía activa</strong><p>Tenés todos los ebooks mientras sigas suscripto. La suscripción se administra desde tu cuenta de Mercado Pago.</p></div>";
+      plan.hidden = false;
+    }
+
+    var lista = $("lista");
+    lista.innerHTML = "";
+    var ebooks = productos.data.filter(function (p) { return p.tipo === "ebook"; });
+    var mios = ebooks.filter(function (p) { return todo || activos.indexOf(p.id) !== -1; });
+
+    if (!mios.length) {
+      var vacio = document.createElement("p");
+      vacio.className = "nota";
+      vacio.textContent = "Todavía no tenés ebooks. Elegí un plan para empezar.";
+      lista.appendChild(vacio);
+      return;
+    }
+    mios.forEach(function (p) {
+      var item = document.createElement("article");
+      item.className = "item";
+      var mini = document.createElement("div");
+      mini.className = "mini";
+      mini.setAttribute("aria-hidden", "true");
+      mini.textContent = "visión alfa";
+      var datos = document.createElement("div");
+      datos.className = "datos";
+      var h = document.createElement("h3");
+      h.textContent = p.nombre;
+      var nota = document.createElement("span");
+      nota.className = "nota";
+      nota.textContent = "Versión siempre actualizada";
+      datos.appendChild(h);
+      datos.appendChild(nota);
+      var leer = document.createElement("a");
+      leer.className = "btn btn-mostaza";
+      leer.href = "leer.html?libro=" + encodeURIComponent(p.id);
+      leer.textContent = "Leer";
+      item.appendChild(mini);
+      item.appendChild(datos);
+      item.appendChild(leer);
+      lista.appendChild(item);
+    });
+  }
+
+  $("salir").addEventListener("click", async function () {
+    await VA.sb.auth.signOut();
+    location.href = "cuenta.html";
+  });
+
+  VA.sesion().then(function (s) {
+    if (s) pantallaCuenta(s); else pantallaEntrar();
+  });
+  VA.sb.auth.onAuthStateChange(function (evento, s) {
+    if (evento === "SIGNED_IN" && s) pantallaCuenta(s);
+  });
+})();
+</script>
+</body>
+</html>

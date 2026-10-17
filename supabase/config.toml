@@ -1,0 +1,11 @@
+project_id = "futhqkqfjuuemhcxzakn"
+
+# Las funciones verifican al usuario por su cuenta; el aviso de Mercado Pago no trae sesión.
+[functions.checkout]
+verify_jwt = false
+
+[functions.mp-webhook]
+verify_jwt = false
+
+[functions.leer]
+verify_jwt = false

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Abriendo tu ebook · Visión Alfa</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<style>
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#1F3D2B;color:#F4F3EE;font:500 18px/1.5 'Instrument Sans',system-ui,-apple-system,'Segoe UI',sans-serif;padding:24px max(20px,env(safe-area-inset-right,0px)) 24px max(20px,env(safe-area-inset-left,0px));box-sizing:border-box;text-align:center}
+.caja{display:flex;flex-direction:column;gap:18px;align-items:center;max-width:460px}
+a{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 26px;border-radius:999px;background:#E3A82B;color:#1F3D2B;font-weight:600;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="caja" role="status">
+  <svg width="64" height="48" viewBox="0 8 64 48" aria-hidden="true"><path d="M4 14 L17 50 L30 14" fill="none" stroke="#F4F3EE" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 50 L47 14 L60 50" fill="none" stroke="#E3A82B" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <p id="texto">Abriendo tu ebook…</p>
+  <a id="accion" href="cuenta.html" hidden>Ir a mi cuenta</a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
+<script src="js/va.js"></script>
+<script>
+(async function () {
+  var libro = new URLSearchParams(location.search).get("libro") || "";
+  var texto = document.getElementById("texto");
+  var accion = document.getElementById("accion");
+  var sesion = await VA.sesion();
+  if (!sesion) { location.replace("cuenta.html"); return; }
+  try {
+    var datos = await VA.llamar("leer", { query: "?libro=" + encodeURIComponent(libro) });
+    document.open();
+    document.write(datos.html);
+    document.close();
+  } catch (err) {
+    texto.textContent = err.message;
+    if (err.status === 403) { accion.href = "index.html#planes"; accion.textContent = "Ver planes"; }
+    accion.hidden = false;
+  }
+})();
+</script>
+</body>
+</html>
