@@ -31,4 +31,4 @@ jobs:
             -H "Content-Type: application/json" \
             --data @cuerpo.json)
           echo "Respuesta: $codigo"
-          if [ "$codigo" -ge 300 ]; then cat respuesta.json; exit 1; fi
+          if [ "$codigo" -ge 300 ]; then echo "::error::Supabase respondio $codigo: $(head -c 400 respuesta.json | tr -d '\n')"; exit 1; fi
