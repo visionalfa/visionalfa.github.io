@@ -558,17 +558,21 @@ footer .legales{display:flex;flex-wrap:wrap;gap:8px 20px;width:100%;font-size:14
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
 <script src="js/va.js"></script>
-<a class="nube" id="nube" href="agenda.html?servicio=web-automatizada" hidden aria-label="¿Te gusta lo que ves? Te enseño a hacer páginas como esta, con todo automatizado. 2 horas de asesoría más el ebook paso a paso por $200.000">
-  <svg class="nube-forma" viewBox="0 0 260 170" aria-hidden="true" preserveAspectRatio="none"><path d="M58 160 C24 160 6 138 8 114 C10 92 28 78 48 78 C44 48 68 24 98 26 C114 8 146 4 168 20 C186 10 214 16 224 40 C246 44 258 64 254 86 C258 112 244 134 220 140 C214 156 196 162 178 160 Z"/></svg>
-  <span class="nube-txt">
-    <strong>¿Te gusta lo que ves?</strong>
-    <span>Te enseño a hacer una web como esta, con todo automatizado.</span>
-    <em>2 hs + ebook · $200.000 →</em>
-  </span>
-</a>
-<button class="nube-x" id="nubeX" type="button" hidden aria-label="Cerrar">×</button>
+<div class="nube-caja" id="nubeCaja" hidden>
+  <a class="nube" href="agenda.html?servicio=web-automatizada" aria-label="¿Te gusta lo que ves? Te enseño a hacer páginas como esta, con todo automatizado. 2 horas de asesoría más el ebook paso a paso por $200.000">
+    <svg class="nube-forma" viewBox="0 0 260 170" aria-hidden="true" preserveAspectRatio="none"><path d="M58 160 C24 160 6 138 8 114 C10 92 28 78 48 78 C44 48 68 24 98 26 C114 8 146 4 168 20 C186 10 214 16 224 40 C246 44 258 64 254 86 C258 112 244 134 220 140 C214 156 196 162 178 160 Z"/></svg>
+    <span class="nube-txt">
+      <strong>¿Te gusta lo que ves?</strong>
+      <span>Te enseño a hacer una web como esta, con todo automatizado.</span>
+      <em>2 hs + ebook · $200.000 →</em>
+    </span>
+  </a>
+  <button class="nube-x" id="nubeX" type="button" aria-label="Cerrar"><span aria-hidden="true">×</span></button>
+</div>
 <style>
-.nube{position:fixed;left:0;top:0;z-index:60;width:250px;height:164px;display:block;text-decoration:none;color:var(--verde);will-change:transform;filter:drop-shadow(0 10px 22px rgba(22,35,27,.22));transition:filter .2s}
+.nube-caja{position:fixed;left:0;top:0;z-index:60;width:250px;height:164px;will-change:transform}
+.nube-caja[hidden]{display:none}
+.nube{position:absolute;inset:0;display:block;text-decoration:none;color:var(--verde);filter:drop-shadow(0 10px 22px rgba(22,35,27,.22));transition:filter .2s}
 .nube:hover{filter:drop-shadow(0 14px 28px rgba(22,35,27,.32))}
 .nube-forma{position:absolute;inset:0;width:100%;height:100%}
 .nube-forma path{fill:#FFFFFF;stroke:var(--mostaza);stroke-width:3}
@@ -577,25 +581,25 @@ footer .legales{display:flex;flex-wrap:wrap;gap:8px 20px;width:100%;font-size:14
 .nube-txt span{font-size:12.5px;color:var(--gris)}
 .nube-txt em{font-style:normal;font-weight:600;font-size:12.5px;background:var(--verde);color:var(--papel);border-radius:999px;padding:4px 10px;margin-top:3px;white-space:nowrap}
 .nube:focus-visible{outline:3px solid var(--mostaza);outline-offset:4px;border-radius:30px}
-.nube-x{position:fixed;left:0;top:0;z-index:61;width:30px;height:30px;border-radius:50%;border:0;background:var(--verde);color:var(--papel);font-size:19px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;will-change:transform}
-@media (max-width:520px){.nube{width:220px;height:146px}.nube-txt{left:32px;right:22px;top:44px;bottom:12px;gap:2px}.nube-txt strong{font-size:14px}.nube-txt span{font-size:11px}.nube-txt em{font-size:11px;padding:3px 9px}}
+/* Zona táctil grande (44px) con el círculo visible adentro */
+.nube-x{position:absolute;right:-6px;top:4px;width:44px;height:44px;border:0;background:transparent;padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.nube-x span{width:30px;height:30px;border-radius:50%;background:var(--verde);color:var(--papel);font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.nube-x:focus-visible span{outline:3px solid var(--mostaza);outline-offset:2px}
+@media (max-width:520px){.nube-caja{width:220px;height:146px}.nube-txt{left:32px;right:22px;top:44px;bottom:12px;gap:2px}.nube-txt strong{font-size:14px}.nube-txt span{font-size:11px}.nube-txt em{font-size:11px;padding:3px 9px}}
 </style>
 <script>
 (function () {
-  var nube = document.getElementById("nube"), x = document.getElementById("nubeX");
+  var caja = document.getElementById("nubeCaja"), x = document.getElementById("nubeX");
   try { if (sessionStorage.getItem("va-nube") === "cerrada") return; } catch (e) {}
   var quieto = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var px = 0, py = 0, vx = 0.45, vy = 0.3, pausa = false, activo = true;
   function limites() {
-    var w = innerWidth, h = innerHeight, nw = nube.offsetWidth, nh = nube.offsetHeight;
+    var w = innerWidth, h = innerHeight, nw = caja.offsetWidth, nh = caja.offsetHeight;
     var movil = w <= 520;
     // En el celular se mueve por la parte de abajo para no tapar el contenido.
     return { x0: 8, x1: Math.max(8, w - nw - 8), y0: movil ? h - nh - 150 : 90, y1: h - nh - 12 };
   }
-  function ubicar() {
-    nube.style.transform = "translate(" + px + "px," + py + "px)";
-    x.style.transform = "translate(" + (px + nube.offsetWidth - 34) + "px," + (py + 18) + "px)";
-  }
+  function ubicar() { caja.style.transform = "translate(" + px + "px," + py + "px)"; }
   function paso() {
     if (!activo) return;
     if (!pausa) {
@@ -607,22 +611,26 @@ footer .legales{display:flex;flex-wrap:wrap;gap:8px 20px;width:100%;font-size:14
     }
     requestAnimationFrame(paso);
   }
-  function mostrar() {
-    nube.hidden = false; x.hidden = false;
-    var l = limites();
-    px = l.x1; py = l.y1; ubicar();
-    if (!quieto) requestAnimationFrame(paso);
+  function cerrar(e) {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+    activo = false; caja.hidden = true;
+    try { sessionStorage.setItem("va-nube", "cerrada"); } catch (err) {}
   }
-  nube.addEventListener("mouseenter", function () { pausa = true; });
-  nube.addEventListener("mouseleave", function () { pausa = false; });
-  nube.addEventListener("focus", function () { pausa = true; });
-  nube.addEventListener("blur", function () { pausa = false; });
+  // Se cierra apenas se toca la X (sin esperar al "click", que en el celular llega tarde).
+  x.addEventListener("pointerdown", cerrar);
+  x.addEventListener("click", cerrar);
+  // Al tocarla o pasar el mouse se queda quieta.
+  caja.addEventListener("pointerenter", function () { pausa = true; });
+  caja.addEventListener("pointerleave", function () { pausa = false; });
+  caja.addEventListener("touchstart", function () { pausa = true; }, { passive: true });
+  caja.addEventListener("focusin", function () { pausa = true; });
+  caja.addEventListener("focusout", function () { pausa = false; });
   addEventListener("resize", function () { var l = limites(); px = Math.min(px, l.x1); py = Math.min(Math.max(py, l.y0), l.y1); ubicar(); });
-  x.addEventListener("click", function () {
-    activo = false; nube.hidden = true; x.hidden = true;
-    try { sessionStorage.setItem("va-nube", "cerrada"); } catch (e) {}
-  });
-  setTimeout(mostrar, 3500);
+  setTimeout(function () {
+    caja.hidden = false;
+    var l = limites(); px = l.x1; py = l.y1; ubicar();
+    if (!quieto) requestAnimationFrame(paso);
+  }, 3500);
 })();
 </script>
 
