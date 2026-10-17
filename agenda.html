@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Reservar asesoría · Visión Alfa</title>
-<meta name="description" content="Reservá una asesoría de 1 hora por videollamada con Visión Alfa.">
+<meta name="description" content="Reservá tu turno con el equipo de Visión Alfa: asesorías por videollamada.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,6 +28,7 @@
 .trampa{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 .vacio{color:var(--gris)}
 .cargando{color:var(--gris);font-size:16px}
+.prof{font-weight:600;color:var(--mostaza);text-transform:uppercase;letter-spacing:.08em;font-size:14px;margin:0 0 6px}
 .nota{font-size:15px;color:var(--gris);margin:0}
 a.btn{text-decoration:none}
 .btn-sec{background:transparent;color:var(--verde);border:2px solid var(--verde)}
@@ -40,15 +41,16 @@ a.btn{text-decoration:none}
       <svg width="34" height="26" viewBox="0 8 64 48" aria-hidden="true"><path d="M4 14 L17 50 L30 14" fill="none" stroke="#F4F3EE" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 50 L47 14 L60 50" fill="none" stroke="#E3A82B" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
       visión alfa
     </a>
-    <a class="volver" href="index.html#planes">← Volver a la web</a>
+    <a class="volver" href="equipo.html">← Ver el equipo</a>
   </div>
 </nav>
 <main><div class="in">
 
 <section id="reservar">
-  <h1>Reservá tu asesoría</h1>
-  <p>Revisamos juntos tu emprendimiento y armamos los próximos pasos.</p>
-  <div class="datos"><span><b>1 hora</b> por videollamada</span><span><b>$60.000</b> con Mercado Pago</span><span>Lunes a viernes de <b>17 a 20 hs</b></span></div>
+  <p class="prof" id="svProf">Florentina Cecchini</p>
+  <h1 id="svNombre">Reservá tu turno</h1>
+  <p id="svDesc"></p>
+  <div class="datos" id="svDatos"></div>
 
   <div class="paso"><span class="n">1</span>Elegí el día</div>
   <p class="cargando" id="cargando">Buscando horarios disponibles…</p>
@@ -79,7 +81,7 @@ a.btn{text-decoration:none}
       </label>
       <div class="trampa" aria-hidden="true"><label>No completar <input name="sitio" tabindex="-1" autocomplete="off"></label></div>
       <p class="nota">Te guardamos el horario <strong>30 minutos</strong> mientras pagás. El turno queda confirmado cuando se aprueba el pago.</p>
-      <button class="btn" type="submit" id="enviar">Ir a pagar $60.000</button>
+      <button class="btn" type="submit" id="enviar">Ir a pagar</button>
       <p class="nota" style="margin:0">Pagás con Mercado Pago: tarjeta de crédito o débito, o dinero en cuenta.</p>
     </form>
   </div>
@@ -120,6 +122,34 @@ a.btn{text-decoration:none}
   var fHora = new Intl.DateTimeFormat("es-AR", { timeZone: ZONA, hour: "2-digit", minute: "2-digit", hour12: false });
   var fLargo = new Intl.DateTimeFormat("es-AR", { timeZone: ZONA, weekday: "long", day: "numeric", month: "long" });
   var elegido = null;
+  var qs0 = new URLSearchParams(location.search);
+  var SERVICIO = (qs0.get("servicio") || "asesoria").replace(/[^a-z0-9-]/g, "");
+  var textoPagar = "Ir a pagar";
+  var DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+  function plata(n) { return "$" + Number(n).toLocaleString("es-AR"); }
+  function rangoDias(d) {
+    d = (d || [1, 2, 3, 4, 5]).slice().sort();
+    if (d.join() === "1,2,3,4,5") return "Lunes a viernes";
+    return d.map(function (x) { return DIAS[x]; }).join(", ");
+  }
+  function pintarServicio(sv) {
+    if (!sv) return;
+    document.title = sv.nombre + " · " + sv.profesional + " · Visión Alfa";
+    $("svProf").textContent = sv.profesional;
+    $("svNombre").textContent = sv.nombre;
+    $("svDesc").textContent = sv.descripcion || "";
+    var dur = sv.duracion === 1 ? "1 hora" : sv.duracion + " horas";
+    var dd = $("svDatos"); dd.innerHTML = "";
+    [[dur, " · " + sv.modalidad.toLowerCase()], [plata(sv.precio), " con Mercado Pago"], [rangoDias(sv.dias) + " de ", sv.hora_desde + " a " + sv.hora_hasta + " hs"]]
+      .forEach(function (p, i) {
+        var sp = document.createElement("span"); var b = document.createElement("b");
+        if (i === 2) { sp.appendChild(document.createTextNode(p[0])); b.textContent = p[1]; sp.appendChild(b); }
+        else { b.textContent = p[0]; sp.appendChild(b); sp.appendChild(document.createTextNode(p[1])); }
+        dd.appendChild(sp);
+      });
+    textoPagar = "Ir a pagar " + plata(sv.precio);
+    if (!$("enviar").disabled) $("enviar").textContent = textoPagar;
+  }
 
   function llamar(metodo, query, cuerpo) {
     return fetch(URL_FN + (query || ""), {
@@ -142,7 +172,8 @@ a.btn{text-decoration:none}
   function cargar(seleccion) {
     $("cargando").hidden = false; $("dias").innerHTML = ""; $("vacio").hidden = true;
     $("bloqueHoras").hidden = true; $("bloqueForm").hidden = true; elegido = null;
-    llamar("GET").then(function (j) {
+    llamar("GET", "?servicio=" + encodeURIComponent(SERVICIO)).then(function (j) {
+      pintarServicio(j.servicio);
       $("cargando").hidden = true;
       var porDia = {};
       j.turnos.forEach(function (t) { var k = fClave.format(new Date(t)); (porDia[k] = porDia[k] || []).push(t); });
@@ -190,13 +221,13 @@ a.btn{text-decoration:none}
     if (f.whatsapp.value.replace(/\D/g, "").length < 8) { mostrarError("Dejanos un WhatsApp con código de área."); f.whatsapp.focus(); return; }
     boton.disabled = true; boton.textContent = "Preparando el pago…";
     llamar("POST", "", {
-      accion: "reservar", inicio: elegido,
+      accion: "reservar", servicio: SERVICIO, inicio: elegido,
       nombre: f.nombre.value.trim(), email: f.email.value.trim(),
       whatsapp: f.whatsapp.value.trim(), tema: f.tema.value.trim(), sitio: f.sitio.value
     }).then(function (j) {
       location.href = j.url;
     }).catch(function (err) {
-      boton.disabled = false; boton.textContent = "Ir a pagar $60.000";
+      boton.disabled = false; boton.textContent = textoPagar;
       mostrarError(err.message);
       if (err.status === 409) cargar();
     });
@@ -215,12 +246,19 @@ a.btn{text-decoration:none}
     function pintar(r) {
       $("vBotones").innerHTML = ""; $("vCaja").innerHTML = ""; $("vTexto").textContent = "";
       if (r.estado === "confirmada") {
-        $("vTitulo").textContent = "¡Listo, tu asesoría está confirmada!";
+        var sv = r.servicios || {};
+        $("vTitulo").textContent = "¡Listo, tu turno está confirmado!";
         var c = document.createElement("div"); c.className = "mensaje ok";
-        c.innerHTML = '<p style="margin:0;font-size:19px"></p>'; c.firstChild.textContent = r.cuando + " · 1 hora";
-        $("vCaja").appendChild(c);
-        $("vTexto").textContent = "Recibimos tu pago. Te mandamos la confirmación a " + r.email + " y antes del encuentro te escribimos con el link de la videollamada. Si no ves el mail, revisá spam o promociones.";
-        boton("Volver a la web", false, "index.html");
+        var p1 = document.createElement("p"); p1.style.cssText = "margin:0;font-size:19px";
+        p1.textContent = r.cuando + " · " + (sv.duracion > 1 ? sv.duracion + " horas" : "1 hora");
+        var p2 = document.createElement("p"); p2.style.margin = "4px 0 0";
+        p2.textContent = (sv.nombre || "") + (sv.profesional ? " con " + sv.profesional : "");
+        c.appendChild(p1); c.appendChild(p2); $("vCaja").appendChild(c);
+        $("vTexto").textContent = "Recibimos tu pago. Te mandamos la confirmación a " + r.email + " y antes del encuentro te escribimos con el link de la videollamada." +
+          (sv.incluye_ebook ? " El ebook incluido ya está habilitado: entrá a Mi cuenta con ese mail para leerlo." : "") +
+          " Si no ves el mail, revisá spam o promociones.";
+        if (sv.incluye_ebook) boton("Ir a Mi cuenta", false, "cuenta.html");
+        boton("Volver a la web", !!sv.incluye_ebook, "index.html");
         return;
       }
       if (r.estado === "pagada_sin_turno") {
@@ -243,12 +281,12 @@ a.btn{text-decoration:none}
           llamar("POST", "", { accion: "pagar", token: token }).then(function (j) { location.href = j.url; })
             .catch(function (e) { b.disabled = false; b.textContent = "Intentar pagar de nuevo"; $("vTexto").textContent = e.message; });
         });
-        boton("Elegir otro horario", true, "agenda.html");
+        boton("Elegir otro horario", true, "agenda.html?servicio=" + encodeURIComponent(r.servicio_id || "asesoria"));
         return;
       }
       $("vTitulo").textContent = "El horario se liberó";
       $("vTexto").textContent = "Pasó el tiempo para pagar y el horario quedó libre. Podés elegir uno nuevo.";
-      boton("Elegir horario", false, "agenda.html");
+      boton("Elegir horario", false, "agenda.html?servicio=" + encodeURIComponent(r.servicio_id || "asesoria"));
     }
     function consultar() {
       llamar("GET", "?token=" + encodeURIComponent(token)).then(pintar).catch(function (e) {
@@ -270,7 +308,7 @@ a.btn{text-decoration:none}
       if (new Date(r.inicio) < new Date()) { $("cancTexto").className = ""; $("cancTexto").textContent = "Ese turno ya pasó."; return; }
       $("cancTexto").className = "";
       var faltan = new Date(r.inicio) - new Date();
-      $("cancTexto").textContent = "Hola, " + r.nombre + ". Tu asesoría es el " + r.cuando + ". ¿Querés cancelarla? El horario queda libre para otra persona. " +
+      $("cancTexto").textContent = "Hola, " + r.nombre + ". Tu turno" + (r.servicios ? " de " + r.servicios.nombre + " con " + r.servicios.profesional : "") + " es el " + r.cuando + ". ¿Querés cancelarla? El horario queda libre para otra persona. " +
         (faltan >= 864e5 ? "Como faltan más de 24 horas, te escribimos para devolverte el pago o pasarte a otro horario." : "Faltan menos de 24 horas: te escribimos por mail para ver cómo seguimos.");
       $("cancBoton").hidden = false;
     }).catch(function (e) { $("cancTexto").className = ""; $("cancTexto").textContent = e.message; });
@@ -279,7 +317,7 @@ a.btn{text-decoration:none}
       llamar("POST", "", { accion: "cancelar", token: token }).then(function () {
         b.hidden = true;
         var r = $("cancRes"); r.className = "mensaje ok"; r.hidden = false;
-        r.innerHTML = 'Tu turno quedó cancelado. Te escribimos por mail para seguir. Si querés, <a href="agenda.html" style="color:inherit">elegí otro horario</a>.';
+        r.innerHTML = 'Tu turno quedó cancelado. Te escribimos por mail para seguir. Si querés, <a href="equipo.html" style="color:inherit">elegí otro horario</a>.';
       }).catch(function (e) {
         b.disabled = false; b.textContent = "Sí, cancelar mi turno";
         var r = $("cancRes"); r.className = "mensaje error"; r.textContent = e.message; r.hidden = false;

@@ -12,6 +12,11 @@ on:
         required: true
         type: choice
         options: [bloquear, habilitar]
+      agenda:
+        description: "Agenda de quién"
+        required: true
+        type: choice
+        options: [todas, florentina, carla, marcelo, juliana]
       motivo:
         description: "Motivo (opcional, solo para vos)"
         required: false
@@ -25,18 +30,21 @@ jobs:
       FECHA: ${{ inputs.fecha }}
       ACCION: ${{ inputs.accion }}
       MOTIVO: ${{ inputs.motivo }}
+      AGENDA: ${{ inputs.agenda }}
     steps:
       - name: Aplicar
         run: |
           fecha=$(printf '%s' "$FECHA" | tr -d ' ')
           if ! printf '%s' "$fecha" | grep -Eq '^20[0-9]{2}-[01][0-9]-[0-3][0-9]$'; then echo "::error::La fecha tiene que ser AAAA-MM-DD, por ejemplo 2026-11-20"; exit 1; fi
+          agenda="$AGENDA"; [ "$agenda" = "todas" ] && agenda=""
+          if ! printf '%s' "$agenda" | grep -Eq '^[a-z]*$'; then echo "::error::Agenda inválida"; exit 1; fi
           motivo=$(printf '%s' "$MOTIVO" | tr -d "'\\\\" | cut -c1-100)
           if [ "$ACCION" = "bloquear" ]; then
-            sql="insert into public.dias_bloqueados (fecha, motivo) values ('$fecha', '$motivo') on conflict (fecha) do update set motivo = excluded.motivo;"
+            sql="insert into public.dias_bloqueados (fecha, agenda, motivo) values ('$fecha', '$agenda', '$motivo') on conflict (fecha, agenda) do update set motivo = excluded.motivo;"
           else
-            sql="delete from public.dias_bloqueados where fecha = '$fecha';"
+            sql="delete from public.dias_bloqueados where fecha = '$fecha' and agenda = '$agenda';"
           fi
-          sql="$sql select count(*) as reservas from public.reservas where estado = 'confirmada' and (inicio at time zone 'America/Argentina/Buenos_Aires')::date = '$fecha';"
+          sql="$sql select count(*) as reservas from public.reservas where estado = 'confirmada' and ('$agenda' = '' or agenda = '$agenda') and (inicio at time zone 'America/Argentina/Buenos_Aires')::date = '$fecha';"
           jq -n --arg q "$sql" '{query: $q}' > consulta.json
           codigo=$(curl -sS -o respuesta.json -w "%{http_code}" -X POST \
             "https://api.supabase.com/v1/projects/$PROJECT_REF/database/query" \

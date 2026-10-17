@@ -1,6 +1,6 @@
 name: Probar la agenda
 
-# Hace una reserva de prueba (a nombre de "Prueba del sistema"), revisa que se cree el link de pago y libera el horario.
+# Hace una reserva de prueba por cada servicio, revisa que se cree el link de pago y libera los horarios.
 on:
   workflow_dispatch:
 
@@ -16,25 +16,35 @@ jobs:
       - name: Probar
         run: |
           set -e
-          curl -sS "$FN" -H "apikey: $CLAVE" > turnos.json
-          n=$(jq '.turnos | length' turnos.json || echo 0)
-          echo "::notice::Turnos libres: $n · primero: $(jq -r '.turnos[0]' turnos.json) · último: $(jq -r '.turnos[-1]' turnos.json)"
-          [ "$n" -gt 0 ] || { echo "::error::No devolvió turnos: $(head -c 300 turnos.json)"; exit 1; }
-          ultimo=$(jq -r '.turnos[-1]' turnos.json)
-          jq -n --arg i "$ultimo" '{accion:"reservar", inicio:$i, nombre:"Prueba del sistema", email:"cliente.prueba@example.com", whatsapp:"0000 0000 0000", tema:"Reserva de prueba automática: se cancela sola."}' > r.json
-          curl -sS -X POST "$FN" -H "apikey: $CLAVE" -H "Content-Type: application/json" --data @r.json > res.json
-          echo "::notice::Reserva: $(cat res.json)"
-          url=$(jq -r '.url // empty' res.json)
-          [ -n "$url" ] || { echo "::error::No devolvió link de pago: $(cat res.json)"; exit 1; }
-          echo "::notice::Link de pago de Mercado Pago creado: $(echo "$url" | cut -c1-60)…"
-          token=$(jq -r '.token' res.json)
-          curl -sS "$FN?token=$token" -H "apikey: $CLAVE" > info.json
-          echo "::notice::Estado de la reserva: $(jq -c '{estado, cuando, vence}' info.json)"
-          jq -n --arg t "$token" '{accion:"pagar", token:$t}' > p.json
-          curl -sS -X POST "$FN" -H "apikey: $CLAVE" -H "Content-Type: application/json" --data @p.json | jq -e '.url' > /dev/null && echo "::notice::Reintento de pago: OK"
-          # Limpieza: libera el horario de prueba
-          q="update public.reservas set estado = 'vencida' where token = '$token' returning estado;"
+          servicios=$(curl -sS "$FN?servicios=1" -H "apikey: $CLAVE" | jq -r '.servicios[].id')
+          [ -n "$servicios" ] || { echo "::error::No devolvió servicios"; exit 1; }
+          for s in $servicios; do
+            curl -sS "$FN?servicio=$s" -H "apikey: $CLAVE" > t.json
+            n=$(jq '.turnos | length' t.json)
+            ultimo=$(jq -r '.turnos[-1]' t.json)
+            jq -n --arg i "$ultimo" --arg s "$s" '{accion:"reservar", servicio:$s, inicio:$i, nombre:"Prueba del sistema", email:"cliente.prueba@example.com", whatsapp:"0000 0000 0000", tema:"Prueba automática"}' > r.json
+            curl -sS -X POST "$FN" -H "apikey: $CLAVE" -H "Content-Type: application/json" --data @r.json > res.json
+            url=$(jq -r '.url // empty' res.json)
+            if [ -n "$url" ]; then
+              token=$(jq -r '.token' res.json)
+              ocupado=$(curl -sS "$FN?servicio=$s" -H "apikey: $CLAVE" | jq --arg i "$ultimo" '.turnos | index($i) == null')
+              echo "::notice::$s · $n turnos ($(jq -r '.servicio | "\(.hora_desde)-\(.hora_hasta) hs, $\(.precio)"' t.json)) · primero $(jq -r '.turnos[0]' t.json) · link de pago OK · horario bloqueado mientras paga: $ocupado"
+              q="update public.reservas set estado = 'vencida' where token = '$token' returning estado;"
+              jq -n --arg q "$q" '{query:$q}' > c.json
+              curl -sS -o /dev/null -X POST "https://api.supabase.com/v1/projects/$PROJECT_REF/database/query" \
+                -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -H "Content-Type: application/json" --data @c.json
+            else
+              echo "::error::$s: no se creó el link de pago: $(cat res.json)"
+            fi
+          done
+          # Superposición: la reserva de 2 horas tiene que bloquear la asesoría de 1 hora en el mismo horario
+          ini=$(curl -sS "$FN?servicio=web-automatizada" -H "apikey: $CLAVE" | jq -r '.turnos[-1]')
+          jq -n --arg i "$ini" '{accion:"reservar", servicio:"web-automatizada", inicio:$i, nombre:"Prueba del sistema", email:"cliente.prueba@example.com", whatsapp:"0000 0000 0000"}' > r.json
+          tok=$(curl -sS -X POST "$FN" -H "apikey: $CLAVE" -H "Content-Type: application/json" --data @r.json | jq -r '.token')
+          segunda=$(date -u -d "$ini + 1 hour" +%Y-%m-%dT%H:%M:%S.000Z)
+          libre=$(curl -sS "$FN?servicio=asesoria" -H "apikey: $CLAVE" | jq --arg a "$ini" --arg b "$segunda" '[.turnos | index($a), index($b)] | map(. == null) | all')
+          echo "::notice::Reserva de 2 hs bloquea las dos horas de la asesoría: $libre"
+          q="update public.reservas set estado = 'vencida' where token = '$tok' returning estado;"
           jq -n --arg q "$q" '{query:$q}' > c.json
-          curl -sS -X POST "https://api.supabase.com/v1/projects/$PROJECT_REF/database/query" \
+          curl -sS -o /dev/null -X POST "https://api.supabase.com/v1/projects/$PROJECT_REF/database/query" \
             -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -H "Content-Type: application/json" --data @c.json
-          curl -sS "$FN" -H "apikey: $CLAVE" | jq -e --arg i "$ultimo" '.turnos | index($i) != null' > /dev/null && echo "::notice::El horario de prueba quedó libre de nuevo"

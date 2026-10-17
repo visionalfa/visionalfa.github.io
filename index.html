@@ -43,6 +43,15 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--mostaza);outline-of
 .nav ul a:hover{color:var(--papel);background:rgba(244,243,238,0.08)}
 .nav ul a.cta{background:var(--mostaza);color:var(--verde);font-weight:600}
 .nav ul a.cta:hover{background:#EDB846;color:var(--verde)}
+.nav ul a.equipo-link{}
+.team{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.miembro{background:var(--blanco);border:1px solid var(--linea);border-radius:20px;padding:22px 18px;text-decoration:none;color:var(--tinta);display:flex;flex-direction:column;align-items:flex-start;gap:4px;transition:transform .15s,border-color .15s}
+.miembro:hover{transform:translateY(-3px);border-color:var(--verde)}
+.miembro strong{font-family:var(--titulos);font-weight:800;color:var(--verde);font-size:18px;line-height:1.15;margin-top:10px}
+.miembro small{color:var(--gris);font-size:14.5px;line-height:1.35}
+.miembro .ini{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--titulos);font-weight:800;font-size:19px}
+.ini.i1{background:var(--verde);color:var(--mostaza)}.ini.i2{background:var(--mostaza);color:var(--verde)}.ini.i3{background:#2E5A40;color:var(--papel)}.ini.i4{background:var(--suave);color:var(--verde)}
+@media (max-width:900px){.team{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .nav ul a.gratis-link{color:var(--mostaza);box-shadow:inset 0 0 0 1.5px var(--mostaza)}
 .nav ul a.gratis-link:hover{background:rgba(227,168,43,0.12);color:var(--mostaza)}
 
@@ -210,7 +219,8 @@ footer .legales{display:flex;flex-wrap:wrap;gap:8px 20px;width:100%;font-size:14
   .avatar{max-width:340px}
 }
 @media (max-width:520px){
-  .nav ul a:not(.cta):not(.cuenta):not(.gratis-link){display:none}
+  .nav ul a:not(.cta):not(.cuenta):not(.gratis-link):not(.equipo-link){display:none}
+  .nav ul a.cta{display:none}
   .nav ul{width:100%;justify-content:space-between;flex-wrap:nowrap;gap:6px}
   .nav ul a{padding:0 10px;font-size:14.5px;white-space:nowrap}
   .nav ul a.cuenta{padding:0 4px}
@@ -238,6 +248,7 @@ footer .legales{display:flex;flex-wrap:wrap;gap:8px 20px;width:100%;font-size:14
       <li><a href="#coleccion">Ebooks</a></li>
       <li><a href="#planes">Planes</a></li>
       <li><a class="gratis-link" href="recursos.html">Recursos gratis</a></li>
+      <li><a class="equipo-link" href="equipo.html">Equipo</a></li>
       <li><a href="#quien">Quién soy</a></li>
       <li><a href="#preguntas">Preguntas</a></li>
       <li><a class="cuenta" href="cuenta.html">Mi cuenta</a></li>
@@ -484,10 +495,29 @@ footer .legales{display:flex;flex-wrap:wrap;gap:8px 20px;width:100%;font-size:14
     <div class="texto">
       <div class="eyebrow" style="color:var(--gris)">Quién está detrás</div>
       <h2 id="t-quien" style="font-size:clamp(34px,5vw,52px);color:var(--verde)">¡Hola, soy Flor!</h2>
+      <p style="font-weight:600;color:var(--verde);margin-top:-6px">Florentina Cecchini · Fundadora de Visión Alfa</p>
       <p>Trabajo en ventas y recorro comercios de la Patagonia todos los días. Ahí aprendí lo que de verdad hace que un negocio venda más: entender al cliente, tener los números claros y no dejar pasar ninguna oportunidad.</p>
       <p>Creé Visión Alfa para compartir eso de forma simple, junto con las herramientas de inteligencia artificial que hoy cualquier emprendedor puede usar.</p>
+      <p>Y como emprender no es solo vender, trabajo con un <a href="equipo.html" style="color:var(--verde);font-weight:600">equipo interdisciplinario</a> de profesionales.</p>
       <p class="firma">Flor · Visión Alfa</p>
     </div>
+  </div>
+</section>
+
+<section class="banda" id="equipo" aria-labelledby="t-equipo">
+  <div class="in">
+    <div class="cab">
+      <div class="eyebrow">Equipo interdisciplinario</div>
+      <h2 id="t-equipo">No estás solo: trabajo con un equipo</h2>
+      <p class="bajada">Profesionales de distintas áreas para acompañarte más allá de las ventas. Todas las sesiones se reservan y se pagan desde la web.</p>
+    </div>
+    <div class="team">
+      <a class="miembro" href="equipo.html"><span class="ini i1">FC</span><strong>Florentina Cecchini</strong><small>Emprendimiento, ventas e IA</small></a>
+      <a class="miembro" href="equipo.html"><span class="ini i2">CT</span><strong>Carla Tanzi</strong><small>Psicóloga · Orientación vocacional</small></a>
+      <a class="miembro" href="equipo.html"><span class="ini i3">MD</span><strong>Marcelo De los Santos</strong><small>Coach ontológico · Equipos</small></a>
+      <a class="miembro" href="equipo.html"><span class="ini i4">JC</span><strong>Juliana Cecchini</strong><small>Asuntos públicos e inversión social</small></a>
+    </div>
+    <p style="margin-top:26px"><a class="btn btn-verde" href="equipo.html">Conocer al equipo y reservar</a></p>
   </div>
 </section>
 
@@ -528,5 +558,73 @@ footer .legales{display:flex;flex-wrap:wrap;gap:8px 20px;width:100%;font-size:14
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
 <script src="js/va.js"></script>
+<a class="nube" id="nube" href="agenda.html?servicio=web-automatizada" hidden aria-label="¿Te gusta lo que ves? Te enseño a hacer páginas como esta, con todo automatizado. 2 horas de asesoría más el ebook paso a paso por $150.000">
+  <svg class="nube-forma" viewBox="0 0 260 170" aria-hidden="true" preserveAspectRatio="none"><path d="M58 160 C24 160 6 138 8 114 C10 92 28 78 48 78 C44 48 68 24 98 26 C114 8 146 4 168 20 C186 10 214 16 224 40 C246 44 258 64 254 86 C258 112 244 134 220 140 C214 156 196 162 178 160 Z"/></svg>
+  <span class="nube-txt">
+    <strong>¿Te gusta lo que ves?</strong>
+    <span>Te enseño a hacer una web como esta, con todo automatizado.</span>
+    <em>2 hs + ebook · $150.000 →</em>
+  </span>
+</a>
+<button class="nube-x" id="nubeX" type="button" hidden aria-label="Cerrar">×</button>
+<style>
+.nube{position:fixed;left:0;top:0;z-index:60;width:250px;height:164px;display:block;text-decoration:none;color:var(--verde);will-change:transform;filter:drop-shadow(0 10px 22px rgba(22,35,27,.22));transition:filter .2s}
+.nube:hover{filter:drop-shadow(0 14px 28px rgba(22,35,27,.32))}
+.nube-forma{position:absolute;inset:0;width:100%;height:100%}
+.nube-forma path{fill:#FFFFFF;stroke:var(--mostaza);stroke-width:3}
+.nube-txt{position:absolute;left:38px;right:26px;top:50px;bottom:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:3px;line-height:1.2}
+.nube-txt strong{font-family:var(--titulos);font-weight:800;font-size:17px;letter-spacing:-.01em}
+.nube-txt span{font-size:12.5px;color:var(--gris)}
+.nube-txt em{font-style:normal;font-weight:600;font-size:12.5px;background:var(--verde);color:var(--papel);border-radius:999px;padding:4px 10px;margin-top:3px;white-space:nowrap}
+.nube:focus-visible{outline:3px solid var(--mostaza);outline-offset:4px;border-radius:30px}
+.nube-x{position:fixed;left:0;top:0;z-index:61;width:30px;height:30px;border-radius:50%;border:0;background:var(--verde);color:var(--papel);font-size:19px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;will-change:transform}
+@media (max-width:520px){.nube{width:220px;height:146px}.nube-txt{left:32px;right:22px;top:44px;bottom:12px;gap:2px}.nube-txt strong{font-size:14px}.nube-txt span{font-size:11px}.nube-txt em{font-size:11px;padding:3px 9px}}
+</style>
+<script>
+(function () {
+  var nube = document.getElementById("nube"), x = document.getElementById("nubeX");
+  try { if (sessionStorage.getItem("va-nube") === "cerrada") return; } catch (e) {}
+  var quieto = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var px = 0, py = 0, vx = 0.45, vy = 0.3, pausa = false, activo = true;
+  function limites() {
+    var w = innerWidth, h = innerHeight, nw = nube.offsetWidth, nh = nube.offsetHeight;
+    var movil = w <= 520;
+    // En el celular se mueve por la parte de abajo para no tapar el contenido.
+    return { x0: 8, x1: Math.max(8, w - nw - 8), y0: movil ? h - nh - 150 : 90, y1: h - nh - 12 };
+  }
+  function ubicar() {
+    nube.style.transform = "translate(" + px + "px," + py + "px)";
+    x.style.transform = "translate(" + (px + nube.offsetWidth - 34) + "px," + (py + 18) + "px)";
+  }
+  function paso() {
+    if (!activo) return;
+    if (!pausa) {
+      var l = limites();
+      px += vx; py += vy;
+      if (px <= l.x0 || px >= l.x1) { vx = -vx; px = Math.min(Math.max(px, l.x0), l.x1); }
+      if (py <= l.y0 || py >= l.y1) { vy = -vy; py = Math.min(Math.max(py, l.y0), l.y1); }
+      ubicar();
+    }
+    requestAnimationFrame(paso);
+  }
+  function mostrar() {
+    nube.hidden = false; x.hidden = false;
+    var l = limites();
+    px = l.x1; py = l.y1; ubicar();
+    if (!quieto) requestAnimationFrame(paso);
+  }
+  nube.addEventListener("mouseenter", function () { pausa = true; });
+  nube.addEventListener("mouseleave", function () { pausa = false; });
+  nube.addEventListener("focus", function () { pausa = true; });
+  nube.addEventListener("blur", function () { pausa = false; });
+  addEventListener("resize", function () { var l = limites(); px = Math.min(px, l.x1); py = Math.min(Math.max(py, l.y0), l.y1); ubicar(); });
+  x.addEventListener("click", function () {
+    activo = false; nube.hidden = true; x.hidden = true;
+    try { sessionStorage.setItem("va-nube", "cerrada"); } catch (e) {}
+  });
+  setTimeout(mostrar, 3500);
+})();
+</script>
+
 </body>
 </html>
