@@ -28,6 +28,9 @@
 .trampa{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 .vacio{color:var(--gris)}
 .cargando{color:var(--gris);font-size:16px}
+.nota{font-size:15px;color:var(--gris);margin:0}
+a.btn{text-decoration:none}
+.btn-sec{background:transparent;color:var(--verde);border:2px solid var(--verde)}
 </style>
 </head>
 <body>
@@ -45,7 +48,7 @@
 <section id="reservar">
   <h1>Reservá tu asesoría</h1>
   <p>Revisamos juntos tu emprendimiento y armamos los próximos pasos.</p>
-  <div class="datos"><span><b>1 hora</b> por videollamada</span><span><b>$60.000</b></span><span>Lunes a viernes de <b>17 a 20 hs</b></span></div>
+  <div class="datos"><span><b>1 hora</b> por videollamada</span><span><b>$60.000</b> con Mercado Pago</span><span>Lunes a viernes de <b>17 a 20 hs</b></span></div>
 
   <div class="paso"><span class="n">1</span>Elegí el día</div>
   <p class="cargando" id="cargando">Buscando horarios disponibles…</p>
@@ -75,18 +78,19 @@
         <textarea id="tema" name="tema" maxlength="1000"></textarea>
       </label>
       <div class="trampa" aria-hidden="true"><label>No completar <input name="sitio" tabindex="-1" autocomplete="off"></label></div>
-      <button class="btn" type="submit" id="enviar">Confirmar reserva</button>
+      <p class="nota">Te guardamos el horario <strong>30 minutos</strong> mientras pagás. El turno queda confirmado cuando se aprueba el pago.</p>
+      <button class="btn" type="submit" id="enviar">Ir a pagar $60.000</button>
+      <p class="nota" style="margin:0">Pagás con Mercado Pago: tarjeta de crédito o débito, o dinero en cuenta.</p>
     </form>
   </div>
   <div id="error" class="mensaje error" hidden style="margin-top:18px"></div>
 </section>
 
-<section id="listo" hidden>
-  <h1>¡Listo, ya tenés tu turno!</h1>
-  <div class="mensaje ok"><p style="margin:0;font-size:19px" id="listoCuando"></p></div>
-  <p style="margin-top:18px">Te mandamos la confirmación a <strong id="listoMail"></strong>. Antes del encuentro te escribimos con el link de la videollamada y los datos para el pago.</p>
-  <p>Si no te llega, revisá la carpeta de spam o promociones.</p>
-  <a class="btn" href="index.html">Volver a la web</a>
+<section id="vuelta" hidden>
+  <h1 id="vTitulo">Confirmando tu pago…</h1>
+  <div id="vCaja"></div>
+  <p id="vTexto" style="margin-top:18px"></p>
+  <div id="vBotones" style="display:flex;flex-wrap:wrap;gap:12px"></div>
 </section>
 
 <section id="cancelar" hidden>
@@ -184,32 +188,90 @@
     if (f.nombre.value.trim().length < 2) { mostrarError("Completá tu nombre."); f.nombre.focus(); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.value.trim())) { mostrarError("Revisá el mail: parece que le falta algo."); f.email.focus(); return; }
     if (f.whatsapp.value.replace(/\D/g, "").length < 8) { mostrarError("Dejanos un WhatsApp con código de área."); f.whatsapp.focus(); return; }
-    boton.disabled = true; boton.textContent = "Reservando…";
+    boton.disabled = true; boton.textContent = "Preparando el pago…";
     llamar("POST", "", {
       accion: "reservar", inicio: elegido,
       nombre: f.nombre.value.trim(), email: f.email.value.trim(),
       whatsapp: f.whatsapp.value.trim(), tema: f.tema.value.trim(), sitio: f.sitio.value
-    }).then(function () {
-      $("reservar").hidden = true;
-      $("listoCuando").textContent = largo(elegido) + " · 1 hora";
-      $("listoMail").textContent = f.email.value.trim();
-      $("listo").hidden = false; window.scrollTo(0, 0);
+    }).then(function (j) {
+      location.href = j.url;
     }).catch(function (err) {
-      boton.disabled = false; boton.textContent = "Confirmar reserva";
+      boton.disabled = false; boton.textContent = "Ir a pagar $60.000";
       mostrarError(err.message);
       if (err.status === 409) cargar();
     });
   });
 
+  // Vuelta desde Mercado Pago
+  function boton(texto, sec, accion) {
+    var b = document.createElement(typeof accion === "string" ? "a" : "button");
+    b.className = "btn" + (sec ? " btn-sec" : ""); b.textContent = texto;
+    if (typeof accion === "string") b.href = accion; else { b.type = "button"; b.addEventListener("click", accion); }
+    $("vBotones").appendChild(b); return b;
+  }
+  function vuelta(token, resultado) {
+    $("reservar").hidden = true; $("vuelta").hidden = false;
+    var intentos = 0;
+    function pintar(r) {
+      $("vBotones").innerHTML = ""; $("vCaja").innerHTML = ""; $("vTexto").textContent = "";
+      if (r.estado === "confirmada") {
+        $("vTitulo").textContent = "¡Listo, tu asesoría está confirmada!";
+        var c = document.createElement("div"); c.className = "mensaje ok";
+        c.innerHTML = '<p style="margin:0;font-size:19px"></p>'; c.firstChild.textContent = r.cuando + " · 1 hora";
+        $("vCaja").appendChild(c);
+        $("vTexto").textContent = "Recibimos tu pago. Te mandamos la confirmación a " + r.email + " y antes del encuentro te escribimos con el link de la videollamada. Si no ves el mail, revisá spam o promociones.";
+        boton("Volver a la web", false, "index.html");
+        return;
+      }
+      if (r.estado === "pagada_sin_turno") {
+        $("vTitulo").textContent = "Recibimos tu pago";
+        $("vTexto").textContent = "El horario se ocupó mientras pagabas. Te vamos a escribir a " + r.email + " para elegir otro horario o devolverte el dinero.";
+        return;
+      }
+      if (r.estado === "pendiente" && resultado === "ok" && intentos < 20) {
+        $("vTitulo").textContent = "Confirmando tu pago…";
+        $("vTexto").textContent = "Esperamos la confirmación de Mercado Pago. No cierres esta página.";
+        intentos++; setTimeout(consultar, 3000); return;
+      }
+      if (r.estado === "pendiente") {
+        $("vTitulo").textContent = resultado === "ok" ? "Todavía estamos esperando el pago" : "El pago no se completó";
+        $("vTexto").textContent = resultado === "ok"
+          ? "Si ya pagaste, te llega un mail apenas Mercado Pago lo confirme. Si no, podés volver a intentarlo: tu horario (" + r.cuando + ") sigue guardado unos minutos."
+          : "Tu horario (" + r.cuando + ") sigue guardado unos minutos. Podés intentar de nuevo con otro medio de pago.";
+        var b = boton("Intentar pagar de nuevo", false, function () {
+          b.disabled = true; b.textContent = "Preparando el pago…";
+          llamar("POST", "", { accion: "pagar", token: token }).then(function (j) { location.href = j.url; })
+            .catch(function (e) { b.disabled = false; b.textContent = "Intentar pagar de nuevo"; $("vTexto").textContent = e.message; });
+        });
+        boton("Elegir otro horario", true, "agenda.html");
+        return;
+      }
+      $("vTitulo").textContent = "El horario se liberó";
+      $("vTexto").textContent = "Pasó el tiempo para pagar y el horario quedó libre. Podés elegir uno nuevo.";
+      boton("Elegir horario", false, "agenda.html");
+    }
+    function consultar() {
+      llamar("GET", "?token=" + encodeURIComponent(token)).then(pintar).catch(function (e) {
+        $("vTitulo").textContent = "No encontramos tu reserva"; $("vTexto").textContent = e.message;
+      });
+    }
+    consultar();
+  }
+
   // Cancelación desde el link del mail
-  var token = new URLSearchParams(location.search).get("cancelar");
-  if (token) {
+  var qs = new URLSearchParams(location.search);
+  var token = qs.get("cancelar");
+  if (qs.get("r")) {
+    vuelta(qs.get("r"), qs.get("pago") || "ok");
+  } else if (token) {
     $("reservar").hidden = true; $("cancelar").hidden = false;
     llamar("GET", "?token=" + encodeURIComponent(token)).then(function (r) {
-      if (r.estado === "cancelada") { $("cancTexto").className = ""; $("cancTexto").textContent = "Este turno ya estaba cancelado."; return; }
+      if (r.estado !== "confirmada") { $("cancTexto").className = ""; $("cancTexto").textContent = "Este turno no está activo (ya fue cancelado o no se llegó a pagar)."; return; }
       if (new Date(r.inicio) < new Date()) { $("cancTexto").className = ""; $("cancTexto").textContent = "Ese turno ya pasó."; return; }
       $("cancTexto").className = "";
-      $("cancTexto").textContent = "Hola, " + r.nombre + ". Tu asesoría es el " + r.cuando + ". ¿Querés cancelarla? El horario queda libre para otra persona.";
+      var faltan = new Date(r.inicio) - new Date();
+      $("cancTexto").textContent = "Hola, " + r.nombre + ". Tu asesoría es el " + r.cuando + ". ¿Querés cancelarla? El horario queda libre para otra persona. " +
+        (faltan >= 864e5 ? "Como faltan más de 24 horas, te escribimos para devolverte el pago o pasarte a otro horario." : "Faltan menos de 24 horas: te escribimos por mail para ver cómo seguimos.");
       $("cancBoton").hidden = false;
     }).catch(function (e) { $("cancTexto").className = ""; $("cancTexto").textContent = e.message; });
     $("cancBoton").addEventListener("click", function () {
@@ -217,7 +279,7 @@
       llamar("POST", "", { accion: "cancelar", token: token }).then(function () {
         b.hidden = true;
         var r = $("cancRes"); r.className = "mensaje ok"; r.hidden = false;
-        r.innerHTML = 'Tu turno quedó cancelado. Si querés, <a href="agenda.html" style="color:inherit">elegí otro horario</a>.';
+        r.innerHTML = 'Tu turno quedó cancelado. Te escribimos por mail para seguir. Si querés, <a href="agenda.html" style="color:inherit">elegí otro horario</a>.';
       }).catch(function (e) {
         b.disabled = false; b.textContent = "Sí, cancelar mi turno";
         var r = $("cancRes"); r.className = "mensaje error"; r.textContent = e.message; r.hidden = false;

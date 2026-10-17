@@ -1,6 +1,7 @@
 // Recibe los avisos de Mercado Pago y da o quita accesos según corresponda.
 // Nunca confía en los datos del aviso: siempre consulta el pago real en la API de Mercado Pago.
 import { admin, json, mp } from "../_shared/comun.ts";
+import { anularPorDevolucion, confirmarPorPago } from "../_shared/reservas.ts";
 
 async function firmaValida(req: Request, dataId: string | null): Promise<boolean> {
   const secreto = Deno.env.get("MP_WEBHOOK_SECRET");
@@ -68,6 +69,26 @@ Deno.serve(async (req) => {
         return json({ error: "no se pudo consultar el pago" }, 500); // Mercado Pago reintenta
       }
       const pago = await r.json();
+
+      // Pago de una asesoría de la agenda: "reserva|<id>"
+      const ref = String(pago.external_reference ?? "");
+      if (ref.startsWith("reserva|")) {
+        const reservaId = ref.slice(8);
+        if (!/^[0-9a-f-]{36}$/i.test(reservaId)) return json({ ok: true });
+        await db.from("pagos").upsert({
+          id: String(pago.id), user_id: null, producto_id: "asesoria", estado: pago.status,
+          monto: pago.transaction_amount,
+          detalle: { reserva_id: reservaId, status_detail: pago.status_detail, payment_type: pago.payment_type_id },
+          actualizado: ahora,
+        });
+        if (pago.status === "approved") {
+          await confirmarPorPago(db, reservaId, String(pago.id), Number(pago.transaction_amount));
+        } else if (["refunded", "charged_back", "cancelled"].includes(pago.status)) {
+          await anularPorDevolucion(db, reservaId);
+        }
+        return json({ ok: true });
+      }
+
       const { userId, productoId } = separarReferencia(pago.external_reference);
 
       await db.from("pagos").upsert({
