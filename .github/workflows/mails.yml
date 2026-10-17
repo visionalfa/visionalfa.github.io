@@ -1,0 +1,34 @@
+name: Actualizar mails de la cuenta
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "supabase/templates/**"
+      - ".github/workflows/mails.yml"
+  workflow_dispatch:
+
+jobs:
+  mails:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      PROJECT_REF: futhqkqfjuuemhcxzakn
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cargar asuntos y mensajes en castellano
+        run: |
+          jq -n \
+            --arg s1 "Confirmá tu mail para entrar a Visión Alfa" \
+            --rawfile b1 supabase/templates/confirmacion.html \
+            --arg s2 "Tu link para entrar a Visión Alfa" \
+            --rawfile b2 supabase/templates/ingreso.html \
+            '{mailer_subjects_confirmation: $s1, mailer_templates_confirmation_content: $b1,
+              mailer_subjects_magic_link: $s2, mailer_templates_magic_link_content: $b2}' > cuerpo.json
+          codigo=$(curl -sS -o respuesta.json -w "%{http_code}" -X PATCH \
+            "https://api.supabase.com/v1/projects/$PROJECT_REF/config/auth" \
+            -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+            -H "Content-Type: application/json" \
+            --data @cuerpo.json)
+          echo "Respuesta: $codigo"
+          if [ "$codigo" -ge 300 ]; then cat respuesta.json; exit 1; fi
