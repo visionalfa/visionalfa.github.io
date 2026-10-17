@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Botón de arrepentimiento · Visión Alfa</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/legal.css">
+</head>
+<body>
+<nav class="nav" aria-label="Principal">
+  <div class="in">
+    <a class="marca" href="index.html">
+      <svg width="34" height="26" viewBox="0 8 64 48" aria-hidden="true"><path d="M4 14 L17 50 L30 14" fill="none" stroke="#F4F3EE" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 50 L47 14 L60 50" fill="none" stroke="#E3A82B" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      visión alfa
+    </a>
+    <a class="volver" href="index.html">← Volver a la web</a>
+  </div>
+</nav>
+<main><div class="in">
+<h1>Botón de arrepentimiento</h1>
+<p>Si compraste en Visión Alfa en los últimos 10 días corridos, podés pedir la revocación de tu compra completando este formulario. No hace falta que entres a tu cuenta ni que expliques el motivo.</p>
+<div class="caja">
+  <p style="margin:0">Al enviarlo te mostramos un <strong>código de trámite</strong>. Guardalo: con ese código hacés el seguimiento. Te contactamos por mail para confirmar los pasos. Si se trata de un ebook al que ya accediste, revisá el punto 7 de los <a href="terminos.html">términos y condiciones</a>.</p>
+</div>
+<form id="form" novalidate>
+  <label for="nombre">Nombre y apellido
+    <input id="nombre" name="nombre" autocomplete="name" required maxlength="120">
+  </label>
+  <label for="email">Mail con el que compraste
+    <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="160">
+  </label>
+  <label for="operacion">Número de operación de Mercado Pago o fecha de compra <span>Opcional, nos ayuda a encontrarla más rápido.</span>
+    <input id="operacion" name="operacion" maxlength="120">
+  </label>
+  <label for="detalle">Qué compraste o algo que quieras contarnos <span>Opcional.</span>
+    <textarea id="detalle" name="detalle" maxlength="1000"></textarea>
+  </label>
+  <button class="btn" type="submit" id="enviar">Enviar pedido de arrepentimiento</button>
+</form>
+<div id="resultado" hidden style="margin-top:20px"></div>
+</div></main>
+<footer><div class="in">
+  <span>© Visión Alfa</span>
+  <a href="terminos.html">Términos y condiciones</a>
+  <a href="privacidad.html">Privacidad</a>
+  <a href="arrepentimiento.html">Botón de arrepentimiento</a>
+  <a href="https://www.argentina.gob.ar/produccion/defensadelconsumidor/formulario" target="_blank" rel="noopener">Defensa de las y los Consumidores. Para reclamos ingresá acá</a>
+</div></footer>
+<script>
+(function () {
+  var URL_FN = "https://futhqkqfjuuemhcxzakn.supabase.co/functions/v1/arrepentimiento";
+  var CLAVE = "sb_publishable_x20gCAkWL2NsZG84wiWgGQ_hlchdMOF";
+  var form = document.getElementById("form");
+  var res = document.getElementById("resultado");
+  var boton = document.getElementById("enviar");
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    var datos = {
+      nombre: form.nombre.value.trim(),
+      email: form.email.value.trim(),
+      operacion: form.operacion.value.trim(),
+      detalle: form.detalle.value.trim()
+    };
+    boton.disabled = true;
+    boton.textContent = "Enviando…";
+    try {
+      var r = await fetch(URL_FN, { method: "POST", headers: { "Content-Type": "application/json", apikey: CLAVE }, body: JSON.stringify(datos) });
+      var j = await r.json().catch(function () { return {}; });
+      if (!r.ok) throw new Error(j.error || "No pudimos registrar el pedido. Probá de nuevo.");
+      form.hidden = true;
+      res.className = "mensaje ok";
+      res.innerHTML = "";
+      var t1 = document.createElement("p"); t1.style.margin = "0"; t1.textContent = "Recibimos tu pedido. Tu código de trámite es:";
+      var c = document.createElement("span"); c.className = "codigo"; c.textContent = j.codigo;
+      var t2 = document.createElement("p"); t2.style.margin = "0"; t2.textContent = "Guardalo (podés sacarle una captura). Te vamos a escribir a " + datos.email + " para seguir con el trámite.";
+      res.appendChild(t1); res.appendChild(c); res.appendChild(t2);
+      res.hidden = false;
+    } catch (err) {
+      res.className = "mensaje error";
+      res.textContent = err.message;
+      res.hidden = false;
+      boton.disabled = false;
+      boton.textContent = "Enviar pedido de arrepentimiento";
+    }
+  });
+})();
+</script>
+</body>
+</html>

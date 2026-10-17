@@ -44,3 +44,4 @@ jobs:
           supabase functions deploy checkout   --no-verify-jwt --project-ref "$PROJECT_REF"
           supabase functions deploy mp-webhook --no-verify-jwt --project-ref "$PROJECT_REF"
           supabase functions deploy leer       --no-verify-jwt --project-ref "$PROJECT_REF"
+          supabase functions deploy arrepentimiento --no-verify-jwt --project-ref "$PROJECT_REF"
