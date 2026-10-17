@@ -129,27 +129,6 @@ Deno.serve(async (req) => {
     return json({ ok: true, conTiempo });
   }
 
-  // ---------- Diagnóstico temporal ----------
-  if (body.accion === "diagnostico" && body.clave === "va-diag-1017") {
-    const base = { items: [{ id: "asesoria", title: "Prueba", quantity: 1, unit_price: 100, currency_id: "ARS" }] };
-    const vence = new Date(Date.now() + 27e5 - 3 * 3600e3).toISOString().replace("Z", "-03:00");
-    const casos: Record<string, unknown> = {
-      minimo: base,
-      con_ref: { ...base, external_reference: "reserva|x" },
-      con_excluidos: { ...base, payment_methods: { excluded_payment_types: [{ id: "ticket" }, { id: "atm" }] } },
-      con_vence: { ...base, expires: true, expiration_date_to: vence },
-      con_payer: { ...base, payer: { email: "cliente.prueba@example.com", name: "Prueba" } },
-    };
-    const out: Record<string, string> = {};
-    const me = await mp("/users/me"); out.users_me = String(me.status);
-    for (const [k, v] of Object.entries(casos)) {
-      const res = await mp("/checkout/preferences", { method: "POST", body: JSON.stringify(v) });
-      const d = await res.json().catch(() => ({}));
-      out[k] = `${res.status} ${d.message ?? (d.init_point ? "ok" : "")}`.slice(0, 120);
-    }
-    return json(out);
-  }
-
   // ---------- Nuevo link de pago para una reserva pendiente ----------
   if (body.accion === "pagar") {
     const token = texto(body.token, 40);
