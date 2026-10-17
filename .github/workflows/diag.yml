@@ -7,3 +7,9 @@ jobs:
       - run: |
           r=$(curl -sS -X POST https://futhqkqfjuuemhcxzakn.supabase.co/functions/v1/agenda -H "apikey: sb_publishable_x20gCAkWL2NsZG84wiWgGQ_hlchdMOF" -H "Content-Type: application/json" -d '{"accion":"diagnostico","clave":"va-diag-1017"}')
           echo "::notice::$r"
+          s=$(curl -sS "https://api.supabase.com/v1/projects/futhqkqfjuuemhcxzakn/secrets" -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" | jq -r '[.[].name] | join(",")')
+          echo "::notice::Secretos: $s"
+          q='select id, estado, monto, creado from public.pagos order by creado desc limit 5;'
+          jq -n --arg q "$q" '{query:$q}' > c.json
+          p=$(curl -sS -X POST "https://api.supabase.com/v1/projects/futhqkqfjuuemhcxzakn/database/query" -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" -H "Content-Type: application/json" --data @c.json | jq -c .)
+          echo "::notice::Pagos: $p"
