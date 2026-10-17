@@ -130,7 +130,9 @@ a.btn{text-decoration:none}
   function rangoDias(d) {
     d = (d || [1, 2, 3, 4, 5]).slice().sort();
     if (d.join() === "1,2,3,4,5") return "Lunes a viernes";
-    return d.map(function (x) { return DIAS[x]; }).join(", ");
+    var n = d.map(function (x) { return DIAS[x]; });
+    var t = n.length > 1 ? n.slice(0, -1).join(", ") + " y " + n[n.length - 1] : n[0];
+    return t.charAt(0).toUpperCase() + t.slice(1);
   }
   function pintarServicio(sv) {
     if (!sv) return;
