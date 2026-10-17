@@ -56,7 +56,7 @@ export async function confirmarPorPago(db: SupabaseClient, reservaId: string, pa
     return false;
   }
   const conEbook = r.servicios?.incluye_ebook ? await darEbook(db, r.email, r.servicios.incluye_ebook, pagoId) : false;
-  await mailsConfirmacion({ ...r, pago_id: pagoId, monto }, conEbook);
+  await mailsConfirmacion({ ...r, pago_id: pagoId, monto }, conEbook, await mailProfesional(db, r.agenda));
   return true;
 }
 
@@ -94,7 +94,14 @@ export async function anularPorDevolucion(db: SupabaseClient, reservaId: string)
   if (r?.pago_id) await db.from("accesos").update({ estado: "inactivo" }).eq("mp_referencia", `reserva_${r.pago_id}`);
 }
 
-async function mailsConfirmacion(r: Reserva, conEbook: boolean) {
+/** Mail personal del profesional dueño de la agenda (si está cargado). */
+export async function mailProfesional(db: SupabaseClient, agenda: string | null | undefined): Promise<string | null> {
+  if (!agenda) return null;
+  const { data } = await db.from("agenda_contactos").select("email").eq("agenda", agenda).maybeSingle();
+  return data?.email ?? null;
+}
+
+async function mailsConfirmacion(r: Reserva, conEbook: boolean, profesionalMail: string | null) {
   const sv = r.servicios ?? {};
   const prof = sv.profesional ?? "Visión Alfa";
   const nombreSv = sv.nombre ?? "Asesoría";
@@ -122,6 +129,26 @@ async function mailsConfirmacion(r: Reserva, conEbook: boolean) {
 <p style="color:#6B7069;font-size:14px">Respondé este mail para mandarle el link de la videollamada. El archivo adjunto lo agrega a tu calendario.</p>`),
     ics: ics(r.id, r.inicio, `${nombreSv} con ${r.nombre}`, `Profesional: ${prof}\nMail: ${r.email} · WhatsApp: ${r.whatsapp}\nTema: ${r.tema ?? ""}`, horas),
   });
+
+  // Aviso al mail personal del profesional
+  if (profesionalMail) {
+    const primerNombre = String(prof).split(" ")[0];
+    await enviar({
+      para: profesionalMail, responderA: r.email,
+      asunto: `Nueva sesión reservada: ${r.nombre} · ${c}`,
+      texto: `Hola, ${primerNombre}:\n\nTenés una nueva sesión reservada y pagada desde Visión Alfa.\n\nServicio: ${nombreSv} (${dur})\nCuándo: ${c} (hora de Argentina)\nNombre: ${r.nombre}\nMail: ${r.email}\nWhatsApp: ${r.whatsapp}\nTema: ${r.tema || "(no indicó)"}\n\nRespondé este mail para escribirle directamente y mandale el link de la videollamada.\n\nVisión Alfa`,
+      html: plantilla("Nueva sesión reservada", `
+<p>Hola, ${escapar(primerNombre)}:</p>
+<p>Tenés una nueva sesión reservada y pagada desde Visión Alfa.</p>
+<p style="font-size:18px;margin:0 0 6px"><strong>${escapar(c)}</strong> · ${dur}</p>
+<p style="margin:0 0 16px">${escapar(nombreSv)}</p>
+<p style="margin:0"><strong>Nombre:</strong> ${escapar(r.nombre)}<br><strong>Mail:</strong> ${escapar(r.email)}<br>
+<strong>WhatsApp:</strong> <a href="https://wa.me/${wa}">${escapar(r.whatsapp ?? "")}</a></p>
+<p><strong>Tema:</strong><br>${escapar(r.tema || "(no indicó)").replace(/\n/g, "<br>")}</p>
+<p style="color:#6B7069;font-size:14px">Respondé este mail para escribirle directamente y mandale el link de la videollamada. El archivo adjunto lo agrega a tu calendario.</p>`),
+      ics: ics(r.id, r.inicio, `${nombreSv} con ${r.nombre}`, `Mail: ${r.email} · WhatsApp: ${r.whatsapp}\nTema: ${r.tema ?? ""}`, horas),
+    });
+  }
 
   await enviar({
     para: r.email,

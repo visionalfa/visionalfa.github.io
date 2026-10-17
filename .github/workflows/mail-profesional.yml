@@ -1,0 +1,42 @@
+name: Mail de un profesional
+
+# Guarda (o cambia) el mail personal donde cada profesional recibe el aviso de sus reservas.
+# El mail queda guardado de forma privada en la base de datos, no en la web.
+on:
+  workflow_dispatch:
+    inputs:
+      agenda:
+        description: "Profesional"
+        required: true
+        type: choice
+        options: [carla, marcelo, juliana, florentina]
+      email:
+        description: "Mail personal (vacío = dejar de enviarle avisos)"
+        required: false
+
+jobs:
+  mail:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      PROJECT_REF: futhqkqfjuuemhcxzakn
+      AGENDA: ${{ inputs.agenda }}
+      EMAIL: ${{ inputs.email }}
+    steps:
+      - name: Guardar
+        run: |
+          email=$(printf '%s' "$EMAIL" | tr 'A-Z' 'a-z' | tr -d ' ')
+          [ -n "$email" ] && echo "::add-mask::$email"
+          if ! printf '%s' "$AGENDA" | grep -Eq '^[a-z]+$'; then echo "::error::Profesional inválido"; exit 1; fi
+          if [ -z "$email" ]; then
+            sql="delete from public.agenda_contactos where agenda = '$AGENDA';"
+          else
+            if ! printf '%s' "$email" | grep -Eq '^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$'; then echo "::error::El mail no es válido"; exit 1; fi
+            sql="insert into public.agenda_contactos (agenda, email) values ('$AGENDA', '$email') on conflict (agenda) do update set email = excluded.email;"
+          fi
+          jq -n --arg q "$sql" '{query: $q}' > consulta.json
+          codigo=$(curl -sS -o respuesta.json -w "%{http_code}" -X POST \
+            "https://api.supabase.com/v1/projects/$PROJECT_REF/database/query" \
+            -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -H "Content-Type: application/json" --data @consulta.json)
+          if [ "$codigo" -ge 300 ]; then echo "::error::Supabase respondio $codigo"; exit 1; fi
+          echo "::notice::Listo: avisos de $AGENDA actualizados"

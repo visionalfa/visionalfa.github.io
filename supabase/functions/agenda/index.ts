@@ -7,7 +7,7 @@
 // POST {accion:"cancelar"} → cancela con el token que llega en el mail
 import { admin, cors, json, mp, SITE_URL } from "../_shared/comun.ts";
 import { AVISOS, enviar, escapar, plantilla } from "../_shared/mail.ts";
-import { cuando, ESPERA_PAGO_MIN, liberarVencidas } from "../_shared/reservas.ts";
+import { cuando, ESPERA_PAGO_MIN, liberarVencidas, mailProfesional } from "../_shared/reservas.ts";
 
 const OFFSET_AR = 3;                   // Argentina = UTC-3, sin horario de verano
 const ANTICIPACION_MS = 24 * 3600e3;   // mínimo un día de anticipación
@@ -152,6 +152,15 @@ Deno.serve(async (req) => {
       texto: `${data.nombre} (${data.email}, WhatsApp ${data.whatsapp}) canceló "${sv.nombre}" con ${sv.profesional} del ${c}.\n${nota}\nOperación de Mercado Pago: ${data.pago_id ?? "-"}\nEl horario quedó libre otra vez.`,
       html: plantilla("Se canceló un turno", `<p><strong>${escapar(data.nombre)}</strong> (${escapar(data.email)}, WhatsApp ${escapar(data.whatsapp ?? "")}) canceló <strong>${escapar(sv.nombre ?? "")}</strong> con ${escapar(sv.profesional ?? "")} del <strong>${escapar(c)}</strong>.</p><p><strong>${nota}</strong></p><p>Operación de Mercado Pago: ${escapar(data.pago_id ?? "-")}</p><p style="color:#6B7069;font-size:14px">El horario quedó libre otra vez. Respondé este mail para escribirle.</p>`),
     });
+    const profMail = await mailProfesional(db, data.agenda);
+    if (profMail) {
+      await enviar({
+        para: profMail, responderA: data.email,
+        asunto: `Sesión cancelada: ${data.nombre} · ${c}`,
+        texto: `${data.nombre} canceló la sesión de "${sv.nombre}" del ${c}. El horario quedó libre otra vez en tu agenda.`,
+        html: plantilla("Se canceló una sesión", `<p><strong>${escapar(data.nombre)}</strong> canceló la sesión de <strong>${escapar(sv.nombre ?? "")}</strong> del <strong>${escapar(c)}</strong>.</p><p>El horario quedó libre otra vez en tu agenda.</p>`),
+      });
+    }
     return json({ ok: true, conTiempo });
   }
 
