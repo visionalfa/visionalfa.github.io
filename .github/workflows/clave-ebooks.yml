@@ -1,0 +1,39 @@
+name: Crear clave de los ebooks
+
+# Genera, una sola vez, el par de claves que protege los ebooks.
+# La clave privada se guarda directo en Supabase (nunca se muestra) y la pública queda en el repositorio.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  clave:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      PROJECT_REF: futhqkqfjuuemhcxzakn
+    steps:
+      - uses: actions/checkout@v4
+      - name: Crear y guardar la clave
+        run: |
+          if [ -f ebooks/clave-publica.pem ]; then
+            echo "::error::La clave ya existe. Si se crea otra, los ebooks cifrados con la anterior dejan de abrirse."
+            exit 1
+          fi
+          umask 077
+          openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:3072 -out privada.pem 2>/dev/null
+          openssl pkey -in privada.pem -pubout -out ebooks/clave-publica.pem
+          jq -n --rawfile v privada.pem '[{name: "EBOOKS_PRIVATE_KEY", value: $v}]' > secreto.json
+          codigo=$(curl -sS -o respuesta.json -w "%{http_code}" -X POST \
+            "https://api.supabase.com/v1/projects/$PROJECT_REF/secrets" \
+            -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+            -H "Content-Type: application/json" --data @secreto.json)
+          shred -u privada.pem secreto.json
+          if [ "$codigo" -ge 300 ]; then echo "::error::Supabase respondio $codigo: $(head -c 400 respuesta.json | tr -d '\n')"; exit 1; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ebooks/clave-publica.pem
+          git commit -m "Clave pública para proteger los ebooks"
+          git push
