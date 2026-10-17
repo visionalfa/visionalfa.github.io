@@ -1,11 +1,11 @@
-name: Revisar web
+name: Revisar ventas
 on: workflow_dispatch
 jobs:
   d:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          for u in index.html equipo.html agenda.html?servicio=orientacion-vocacional; do
-            c=$(curl -sS -o p.html -w "%{http_code}" "https://visionalfa.github.io/$u")
-            echo "::notice::$u → $c · $(grep -o '<title>[^<]*' p.html | head -1) · equipo-link: $(grep -c 'equipo.html' p.html)"
-          done
+          q="select p.id, p.producto_id, p.estado, p.monto, (select a.estado from public.accesos a where a.mp_referencia = 'pago_' || p.id) as acceso from public.pagos p order by p.creado desc limit 5;"
+          jq -n --arg q "$q" '{query:$q}' > c.json
+          r=$(curl -sS -X POST "https://api.supabase.com/v1/projects/futhqkqfjuuemhcxzakn/database/query" -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" -H "Content-Type: application/json" --data @c.json | jq -c .)
+          echo "::notice::$r"
