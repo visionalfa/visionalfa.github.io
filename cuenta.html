@@ -18,6 +18,7 @@
   color-scheme: light;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--texto);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
 .in{max-width:760px;margin:0 auto;width:100%;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
 h1,h2{font-family:var(--titulos);font-weight:800;letter-spacing:-0.025em;line-height:1.05;margin:0;color:var(--verde);text-wrap:balance}
@@ -53,6 +54,9 @@ input[type=email]:focus{border-color:var(--verde);outline:none}
 .item{display:flex;align-items:center;gap:18px;background:var(--blanco);border:1px solid var(--linea);border-radius:18px;padding:16px;flex-wrap:wrap}
 .mini{width:64px;aspect-ratio:5/7;border-radius:3px 8px 8px 3px;background:var(--mostaza);color:var(--verde);display:flex;align-items:flex-end;padding:6px;font-family:var(--titulos);font-weight:800;font-size:10px;line-height:1;flex-shrink:0;box-shadow:inset 3px 0 0 rgba(0,0,0,.14)}
 .item .datos{flex:1;min-width:160px;display:flex;flex-direction:column;gap:2px}
+.consejo{display:flex;gap:14px;align-items:flex-start;background:var(--blanco);border:1px solid var(--linea);border-radius:16px;padding:16px 18px;font-size:15.5px;color:var(--gris)}
+.consejo svg{flex-shrink:0;margin-top:2px}
+.consejo strong{color:var(--verde)}
 .item h3{margin:0;font-family:var(--titulos);font-weight:800;font-size:21px;color:var(--verde);letter-spacing:-0.02em}
 .plan{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:var(--verde);color:var(--papel);border-radius:18px;padding:20px 22px}
 .plan strong{font-family:var(--titulos);font-size:22px;letter-spacing:-0.02em}
@@ -101,6 +105,10 @@ footer .in{padding-block:24px calc(24px + env(safe-area-inset-bottom,0px))}
       <div id="plan" hidden></div>
       <h2 style="font-size:28px;margin-top:8px">Tus ebooks</h2>
       <div class="lista" id="lista"></div>
+      <div class="consejo">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="#E3A82B" stroke-width="2"/><path d="M12 11v6M12 7.5v.5" stroke="#1F3D2B" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <p><strong>Para la mejor experiencia, leé tus ebooks desde acá, en la web.</strong> Así siempre ves la versión más actualizada y los botones para copiar los prompts funcionan. Tip: agregá esta página a la pantalla de inicio de tu celular para tenerla a un toque.</p>
+      </div>
       <div class="fila" style="margin-top:12px">
         <a class="btn btn-borde" href="index.html#planes">Ver planes</a>
         <button class="salir" type="button" id="salir">Cerrar sesión</button>
