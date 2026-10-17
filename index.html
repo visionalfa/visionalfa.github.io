@@ -123,6 +123,17 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--mostaza);outline-of
 .incluye svg{flex-shrink:0;margin-top:3px}
 .nota{font-size:14px;color:#C9D0C6}
 
+/* Recursos gratis */
+.gratis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.gratis-item{display:flex;flex-direction:column;gap:8px;background:var(--blanco);border:1px solid var(--linea);border-radius:20px;padding:24px;text-decoration:none;color:var(--tinta)}
+.gratis-item:hover{border-color:var(--verde)}
+.gratis-item strong{font-family:var(--titulos);font-size:22px;color:var(--verde);letter-spacing:-0.02em}
+.gratis-item span{color:var(--gris)}
+.gratis-item.dest{background:var(--verde);border-color:var(--verde)}
+.gratis-item.dest strong{color:var(--mostaza)}
+.gratis-item.dest span{color:var(--suave)}
+@media (max-width:900px){.gratis{grid-template-columns:minmax(0,1fr)}}
+
 /* Actualizaciones */
 .actual{background:var(--mostaza);color:var(--verde)}
 .actual .in{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:48px;align-items:center;padding-block:72px}
@@ -221,6 +232,7 @@ footer .legales{display:flex;flex-wrap:wrap;gap:8px 20px;width:100%;font-size:14
     <ul>
       <li><a href="#coleccion">Ebooks</a></li>
       <li><a href="#planes">Planes</a></li>
+      <li><a href="recursos.html">Recursos gratis</a></li>
       <li><a href="#quien">Quién soy</a></li>
       <li><a href="#preguntas">Preguntas</a></li>
       <li><a class="cuenta" href="cuenta.html">Mi cuenta</a></li>
@@ -391,6 +403,21 @@ footer .legales{display:flex;flex-wrap:wrap;gap:8px 20px;width:100%;font-size:14
       </article>
     </div>
     <p class="aclara">Los pagos se procesan de forma segura con Mercado Pago. ¿Ya compraste? Entrá a <a href="cuenta.html">Mi cuenta</a>.</p>
+  </div>
+</section>
+
+<section class="banda" id="gratis" aria-labelledby="t-gratis">
+  <div class="in">
+    <div class="cab">
+      <div class="eyebrow">Recursos gratis</div>
+      <h2 id="t-gratis">¿Buscás tu primer trabajo?</h2>
+      <p>Guías gratis para armar tu CV aunque no tengas experiencia, postularte y preparar la entrevista. Sin registrarte.</p>
+    </div>
+    <div class="gratis">
+      <a class="gratis-item dest" href="cv.html"><strong>Armador de CV gratis</strong><span>Completás tus datos y lo descargás en PDF.</span></a>
+      <a class="gratis-item" href="recursos.html#cv"><strong>Cómo hacer tu primer CV</strong><span>Qué poner y cómo destacar sin experiencia.</span></a>
+      <a class="gratis-item" href="recursos.html#entrevista"><strong>Preparar la entrevista</strong><span>Las preguntas de siempre y cómo responderlas.</span></a>
+    </div>
   </div>
 </section>
 

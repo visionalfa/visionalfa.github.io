@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Recursos gratis · Visión Alfa</title>
+<meta name="description" content="Recursos gratis de Visión Alfa: cómo hacer tu primer CV, armador de CV, mensajes para postularte, cómo preparar una entrevista y prompts de IA para buscar trabajo.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/legal.css">
+<style>
+.hero-r{background:var(--verde);color:var(--papel)}
+.hero-r .in{padding-block:56px 64px;display:flex;flex-direction:column;gap:16px}
+.hero-r .eyebrow{font-size:13px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--mostaza)}
+.hero-r h1{color:var(--papel);font-size:clamp(38px,7vw,62px);margin:0}
+.hero-r p{font-size:19px;color:var(--suave);max-width:600px;margin:0}
+.tarjetas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:8px 0 8px}
+.tarjeta{display:flex;flex-direction:column;gap:6px;background:var(--blanco);border:1px solid var(--linea);border-radius:18px;padding:18px 20px;text-decoration:none;color:var(--tinta);min-height:44px}
+.tarjeta:hover{border-color:var(--verde)}
+.tarjeta strong{font-family:var(--titulos);font-size:20px;color:var(--verde);letter-spacing:-.02em}
+.tarjeta span{font-size:15px;color:var(--gris)}
+.tarjeta.dest{background:var(--mostaza);border-color:var(--mostaza)}
+.tarjeta.dest span{color:var(--tinta)}
+section.bloque{padding-top:24px;border-top:1px solid var(--linea);margin-top:40px}
+section.bloque:first-of-type{border-top:0;margin-top:16px}
+.etq{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gris)}
+.tabla{overflow-x:auto;margin:18px 0;border:1px solid var(--linea);border-radius:14px;background:var(--blanco)}
+table{border-collapse:collapse;width:100%;font-size:16px}
+th,td{text-align:left;padding:11px 13px;border-bottom:1px solid var(--linea);vertical-align:top}
+th{background:#ECEAE3;color:var(--verde);font-weight:600}
+tr:last-child td{border-bottom:0}
+.tip{background:var(--verde);color:var(--papel);border-radius:16px;padding:18px 22px;margin:20px 0}
+.tip strong{color:var(--mostaza)}
+.prompt{background:var(--blanco);border:1px solid var(--linea);border-radius:16px;margin:18px 0;overflow:hidden}
+.prompt-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px 10px 18px;background:#ECEAE3;border-bottom:1px solid var(--linea)}
+.prompt-head span{font-size:14.5px;font-weight:600;color:var(--verde)}
+.prompt pre{margin:0;padding:16px 18px;white-space:pre-wrap;word-wrap:break-word;font-family:var(--texto);font-size:16px;line-height:1.6}
+button.copiar{font:600 14px var(--texto);border:0;border-radius:999px;background:var(--verde);color:var(--papel);padding:9px 16px;min-height:40px;cursor:pointer}
+button.copiar.ok{background:var(--mostaza);color:var(--tinta)}
+.cta-final{background:var(--blanco);border:2px solid var(--verde);border-radius:20px;padding:24px;margin-top:44px;display:flex;flex-direction:column;gap:12px}
+.cta-final a.btn{text-decoration:none}
+@media (max-width:560px){.tarjetas{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="Principal">
+  <div class="in">
+    <a class="marca" href="index.html">
+      <svg width="34" height="26" viewBox="0 8 64 48" aria-hidden="true"><path d="M4 14 L17 50 L30 14" fill="none" stroke="#F4F3EE" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 50 L47 14 L60 50" fill="none" stroke="#E3A82B" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      visión alfa
+    </a>
+    <a class="volver" href="index.html">← Volver a la web</a>
+  </div>
+</nav>
+
+<header class="hero-r">
+  <div class="in">
+    <div class="eyebrow">Recursos gratis</div>
+    <h1>Tu primer trabajo, paso a paso</h1>
+    <p>Cómo armar tu CV aunque no tengas experiencia, qué escribir cuando te postulás y cómo preparar la entrevista. Gratis y sin registrarte.</p>
+  </div>
+</header>
+
+<main><div class="in">
+
+  <div class="tarjetas">
+    <a class="tarjeta dest" href="cv.html"><strong>Armador de CV gratis →</strong><span>Completás tus datos y lo descargás en PDF, listo para mandar.</span></a>
+    <a class="tarjeta" href="#cv"><strong>Cómo hacer tu primer CV</strong><span>Qué poner, qué no y cómo destacar sin experiencia.</span></a>
+    <a class="tarjeta" href="#postularte"><strong>Mensajes para postularte</strong><span>Plantillas para mail, LinkedIn y WhatsApp.</span></a>
+    <a class="tarjeta" href="#entrevista"><strong>Preparar la entrevista</strong><span>Las preguntas de siempre y cómo responderlas.</span></a>
+    <a class="tarjeta" href="#buscar"><strong>Dónde buscar</strong><span>Portales, redes y contactos.</span></a>
+    <a class="tarjeta" href="#ia"><strong>Prompts de IA para buscar trabajo</strong><span>Que la IA te ayude con el CV y la entrevista.</span></a>
+  </div>
+
+  <!-- CV -->
+  <section class="bloque" id="cv">
+    <div class="etq">Guía 1</div>
+    <h2 style="font-size:32px;margin-top:6px">Cómo hacer tu primer CV</h2>
+    <p>El CV es tu carta de presentación: quien lo lee le dedica muy poco tiempo, así que tiene que ser claro, corto y fácil de leer. Si es tu primer trabajo, no te preocupes por la falta de experiencia: lo que importa es mostrar lo que sabés hacer y las ganas de aprender.</p>
+    <h3>Qué tiene que tener</h3>
+    <div class="tabla"><table>
+      <tr><th>Sección</th><th>Qué poner</th></tr>
+      <tr><td><strong>Datos de contacto</strong></td><td>Nombre completo, ciudad, teléfono y un mail serio (nombre.apellido@…). LinkedIn si tenés.</td></tr>
+      <tr><td><strong>Perfil</strong></td><td>2 o 3 líneas: quién sos, qué estás buscando y qué podés aportar.</td></tr>
+      <tr><td><strong>Educación</strong></td><td>Secundario y estudios en curso, con años. Si estás estudiando, poné "en curso".</td></tr>
+      <tr><td><strong>Experiencia</strong></td><td>Trabajos, pero también changas, voluntariado, pasantías, emprendimientos propios o proyectos del colegio o la facultad.</td></tr>
+      <tr><td><strong>Habilidades</strong></td><td>Herramientas (Excel, redes sociales, caja), idiomas y habilidades como atención al público u organización.</td></tr>
+      <tr><td><strong>Cursos</strong></td><td>Cursos cortos o certificados, aunque sean online y gratuitos.</td></tr>
+    </table></div>
+    <h3>Sin experiencia: cómo destacar</h3>
+    <ul>
+      <li><strong>Contá lo que hiciste, aunque no haya sido un empleo formal:</strong> ayudar en el negocio familiar, cuidar chicos, dar clases particulares, organizar un evento, vender por Instagram.</li>
+      <li><strong>Usá verbos de acción y resultados:</strong> "Atendí clientes", "Organicé", "Vendí", "Coordiné". Si podés, sumá un número: "Atendí a más de 30 clientes por día".</li>
+      <li><strong>Adaptá el CV a cada trabajo:</strong> poné primero lo que más se relaciona con el puesto.</li>
+    </ul>
+    <h3>Lo que no va</h3>
+    <ul>
+      <li>DNI, estado civil, religión o datos que no tienen que ver con el trabajo.</li>
+      <li>Más de una página: para un primer trabajo, una alcanza y sobra.</li>
+      <li>Errores de ortografía: pedile a alguien que lo lea antes de mandarlo.</li>
+      <li>Diseños recargados, que cuestan leer o que los sistemas de selección no pueden procesar.</li>
+    </ul>
+    <h3>¿Va foto?</h3>
+    <p>No es obligatoria. Si la ponés, que sea una foto simple, de frente, con buena luz y fondo liso. Nada de fotos de fiestas ni recortadas de otra foto.</p>
+    <div class="tip"><p style="margin:0"><strong>Atajo:</strong> usá el <a href="cv.html" style="color:var(--mostaza)">armador de CV gratis</a>. Completás tus datos, ves cómo queda y lo descargás en PDF.</p></div>
+  </section>
+
+  <!-- POSTULARTE -->
+  <section class="bloque" id="postularte">
+    <div class="etq">Guía 2</div>
+    <h2 style="font-size:32px;margin-top:6px">Mensajes para postularte</h2>
+    <p>Mandar el CV sin ningún texto es desaprovechar la oportunidad. Un mensaje corto y personalizado hace que te lean con otros ojos.</p>
+    <div class="prompt"><div class="prompt-head"><span>Mail para postularte a una búsqueda</span><button class="copiar" type="button">Copiar</button></div><pre>Asunto: Postulación para [puesto] – [tu nombre]
+
+Hola, [nombre de la persona o "equipo de selección"]:
+
+Me llamo [tu nombre] y quiero postularme para el puesto de [puesto] que vi en [dónde viste la búsqueda].
+
+[Una o dos líneas sobre vos: qué estudiás o qué hiciste que se relacione con el puesto. Por ejemplo: "Estoy cursando el segundo año de Administración y tengo experiencia en atención al público por haber trabajado en el negocio familiar".]
+
+Me interesa especialmente [algo concreto de la empresa o del puesto] y creo que puedo aportar [una o dos fortalezas].
+
+Adjunto mi CV. Quedo a disposición para una entrevista.
+
+¡Muchas gracias!
+[Tu nombre]
+[Teléfono]</pre></div>
+    <div class="prompt"><div class="prompt-head"><span>Mensaje para ofrecerte aunque no haya búsqueda</span><button class="copiar" type="button">Copiar</button></div><pre>Hola, ¿cómo están? Soy [tu nombre], vivo en [ciudad] y estoy buscando mi primer trabajo en [rubro o tipo de puesto]. Me gusta mucho [la empresa / el local] por [motivo concreto]. Tengo disponibilidad [horario] y experiencia en [lo que hiciste]. Les dejo mi CV por si en algún momento necesitan a alguien. ¡Gracias por leerme!</pre></div>
+    <div class="prompt"><div class="prompt-head"><span>Seguimiento después de una semana</span><button class="copiar" type="button">Copiar</button></div><pre>Hola, [nombre]. Te escribo para saber si hubo novedades sobre la búsqueda de [puesto]. Sigo muy interesado/a en la posición y quedo a disposición para lo que necesiten. ¡Gracias!</pre></div>
+  </section>
+
+  <!-- ENTREVISTA -->
+  <section class="bloque" id="entrevista">
+    <div class="etq">Guía 3</div>
+    <h2 style="font-size:32px;margin-top:6px">Cómo preparar la entrevista</h2>
+    <h3>Antes</h3>
+    <ul>
+      <li>Averiguá qué hace la empresa: mirá su web y sus redes.</li>
+      <li>Releé la búsqueda y pensá un ejemplo tuyo para cada requisito.</li>
+      <li>Prepará tus respuestas a las preguntas de siempre (abajo).</li>
+      <li>Si es virtual, probá cámara, micrófono y conexión, y buscá un lugar tranquilo.</li>
+      <li>Llegá 10 minutos antes o conectate unos minutos antes.</li>
+    </ul>
+    <h3>Las preguntas de siempre</h3>
+    <div class="tabla"><table>
+      <tr><th>Pregunta</th><th>Cómo encararla</th></tr>
+      <tr><td>"Contame sobre vos"</td><td>Un minuto: qué estudiás o hiciste, qué te gusta hacer y por qué te interesa este trabajo. No es tu historia de vida.</td></tr>
+      <tr><td>"¿Por qué querés trabajar acá?"</td><td>Algo concreto de la empresa que te atrae, más lo que podés aportar.</td></tr>
+      <tr><td>"¿Cuáles son tus fortalezas?"</td><td>Dos fortalezas con un ejemplo real de cada una.</td></tr>
+      <tr><td>"¿Y tus debilidades?"</td><td>Algo real que estés mejorando y qué hacés para mejorarlo.</td></tr>
+      <tr><td>"No tenés experiencia, ¿por qué te elegiríamos?"</td><td>Ganas de aprender, responsabilidad y un ejemplo de algo que aprendiste rápido.</td></tr>
+      <tr><td>"¿Tenés alguna pregunta?"</td><td>Siempre tené una: "¿Cómo sería un día de trabajo?" o "¿Qué valoran de alguien en este puesto?".</td></tr>
+    </table></div>
+    <h3>Responder con ejemplos: el método SAR</h3>
+    <p>Cuando te pidan un ejemplo, contalo en tres partes: <strong>Situación</strong> (qué pasaba), <strong>Acción</strong> (qué hiciste vos) y <strong>Resultado</strong> (cómo terminó). Por ejemplo: "En el negocio de mi familia se juntaban muchos pedidos los sábados (situación). Armé una planilla para anotarlos y repartirlos por horario (acción). Dejamos de olvidarnos pedidos y los clientes esperaban menos (resultado)."</p>
+    <h3>Después</h3>
+    <p>Mandá un mensaje corto agradeciendo la entrevista el mismo día. Pocas personas lo hacen y deja una muy buena impresión.</p>
+  </section>
+
+  <!-- BUSCAR -->
+  <section class="bloque" id="buscar">
+    <div class="etq">Guía 4</div>
+    <h2 style="font-size:32px;margin-top:6px">Dónde buscar tu primer trabajo</h2>
+    <ul>
+      <li><strong>Portales de empleo:</strong> LinkedIn, Bumeran, ZonaJobs y Computrabajo, entre otros. Armá alertas con el puesto y tu ciudad para que te lleguen las búsquedas nuevas.</li>
+      <li><strong>Tu institución educativa:</strong> muchas facultades e institutos tienen bolsas de trabajo y programas de pasantías.</li>
+      <li><strong>Tu municipio:</strong> muchas ciudades tienen una oficina de empleo que publica búsquedas y ofrece capacitaciones gratuitas.</li>
+      <li><strong>Contactos:</strong> contale a tu familia, amigos y conocidos qué estás buscando. Muchos primeros trabajos llegan por recomendación.</li>
+      <li><strong>Comercios y empresas de tu zona:</strong> llevá tu CV en persona o escribiles con el mensaje de la guía 2.</li>
+    </ul>
+    <div class="tip"><p style="margin:0"><strong>Cuidado con las estafas:</strong> un trabajo real nunca te pide plata para empezar, ni datos de tu tarjeta o claves bancarias.</p></div>
+  </section>
+
+  <!-- IA -->
+  <section class="bloque" id="ia">
+    <div class="etq">Guía 5</div>
+    <h2 style="font-size:32px;margin-top:6px">Prompts de IA para buscar trabajo</h2>
+    <p>Copialos en ChatGPT, Claude o Gemini y completá lo que está entre corchetes. Revisá siempre lo que te devuelve: no pongas en tu CV nada que no sea cierto.</p>
+    <div class="prompt"><div class="prompt-head"><span>Mejorar tu CV</span><button class="copiar" type="button">Copiar</button></div><pre>Estoy buscando mi primer trabajo como [puesto] en [ciudad]. Este es mi CV: [pegalo sin DNI ni dirección].
+Mejoralo para que sea claro y profesional: usá verbos de acción, destacá lo que se relaciona con el puesto y sugerime qué agregar o sacar. No inventes experiencia que no tengo.</pre></div>
+    <div class="prompt"><div class="prompt-head"><span>Encontrar experiencia que no sabías que tenías</span><button class="copiar" type="button">Copiar</button></div><pre>Nunca tuve un trabajo formal, pero hice estas cosas: [changas, ayudar en un negocio, voluntariado, proyectos del colegio, cuidar chicos, vender algo]. ¿Cómo las puedo contar en mi CV como experiencia, de forma honesta y profesional?</pre></div>
+    <div class="prompt"><div class="prompt-head"><span>Simular una entrevista</span><button class="copiar" type="button">Copiar</button></div><pre>Actuá como entrevistador/a para un puesto de [puesto] en [tipo de empresa]. Haceme una pregunta por vez, esperá mi respuesta y después decime qué estuvo bien y qué puedo mejorar. Hacé 6 preguntas en total.</pre></div>
+    <div class="prompt"><div class="prompt-head"><span>Adaptar el mensaje a una búsqueda</span><button class="copiar" type="button">Copiar</button></div><pre>Esta es la búsqueda a la que me quiero postular: [pegá el aviso]. Este es mi perfil: [2 o 3 líneas sobre vos]. Escribime un mail corto para postularme, en tono profesional y cercano, que conecte lo que piden con lo que yo tengo.</pre></div>
+  </section>
+
+  <div class="cta-final">
+    <strong style="font-family:var(--titulos);font-size:24px;color:var(--verde)">¿Querés emprender además de trabajar?</strong>
+    <p style="margin:0">En Visión Alfa tenemos guías prácticas para arrancar tu propio emprendimiento, vender más y ordenar tus números.</p>
+    <a class="btn" href="index.html#coleccion">Ver los ebooks</a>
+    <p style="margin:0;font-size:15px;color:var(--gris)">Seguinos en Instagram para más recursos gratis: <a href="https://www.instagram.com/visionalfa.arg" target="_blank" rel="noopener">@visionalfa.arg</a></p>
+  </div>
+
+</div></main>
+<footer><div class="in">
+  <span>© Visión Alfa</span>
+  <a href="terminos.html">Términos y condiciones</a>
+  <a href="privacidad.html">Privacidad</a>
+  <a href="arrepentimiento.html">Botón de arrepentimiento</a>
+  <a href="https://www.argentina.gob.ar/produccion/defensadelconsumidor/formulario" target="_blank" rel="noopener">Defensa de las y los Consumidores. Para reclamos ingresá acá</a>
+</div></footer>
+<script>
+document.querySelectorAll("button.copiar").forEach(function (b) {
+  b.addEventListener("click", function () {
+    var texto = b.closest(".prompt").querySelector("pre").innerText;
+    var listo = function () { b.textContent = "¡Copiado!"; b.classList.add("ok"); setTimeout(function () { b.textContent = "Copiar"; b.classList.remove("ok"); }, 1800); };
+    if (navigator.clipboard) navigator.clipboard.writeText(texto).then(listo, function () { respaldo(texto); listo(); });
+    else { respaldo(texto); listo(); }
+  });
+});
+function respaldo(t) { var a = document.createElement("textarea"); a.value = t; a.style.position = "fixed"; a.style.opacity = "0"; document.body.appendChild(a); a.select(); try { document.execCommand("copy"); } catch (e) {} document.body.removeChild(a); }
+</script>
+</body>
+</html>

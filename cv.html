@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Armador de CV gratis · Visión Alfa</title>
+<meta name="description" content="Armá tu CV gratis en minutos y descargalo en PDF. Ideal para tu primer trabajo.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/legal.css">
+<style>
+main .in{max-width:1160px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:32px;align-items:start}
+.form{display:flex;flex-direction:column;gap:14px}
+.form h2{margin:18px 0 0;font-size:21px}
+.ayuda{font-size:14.5px;color:var(--gris);font-weight:400}
+.fila2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.acciones{display:flex;gap:12px;flex-wrap:wrap;align-items:center;position:sticky;bottom:0;background:var(--papel);padding-block:12px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--linea)}
+.btn-sec{background:transparent;color:var(--verde);box-shadow:inset 0 0 0 2px var(--verde)}
+.vista{position:sticky;top:16px}
+.vista .etq{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gris);margin-bottom:8px}
+/* La hoja del CV */
+.hoja{background:#fff;color:#1d2420;border-radius:6px;box-shadow:0 14px 40px rgba(22,35,27,.16);padding:36px 38px;font-family:'Instrument Sans',Arial,sans-serif;font-size:13.5px;line-height:1.5;aspect-ratio:210/297;overflow:hidden}
+.hoja .cv-nombre{font-family:'Bricolage Grotesque',Arial,sans-serif;font-weight:800;font-size:30px;line-height:1.05;letter-spacing:-.02em;color:#1F3D2B;margin:0}
+.hoja .cv-titulo{font-size:15px;font-weight:600;color:#9a6b0c;margin:4px 0 10px}
+.hoja .cv-contacto{font-size:12.5px;color:#4A5A50;display:flex;flex-wrap:wrap;gap:4px 14px;padding-bottom:12px;border-bottom:2px solid #1F3D2B}
+.hoja h3{font-family:'Bricolage Grotesque',Arial,sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#1F3D2B;margin:16px 0 6px}
+.hoja p{margin:0 0 4px}
+.hoja ul{margin:0;padding-left:18px}
+.hoja li{margin-bottom:3px}
+.vacio{color:#aab3ad}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}.vista{position:static}.hoja{aspect-ratio:auto;padding:26px 22px}}
+@media (max-width:520px){.fila2{grid-template-columns:minmax(0,1fr)}}
+@page{size:A4;margin:0}
+@media print{
+  body{background:#fff}
+  .nav,footer,.form,.vista .etq,.intro,.nota-priv,.solo-pantalla{display:none!important}
+  main{padding:0}
+  main .in{max-width:none;padding:0}
+  .grid{display:block}
+  .vista{position:static}
+  .hoja{box-shadow:none;border-radius:0;aspect-ratio:auto;width:210mm;min-height:290mm;padding:18mm 18mm;overflow:visible}
+}
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="Principal">
+  <div class="in">
+    <a class="marca" href="index.html">
+      <svg width="34" height="26" viewBox="0 8 64 48" aria-hidden="true"><path d="M4 14 L17 50 L30 14" fill="none" stroke="#F4F3EE" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 50 L47 14 L60 50" fill="none" stroke="#E3A82B" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      visión alfa
+    </a>
+    <a class="volver" href="recursos.html">← Recursos gratis</a>
+  </div>
+</nav>
+<main><div class="in">
+  <div class="intro">
+    <h1>Armador de CV gratis</h1>
+    <p style="font-size:19px;color:var(--gris);max-width:640px">Completá tus datos y mirá cómo queda. Cuando esté listo, tocá <strong>Descargar PDF</strong>. ¿No sabés qué poner? Leé primero <a href="recursos.html#cv">cómo hacer tu primer CV</a>.</p>
+  </div>
+  <div class="grid">
+    <form class="form" id="form" novalidate>
+      <h2>Tus datos</h2>
+      <label for="nombre">Nombre y apellido<input id="nombre" autocomplete="name" maxlength="80"></label>
+      <label for="titulo">Título <span class="ayuda">Lo que sos o buscás. Ej.: Estudiante de Administración · Atención al cliente</span><input id="titulo" maxlength="100"></label>
+      <div class="fila2">
+        <label for="ciudad">Ciudad<input id="ciudad" autocomplete="address-level2" maxlength="60"></label>
+        <label for="telefono">Teléfono<input id="telefono" type="tel" autocomplete="tel" maxlength="30"></label>
+      </div>
+      <div class="fila2">
+        <label for="email">Mail<input id="email" type="email" autocomplete="email" maxlength="80"></label>
+        <label for="linkedin">LinkedIn <span class="ayuda">Opcional</span><input id="linkedin" maxlength="100"></label>
+      </div>
+      <h2>Perfil</h2>
+      <label for="perfil">Sobre vos en 2 o 3 líneas <span class="ayuda">Quién sos, qué buscás y qué aportás.</span><textarea id="perfil" maxlength="500"></textarea></label>
+      <h2>Experiencia</h2>
+      <label for="experiencia">Una por línea <span class="ayuda">Ej.: 2024–2025 · Atención en el negocio familiar · Atendí clientes y manejé la caja. Incluí changas, voluntariado o proyectos.</span><textarea id="experiencia" maxlength="1500"></textarea></label>
+      <h2>Educación</h2>
+      <label for="educacion">Una por línea <span class="ayuda">Ej.: 2023–actual · Lic. en Administración (en curso) · Universidad Nacional del Comahue</span><textarea id="educacion" maxlength="1000"></textarea></label>
+      <h2>Habilidades e idiomas</h2>
+      <label for="habilidades">Habilidades <span class="ayuda">Separadas por comas. Ej.: Excel, atención al público, redes sociales</span><input id="habilidades" maxlength="300"></label>
+      <label for="idiomas">Idiomas <span class="ayuda">Ej.: Inglés intermedio</span><input id="idiomas" maxlength="150"></label>
+      <label for="cursos">Cursos <span class="ayuda">Uno por línea. Opcional.</span><textarea id="cursos" maxlength="800"></textarea></label>
+      <p class="nota-priv ayuda">Tus datos se guardan solo en este dispositivo para que no los pierdas. No se envían a ningún lado.</p>
+      <div class="acciones">
+        <button class="btn" type="button" id="pdf">Descargar PDF</button>
+        <button class="btn btn-sec" type="button" id="borrar">Borrar todo</button>
+      </div>
+    </form>
+
+    <div class="vista">
+      <div class="etq">Así queda</div>
+      <article class="hoja" id="hoja" aria-label="Vista previa del CV">
+        <h1 class="cv-nombre" id="v-nombre"></h1>
+        <p class="cv-titulo" id="v-titulo"></p>
+        <div class="cv-contacto" id="v-contacto"></div>
+        <div id="v-perfil-b"><h3>Perfil</h3><p id="v-perfil"></p></div>
+        <div id="v-exp-b"><h3>Experiencia</h3><ul id="v-exp"></ul></div>
+        <div id="v-edu-b"><h3>Educación</h3><ul id="v-edu"></ul></div>
+        <div id="v-hab-b"><h3>Habilidades</h3><p id="v-hab"></p></div>
+        <div id="v-idi-b"><h3>Idiomas</h3><p id="v-idi"></p></div>
+        <div id="v-cur-b"><h3>Cursos</h3><ul id="v-cur"></ul></div>
+      </article>
+    </div>
+  </div>
+  <p class="ayuda solo-pantalla" style="margin-top:20px">En el celular, al tocar <strong>Descargar PDF</strong> se abre la opción de imprimir: elegí <strong>Guardar como PDF</strong> (en iPhone, tocá Compartir y después Guardar en Archivos).</p>
+</div></main>
+<footer><div class="in">
+  <span>© Visión Alfa · Recurso gratuito</span>
+  <a href="recursos.html">Más recursos gratis</a>
+  <a href="privacidad.html">Privacidad</a>
+</div></footer>
+<script>
+(function () {
+  var campos = ["nombre","titulo","ciudad","telefono","email","linkedin","perfil","experiencia","educacion","habilidades","idiomas","cursos"];
+  var $ = function (id) { return document.getElementById(id); };
+  var CLAVE = "va-cv";
+  var ejemplo = {
+    nombre: "Tu nombre y apellido", titulo: "Lo que sos o buscás",
+    perfil: "Contá en 2 o 3 líneas quién sos, qué buscás y qué podés aportar.",
+    experiencia: "Año · Lugar o actividad · Qué hiciste", educacion: "Año · Estudio · Institución",
+    habilidades: "Habilidad, habilidad, habilidad", idiomas: "Idioma y nivel", cursos: ""
+  };
+  function lineas(t) { return t.split("\n").map(function (l) { return l.trim(); }).filter(Boolean); }
+  function lista(ul, texto, ej) {
+    ul.innerHTML = "";
+    var items = lineas(texto); var vacio = !items.length;
+    (vacio ? lineas(ej) : items).forEach(function (l) {
+      var li = document.createElement("li"); li.textContent = l; if (vacio) li.className = "vacio"; ul.appendChild(li);
+    });
+    return !vacio;
+  }
+  function texto(el, valor, ej) { el.textContent = valor || ej; el.classList.toggle("vacio", !valor); }
+  function render() {
+    var d = {}; campos.forEach(function (c) { d[c] = $(c).value.trim(); });
+    texto($("v-nombre"), d.nombre, ejemplo.nombre);
+    texto($("v-titulo"), d.titulo, ejemplo.titulo);
+    var c = $("v-contacto"); c.innerHTML = "";
+    [d.ciudad, d.telefono, d.email, d.linkedin].filter(Boolean).forEach(function (x) { var s = document.createElement("span"); s.textContent = x; c.appendChild(s); });
+    if (!c.children.length) { var s = document.createElement("span"); s.className = "vacio"; s.textContent = "Ciudad · Teléfono · Mail"; c.appendChild(s); }
+    texto($("v-perfil"), d.perfil, ejemplo.perfil);
+    lista($("v-exp"), d.experiencia, ejemplo.experiencia);
+    lista($("v-edu"), d.educacion, ejemplo.educacion);
+    texto($("v-hab"), d.habilidades, ejemplo.habilidades);
+    texto($("v-idi"), d.idiomas, ejemplo.idiomas);
+    var hayCursos = lista($("v-cur"), d.cursos, "");
+    $("v-cur-b").hidden = !hayCursos;
+    try { localStorage.setItem(CLAVE, JSON.stringify(d)); } catch (e) {}
+  }
+  try { var guardado = JSON.parse(localStorage.getItem(CLAVE) || "null"); if (guardado) campos.forEach(function (c) { if (guardado[c]) $(c).value = guardado[c]; }); } catch (e) {}
+  campos.forEach(function (c) { $(c).addEventListener("input", render); });
+  $("pdf").addEventListener("click", function () {
+    var nombre = $("nombre").value.trim();
+    var titulo = document.title; document.title = "CV " + (nombre || "");
+    window.print(); document.title = titulo;
+  });
+  var confirmar = false;
+  $("borrar").addEventListener("click", function () {
+    if (!confirmar) { confirmar = true; $("borrar").textContent = "Tocá de nuevo para borrar"; setTimeout(function () { confirmar = false; $("borrar").textContent = "Borrar todo"; }, 3000); return; }
+    campos.forEach(function (c) { $(c).value = ""; }); confirmar = false; $("borrar").textContent = "Borrar todo"; render();
+  });
+  render();
+})();
+</script>
+</body>
+</html>
