@@ -13,22 +13,35 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
       PROJECT_REF: futhqkqfjuuemhcxzakn
+      REMITENTE: visionalfa.arg@gmail.com
     steps:
       - uses: actions/checkout@v4
-      - name: Cargar asuntos y mensajes en castellano
+      - name: Revisar la clave de Gmail
         run: |
+          if [ -z "$GMAIL_APP_PASSWORD" ]; then
+            echo "::error::Falta el secreto GMAIL_APP_PASSWORD (contraseña de aplicación de Gmail) en Settings > Secrets and variables > Actions"
+            exit 1
+          fi
+      - name: Enviar mails desde Gmail y en castellano
+        run: |
+          clave=$(printf '%s' "$GMAIL_APP_PASSWORD" | tr -d ' ')
           jq -n \
+            --arg remitente "$REMITENTE" --arg clave "$clave" \
             --arg s1 "Confirmá tu mail para entrar a Visión Alfa" \
             --rawfile b1 supabase/templates/confirmacion.html \
             --arg s2 "Tu link para entrar a Visión Alfa" \
             --rawfile b2 supabase/templates/ingreso.html \
-            '{mailer_subjects_confirmation: $s1, mailer_templates_confirmation_content: $b1,
+            '{smtp_host: "smtp.gmail.com", smtp_port: "465", smtp_user: $remitente, smtp_pass: $clave,
+              smtp_admin_email: $remitente, smtp_sender_name: "Visión Alfa", smtp_max_frequency: 30,
+              mailer_subjects_confirmation: $s1, mailer_templates_confirmation_content: $b1,
               mailer_subjects_magic_link: $s2, mailer_templates_magic_link_content: $b2}' > cuerpo.json
           codigo=$(curl -sS -o respuesta.json -w "%{http_code}" -X PATCH \
             "https://api.supabase.com/v1/projects/$PROJECT_REF/config/auth" \
             -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
             -H "Content-Type: application/json" \
             --data @cuerpo.json)
+          rm -f cuerpo.json
           echo "Respuesta: $codigo"
           if [ "$codigo" -ge 300 ]; then echo "::error::Supabase respondio $codigo: $(head -c 400 respuesta.json | tr -d '\n')"; exit 1; fi
