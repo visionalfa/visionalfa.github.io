@@ -1,0 +1,53 @@
+name: Dar o quitar acceso a mano
+
+# Para regalar acceso, corregir un caso puntual o quitar un acceso.
+# La persona tiene que haber entrado al menos una vez a "Mi cuenta" con ese mail.
+on:
+  workflow_dispatch:
+    inputs:
+      email:
+        description: "Mail de la persona"
+        required: true
+      producto:
+        description: "Qué acceso"
+        required: true
+        type: choice
+        options: [vitalicio, membresia, ia-para-vender-mas]
+      accion:
+        description: "Dar o quitar"
+        required: true
+        type: choice
+        options: [dar, quitar]
+
+jobs:
+  acceso:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      PROJECT_REF: futhqkqfjuuemhcxzakn
+      EMAIL: ${{ inputs.email }}
+      PRODUCTO: ${{ inputs.producto }}
+      ACCION: ${{ inputs.accion }}
+    steps:
+      - name: Aplicar
+        run: |
+          email=$(printf '%s' "$EMAIL" | tr 'A-Z' 'a-z' | tr -d ' ')
+          echo "::add-mask::$email"
+          if ! printf '%s' "$email" | grep -Eq '^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$'; then echo "::error::El mail no es válido"; exit 1; fi
+          if ! printf '%s' "$PRODUCTO" | grep -Eq '^[a-z0-9-]+$'; then echo "::error::Producto inválido"; exit 1; fi
+          estado=activo; [ "$ACCION" = "quitar" ] && estado=inactivo
+          sql="with u as (select id from auth.users where lower(email) = '$email' limit 1)
+               insert into public.accesos (user_id, producto_id, estado, mp_referencia)
+               select id, '$PRODUCTO', '$estado', 'manual_${PRODUCTO}_' || id from u
+               on conflict (mp_referencia) do update set estado = excluded.estado, actualizado = now()
+               returning id;"
+          jq -n --arg q "$sql" '{query: $q}' > consulta.json
+          codigo=$(curl -sS -o respuesta.json -w "%{http_code}" -X POST \
+            "https://api.supabase.com/v1/projects/$PROJECT_REF/database/query" \
+            -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -H "Content-Type: application/json" --data @consulta.json)
+          if [ "$codigo" -ge 300 ]; then echo "::error::Supabase respondio $codigo: $(head -c 300 respuesta.json | tr -d '\n')"; exit 1; fi
+          if [ "$(jq 'length' respuesta.json)" = "0" ]; then
+            echo "::error::No hay ninguna cuenta con ese mail. La persona tiene que entrar primero a Mi cuenta."
+            exit 1
+          fi
+          echo "::notice::Acceso actualizado: $PRODUCTO → $estado"
