@@ -22,6 +22,7 @@ jobs:
             echo "::error::La clave ya existe. Si se crea otra, los ebooks cifrados con la anterior dejan de abrirse."
             exit 1
           fi
+          mkdir -p ebooks
           umask 077
           openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:3072 -out privada.pem 2>/dev/null
           openssl pkey -in privada.pem -pubout -out ebooks/clave-publica.pem
