@@ -93,7 +93,14 @@ Deno.serve(async (req) => {
       const referencia = `pago_${pago.id}`;
       if (pago.status === "approved") {
         await db.from("accesos").upsert(
-          { user_id: userId, producto_id: productoId, estado: "activo", mp_referencia: referencia, actualizado: ahora },
+          {
+            user_id: userId,
+            // Cualquier producto de tipo "de por vida" da el acceso completo.
+            producto_id: producto.tipo === "vitalicio" ? "vitalicio" : productoId,
+            estado: "activo",
+            mp_referencia: referencia,
+            actualizado: ahora,
+          },
           { onConflict: "mp_referencia" },
         );
       } else if (["refunded", "charged_back", "cancelled"].includes(pago.status)) {
