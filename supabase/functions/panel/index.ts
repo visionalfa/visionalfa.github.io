@@ -17,7 +17,7 @@ Deno.serve(async (req) => {
   const user = await usuario(req, db);
   if (!user?.email) return json({ error: "Entrá con tu mail para ver el panel." }, 401);
   const { data: esAdmin } = await db.from("admins").select("email").eq("email", user.email.toLowerCase()).maybeSingle();
-  if (!esAdmin) return json({ error: "Este panel es privado." }, 403);
+  if (!esAdmin) return json({ error: `Este panel es privado. Entraste como ${user.email}.` }, 403);
   if (new URL(req.url).searchParams.get("check")) return json({ ok: true });
 
   const [{ data: pagos }, { data: productos }, { data: servicios }, { data: reservas }, { data: accesos }, { data: arrep }] = await Promise.all([

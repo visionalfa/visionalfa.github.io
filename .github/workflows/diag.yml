@@ -5,15 +5,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          REF=futhqkqfjuuemhcxzakn
-          SR=$(curl -sS "https://api.supabase.com/v1/projects/$REF/api-keys?reveal=true" -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" | jq -r '[.[] | select(.name=="service_role" or .type=="secret")][0].api_key')
-          echo "::add-mask::$SR"
-          L=$(curl -sS -X POST "https://$REF.supabase.co/auth/v1/admin/generate_link" -H "apikey: $SR" -H "Authorization: Bearer $SR" -H "Content-Type: application/json" -d '{"type":"magiclink","email":"visionalfa.arg@gmail.com"}')
-          TH=$(echo "$L" | jq -r '.hashed_token // .properties.hashed_token')
-          S=$(curl -sS -X POST "https://$REF.supabase.co/auth/v1/verify" -H "apikey: sb_publishable_x20gCAkWL2NsZG84wiWgGQ_hlchdMOF" -H "Content-Type: application/json" -d "{\"type\":\"magiclink\",\"token_hash\":\"$TH\"}")
-          AT=$(echo "$S" | jq -r '.access_token'); echo "::add-mask::$AT"
-          [ "$AT" != "null" ] || echo "::error::no session: $(echo "$S" | head -c 200)"
-          c=$(curl -sS -o r.json -w "%{http_code}" "https://$REF.supabase.co/functions/v1/panel?check=1" -H "apikey: sb_publishable_x20gCAkWL2NsZG84wiWgGQ_hlchdMOF" -H "Authorization: Bearer $AT")
-          echo "::notice::check → $c $(head -c 200 r.json)"
-          c=$(curl -sS -o r.json -w "%{http_code}" "https://$REF.supabase.co/functions/v1/panel" -H "apikey: sb_publishable_x20gCAkWL2NsZG84wiWgGQ_hlchdMOF" -H "Authorization: Bearer $AT")
-          echo "::notice::panel → $c $(jq -c '{resumen, error, n_ventas:(.ventas|length?), n_res:(.reservas|length?), clientes}' r.json 2>/dev/null || head -c 300 r.json)"
+          q="select left(email,5) || '…@' || split_part(email,'@',2) as e, length(email) as largo from public.admins; select left(email,5) || '…@' || split_part(email,'@',2) as u, last_sign_in_at from auth.users order by last_sign_in_at desc nulls last limit 5;"
+          jq -n --arg q "$q" '{query:$q}' > c.json
+          echo "::notice::$(curl -sS -X POST https://api.supabase.com/v1/projects/futhqkqfjuuemhcxzakn/database/query -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" -H "Content-Type: application/json" --data @c.json)"
+          q="select left(email,5) || '…@' || split_part(email,'@',2) as e from public.admins;"
+          jq -n --arg q "$q" '{query:$q}' > c.json
+          echo "::notice::admins $(curl -sS -X POST https://api.supabase.com/v1/projects/futhqkqfjuuemhcxzakn/database/query -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" -H "Content-Type: application/json" --data @c.json)"
