@@ -4,4 +4,7 @@ jobs:
   d:
     runs-on: ubuntu-latest
     steps:
-      - run: echo ok
+      - run: |
+          q="select id, precio, precio_oferta, oferta_desde at time zone 'America/Argentina/Buenos_Aires' as desde, oferta_hasta at time zone 'America/Argentina/Buenos_Aires' as hasta from public.productos where activo order by orden;"
+          jq -n --arg q "$q" '{query:$q}' > c.json
+          echo "::notice::$(curl -sS -X POST https://api.supabase.com/v1/projects/futhqkqfjuuemhcxzakn/database/query -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" -H "Content-Type: application/json" --data @c.json)"
