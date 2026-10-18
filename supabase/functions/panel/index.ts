@@ -16,7 +16,13 @@ Deno.serve(async (req) => {
   const db = admin();
   const user = await usuario(req, db);
   if (!user?.email) return json({ error: "Entrá con tu mail para ver el panel." }, 401);
-  const { data: esAdmin } = await db.from("admins").select("email").eq("email", user.email.toLowerCase()).maybeSingle();
+  // En Gmail los puntos y lo que va después de "+" no cambian la casilla: se comparan normalizados.
+  const normal = (m: string) => {
+    const [u, d] = m.toLowerCase().trim().split("@");
+    return ["gmail.com", "googlemail.com"].includes(d) ? `${u.split("+")[0].replace(/\./g, "")}@gmail.com` : `${u}@${d}`;
+  };
+  const { data: lista } = await db.from("admins").select("email");
+  const esAdmin = (lista ?? []).some((a) => normal(a.email) === normal(user.email!));
   if (!esAdmin) return json({ error: `Este panel es privado. Entraste como ${user.email}.` }, 403);
   if (new URL(req.url).searchParams.get("check")) return json({ ok: true });
 
