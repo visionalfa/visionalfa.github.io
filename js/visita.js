@@ -46,6 +46,7 @@
     else if (a.closest(".nube-caja") && !a.classList.contains("nube-x")) d = "nube";
     else if (/agenda\.html/.test(href)) d = "reservar:" + ((href.match(/servicio=([a-z0-9-]+)/) || [])[1] || "asesoria");
     else if (/equipo\.html/.test(href)) d = "equipo";
+    else if (/perfil\.html/.test(href)) d = "test";
     else if (/recursos\.html|cv\.html/.test(href)) d = "gratis";
     else if (/wa\.me|whatsapp/.test(href)) d = "whatsapp";
     if (d) enviar("clic", d);

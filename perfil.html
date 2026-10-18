@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Descubrí tu perfil de competencias · Visión Alfa</title>
+<meta name="description" content="Test gratis de 10 preguntas para descubrir tus fortalezas laborales, en qué trabajos brillás y cómo contarlo en tu CV y en la entrevista.">
+<meta property="og:title" content="¿Cuál es tu perfil de competencias? · Test gratis">
+<meta property="og:description" content="10 preguntas, 3 minutos. Descubrí tus fortalezas y cómo mostrarlas en tu CV.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/legal.css">
+<style>
+[hidden]{display:none!important}
+main{padding-block:0 64px}
+.hero-q{background:var(--verde);color:var(--papel)}
+.hero-q .in{padding-block:48px 52px;display:flex;flex-direction:column;gap:14px}
+.eyebrow{font-size:13px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--mostaza)}
+.hero-q h1{color:var(--papel);font-size:clamp(36px,7vw,58px);margin:0}
+.hero-q p{font-size:19px;color:var(--suave);max-width:600px;margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.chips span{border:1.5px solid rgba(244,243,238,.35);border-radius:999px;padding:5px 12px;font-size:14px;font-weight:600}
+.empezar{align-self:flex-start;margin-top:8px;background:var(--mostaza);color:var(--verde)}
+.zona{padding-top:36px}
+.progreso{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--gris);font-weight:600;margin-bottom:18px}
+.barra{flex:1;height:8px;background:var(--suave);border-radius:999px;overflow:hidden}
+.barra i{display:block;height:100%;background:var(--mostaza);border-radius:999px;transition:width .3s}
+.pregunta h2{font-size:clamp(26px,5vw,34px);margin:0 0 20px}
+.opciones{display:flex;flex-direction:column;gap:12px}
+.op{font:inherit;text-align:left;cursor:pointer;background:var(--blanco);border:2px solid var(--linea);border-radius:16px;padding:16px 18px;min-height:56px;color:var(--tinta);font-size:17px;line-height:1.35;display:flex;gap:14px;align-items:center;transition:border-color .15s,background .15s}
+.op:hover{border-color:var(--verde)}
+.op b{flex:none;width:32px;height:32px;border-radius:50%;background:var(--suave);color:var(--verde);display:flex;align-items:center;justify-content:center;font-size:15px}
+.op.sel{border-color:var(--verde);background:var(--verde);color:var(--papel)}
+.op.sel b{background:var(--mostaza)}
+.nav-q{display:flex;justify-content:space-between;margin-top:20px}
+.atras{font:600 15px var(--texto);background:none;border:0;color:var(--gris);cursor:pointer;padding:10px 0;min-height:44px}
+.res-cab{background:var(--verde);color:var(--papel);border-radius:22px;padding:28px 26px;margin-top:8px}
+.res-cab .eyebrow{margin-bottom:6px}
+.res-cab h2{color:var(--papel);font-size:clamp(32px,6vw,46px);margin:0 0 10px}
+.res-cab h2 em{font-style:normal;color:var(--mostaza)}
+.res-cab p{color:var(--suave);margin:0;font-size:17.5px}
+.mezcla{margin:22px 0 4px;display:flex;flex-direction:column;gap:12px}
+.mz .t{display:flex;justify-content:space-between;font-size:15px;font-weight:600;color:var(--verde);margin-bottom:5px}
+.mz .t span{color:var(--gris)}
+.mz .pista{height:10px;background:var(--suave);border-radius:999px;overflow:hidden}
+.mz .pista i{display:block;height:100%;background:var(--verde);border-radius:999px}
+.mz.top .pista i{background:var(--mostaza)}
+h3.sec{font-family:var(--titulos);font-weight:800;color:var(--verde);font-size:22px;letter-spacing:-.02em;margin:30px 0 10px}
+.lista-comp{display:flex;flex-wrap:wrap;gap:8px;padding:0;margin:0;list-style:none}
+.lista-comp li{background:var(--blanco);border:1.5px solid var(--linea);border-radius:999px;padding:7px 14px;font-weight:600;font-size:15px;color:var(--verde);margin:0}
+.frase{background:var(--blanco);border:1px solid var(--linea);border-left:6px solid var(--mostaza);border-radius:14px;padding:14px 18px;margin:10px 0;font-size:16.5px}
+.frase small{display:block;font-weight:600;color:var(--gris);font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.acciones{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+a.btn{text-decoration:none}
+.btn-sec{background:transparent;color:var(--verde);border:2px solid var(--verde)}
+.carla{background:var(--mostaza);border-radius:20px;padding:22px 24px;margin-top:34px;color:var(--verde)}
+.carla h3{font-family:var(--titulos);font-weight:800;font-size:22px;margin:0 0 6px;letter-spacing:-.02em}
+.carla p{margin:0 0 14px}
+.aviso{font-size:14px;color:var(--gris);margin-top:26px}
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="Principal">
+  <div class="in">
+    <a class="marca" href="index.html">
+      <svg width="34" height="26" viewBox="0 8 64 48" aria-hidden="true"><path d="M4 14 L17 50 L30 14" fill="none" stroke="#F4F3EE" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 50 L47 14 L60 50" fill="none" stroke="#E3A82B" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      visión alfa
+    </a>
+    <a class="volver" href="recursos.html">← Recursos gratis</a>
+  </div>
+</nav>
+
+<header class="hero-q" id="intro">
+  <div class="in">
+    <div class="eyebrow">Test gratis · 3 minutos</div>
+    <h1>Descubrí tu perfil de competencias</h1>
+    <p>10 preguntas sobre cómo sos en el día a día. Al final te mostramos tus fortalezas, en qué trabajos brillás y cómo contarlo en tu CV y en la entrevista.</p>
+    <div class="chips"><span>Sin registrarte</span><span>Ideal para tu primer trabajo</span><span>Gratis</span></div>
+    <button class="btn empezar" type="button" id="empezar">Empezar el test</button>
+  </div>
+</header>
+
+<main><div class="in">
+  <section class="zona" id="test" hidden aria-live="polite">
+    <div class="progreso"><span id="num">1 de 10</span><div class="barra"><i id="barra" style="width:10%"></i></div></div>
+    <div class="pregunta">
+      <h2 id="preg"></h2>
+      <div class="opciones" id="opciones" role="group"></div>
+    </div>
+    <div class="nav-q"><button class="atras" type="button" id="atras">← Anterior</button></div>
+  </section>
+
+  <section class="zona" id="resultado" hidden>
+    <div class="res-cab">
+      <div class="eyebrow">Tu perfil principal</div>
+      <h2 id="rTitulo"></h2>
+      <p id="rDesc"></p>
+    </div>
+    <div class="mezcla" id="mezcla" aria-label="Tu mezcla de perfiles"></div>
+
+    <h3 class="sec">Tus competencias fuertes</h3>
+    <ul class="lista-comp" id="rComp"></ul>
+
+    <h3 class="sec">Dónde podés brillar</h3>
+    <p id="rTrabajos" style="margin:0"></p>
+
+    <h3 class="sec">Cómo contarlo</h3>
+    <div class="frase"><small>En tu CV</small><span id="rCV"></span></div>
+    <div class="frase"><small>En la entrevista</small><span id="rEntrevista"></span></div>
+
+    <h3 class="sec">Para seguir creciendo</h3>
+    <p id="rCrecer" style="margin:0"></p>
+
+    <p id="rSegundo" style="margin-top:18px"></p>
+
+    <div class="acciones">
+      <a class="btn" href="cv.html">Armar mi CV gratis</a>
+      <button class="btn btn-sec" type="button" id="compartir">Compartir mi resultado</button>
+      <button class="btn btn-sec" type="button" id="repetir">Hacer el test de nuevo</button>
+    </div>
+
+    <div class="carla">
+      <h3>¿Querés ir más a fondo?</h3>
+      <p>Este test es una guía rápida. Si estás eligiendo qué estudiar o querés cambiar de rumbo, <strong>Carla Tanzi</strong>, psicóloga de nuestro equipo, te acompaña en un proceso de orientación vocacional.</p>
+      <a class="btn" href="agenda.html?servicio=orientacion-vocacional" style="background:var(--verde);color:var(--papel)">Reservar con Carla</a>
+    </div>
+    <p class="aviso">Este test es orientativo: sirve para pensar tus fortalezas y cómo mostrarlas. No es una evaluación psicológica ni un diagnóstico. Tus respuestas no se guardan.</p>
+  </section>
+</div></main>
+
+<footer><div class="in">
+  <span>© Visión Alfa</span>
+  <a href="terminos.html">Términos y condiciones</a>
+  <a href="privacidad.html">Privacidad</a>
+  <a href="arrepentimiento.html">Botón de arrepentimiento</a>
+  <a href="https://www.argentina.gob.ar/produccion/defensadelconsumidor/formulario" target="_blank" rel="noopener">Defensa de las y los Consumidores. Para reclamos ingresá acá</a>
+</div></footer>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  // C = Conector · O = Organizador · K = Creativo · R = Resolutivo
+  var P = [
+    ["En un trabajo en grupo, vos normalmente…", [["Hablo con todos y busco que nos pongamos de acuerdo", "C"], ["Armo el plan y reparto tareas con fechas", "O"], ["Propongo ideas distintas", "K"], ["Decido cuando nadie se anima", "R"]]],
+    ["Tu día ideal de trabajo incluye…", [["Charlar con mucha gente", "C"], ["Terminar toda mi lista de tareas", "O"], ["Crear algo nuevo", "K"], ["Resolver un problema difícil", "R"]]],
+    ["Un cliente llega enojado. Vos…", [["Lo escucho con calma hasta que se tranquiliza", "C"], ["Reviso paso por paso qué pasó", "O"], ["Busco una solución distinta a la de siempre", "K"], ["Actúo rápido y lo soluciono", "R"]]],
+    ["Te suelen elogiar por…", [["Cómo tratás a la gente", "C"], ["Ser responsable y prolijo/a", "O"], ["Tus ideas", "K"], ["Animarte y resolver", "R"]]],
+    ["¿Qué actividad disfrutás más?", [["Debatir, enseñar o ayudar a otros", "C"], ["Ordenar, calcular o planificar", "O"], ["Dibujar, escribir, diseñar o cocinar", "K"], ["Competir, organizar un evento o arreglar cosas", "R"]]],
+    ["Te dan una tarea sin instrucciones. Vos…", [["Le pregunto a alguien que sepa", "C"], ["Armo un paso a paso antes de empezar", "O"], ["La hago a mi manera", "K"], ["Arranco y voy corrigiendo sobre la marcha", "R"]]],
+    ["¿Qué te cansa más?", [["Estar solo/a todo el día", "C"], ["El desorden y la improvisación", "O"], ["La rutina que se repite", "K"], ["Esperar sin poder avanzar", "R"]]],
+    ["Si tuvieras que vender algo por redes, lo que mejor te saldría es…", [["Responder mensajes y generar confianza", "C"], ["Llevar la cuenta de pedidos, stock y envíos", "O"], ["Hacer las fotos, videos y diseños", "K"], ["Cerrar la venta y conseguir clientes", "R"]]],
+    ["Hay un cambio de último momento…", [["Aviso a todos y calmo al grupo", "C"], ["Reorganizo el plan", "O"], ["Lo veo como una oportunidad", "K"], ["Decido rápido qué hacemos", "R"]]],
+    ["Te imaginás en un trabajo donde…", [["Atendés o ayudás a personas", "C"], ["Todo funciona gracias a tu organización", "O"], ["Creás cosas que otros ven y usan", "K"], ["Liderás un equipo o llevás tu propio proyecto", "R"]]]
+  ];
+  var PERFILES = {
+    C: { nombre: "Conector/a", art: "Sos", desc: "Tu fuerte son las personas: escuchás, generás confianza y hacés que los demás se entiendan. Donde hay gente, vos sumás.",
+      comp: ["Comunicación", "Empatía", "Atención al cliente", "Trabajo en equipo", "Persuasión"],
+      trabajos: "Atención al público y ventas, recepción, call center, turismo y hotelería, docencia y acompañamiento, recursos humanos, salud y cuidado de personas, community manager.",
+      cv: "“Me destaco por la buena comunicación y el trato con las personas: me resulta natural escuchar, explicar y generar un buen clima de trabajo.”",
+      ent: "Contá una vez en que ayudaste a alguien a resolver un problema o calmaste una situación tensa (en el colegio, un club, tu familia o una changa).",
+      crecer: "Practicá decir que no y ordenar tus prioridades: a veces, por ayudar a todos, lo tuyo queda para después." },
+    O: { nombre: "Organizador/a", art: "Sos", desc: "Tu fuerte es el orden: planificás, cumplís y hacés que las cosas funcionen. Donde vos estás, nada se pierde.",
+      comp: ["Organización", "Responsabilidad", "Atención al detalle", "Planificación", "Manejo de datos"],
+      trabajos: "Administración, logística y depósito, caja y facturación, asistente o secretaría, compras, contabilidad, gestión de stock, carga de datos, producción.",
+      cv: "“Soy una persona organizada y responsable: me gusta planificar, cumplir plazos y llevar el control de las tareas con prolijidad.”",
+      ent: "Contá cómo organizaste algo concreto: un viaje, un evento, tus estudios con varias materias o las cuentas de un emprendimiento familiar.",
+      crecer: "Entrená la flexibilidad: no todo sale según el plan, y adaptarte rápido también es una forma de organizarte." },
+    K: { nombre: "Creativo/a", art: "Sos", desc: "Tu fuerte son las ideas: ves posibilidades donde otros ven lo de siempre y le das tu toque a todo lo que hacés.",
+      comp: ["Creatividad", "Adaptabilidad", "Sentido estético", "Pensamiento innovador", "Comunicación visual"],
+      trabajos: "Diseño, marketing y redes sociales, fotografía y video, gastronomía, decoración y vidrieras, indumentaria, comunicación, emprendimientos propios.",
+      cv: "“Soy una persona creativa y curiosa: me gusta proponer ideas nuevas, aprender rápido y adaptarme a distintos desafíos.”",
+      ent: "Mostrá algo que hiciste: un diseño, un video, un posteo, una receta, un proyecto. Si tenés fotos en el celular, llevalas.",
+      crecer: "Sumale método a tus ideas: anotá, poné fechas y terminá lo que empezás. Una buena idea terminada vale más que diez a medias." },
+    R: { nombre: "Resolutivo/a", art: "Sos", desc: "Tu fuerte es la acción: tomás decisiones, te animás y resolvés. Cuando hay un problema, sos de las personas que se ponen al frente.",
+      comp: ["Iniciativa", "Toma de decisiones", "Resolución de problemas", "Trabajo bajo presión", "Liderazgo"],
+      trabajos: "Ventas y área comercial, coordinación de equipos, oficios técnicos y mantenimiento, atención de urgencias, logística, emprender tu propio negocio.",
+      cv: "“Tengo iniciativa y me gusta resolver: trabajo bien bajo presión y me animo a tomar decisiones cuando hace falta.”",
+      ent: "Contá un problema que resolviste por tu cuenta: qué pasaba, qué decidiste hacer y cómo terminó.",
+      crecer: "Antes de actuar, frená un minuto a escuchar a los demás: las mejores decisiones suman otras miradas." }
+  };
+  var resp = new Array(P.length).fill(null), i = 0;
+
+  function mostrar() {
+    $("num").textContent = (i + 1) + " de " + P.length;
+    $("barra").style.width = ((i + 1) / P.length * 100) + "%";
+    $("preg").textContent = P[i][0];
+    var cont = $("opciones"); cont.innerHTML = "";
+    P[i][1].forEach(function (o, j) {
+      var b = document.createElement("button"); b.type = "button"; b.className = "op" + (resp[i] === j ? " sel" : "");
+      var l = document.createElement("b"); l.textContent = "ABCD"[j]; b.appendChild(l);
+      b.appendChild(document.createTextNode(o[0]));
+      b.addEventListener("click", function () {
+        resp[i] = j; cont.querySelectorAll(".op").forEach(function (x) { x.classList.remove("sel"); }); b.classList.add("sel");
+        setTimeout(function () { if (i < P.length - 1) { i++; mostrar(); } else resultado(); }, 220);
+      });
+      cont.appendChild(b);
+    });
+    $("atras").style.visibility = i === 0 ? "hidden" : "visible";
+  }
+
+  function resultado() {
+    var pts = { C: 0, O: 0, K: 0, R: 0 };
+    resp.forEach(function (j, k) { if (j != null) pts[P[k][1][j][1]]++; });
+    var orden = Object.keys(pts).sort(function (a, b) { return pts[b] - pts[a]; });
+    var top = orden[0], seg = orden[1], p = PERFILES[top];
+    $("rTitulo").innerHTML = ""; $("rTitulo").appendChild(document.createTextNode(p.art + " "));
+    var em = document.createElement("em"); em.textContent = p.nombre; $("rTitulo").appendChild(em);
+    $("rDesc").textContent = p.desc;
+    var mz = $("mezcla"); mz.innerHTML = "";
+    orden.forEach(function (k) {
+      var pct = Math.round(pts[k] / P.length * 100);
+      var d = document.createElement("div"); d.className = "mz" + (k === top ? " top" : "");
+      var t = document.createElement("div"); t.className = "t"; var n = document.createElement("b"); n.textContent = PERFILES[k].nombre; var s = document.createElement("span"); s.textContent = pct + "%";
+      t.appendChild(n); t.appendChild(s);
+      var pi = document.createElement("div"); pi.className = "pista"; var ii = document.createElement("i"); ii.style.width = Math.max(2, pct) + "%"; pi.appendChild(ii);
+      d.appendChild(t); d.appendChild(pi); mz.appendChild(d);
+    });
+    var ul = $("rComp"); ul.innerHTML = ""; p.comp.forEach(function (c) { var li = document.createElement("li"); li.textContent = c; ul.appendChild(li); });
+    $("rTrabajos").textContent = p.trabajos;
+    $("rCV").textContent = p.cv; $("rEntrevista").textContent = p.ent; $("rCrecer").textContent = p.crecer;
+    $("rSegundo").textContent = pts[seg] > 0 ? "Tu segundo perfil es " + PERFILES[seg].nombre + ": sumá también " + PERFILES[seg].comp.slice(0, 2).join(" y ").toLowerCase() + " a la lista de cosas que sabés hacer." : "";
+    $("test").hidden = true; $("resultado").hidden = false; window.scrollTo(0, 0);
+    window._perfil = p.nombre;
+    try {
+      if (localStorage.getItem("va-panel-k")) throw 0;
+      var ses = sessionStorage.getItem("va-s") || "quiz";
+      fetch("https://futhqkqfjuuemhcxzakn.supabase.co/functions/v1/visita", { method: "POST", keepalive: true,
+        headers: { "Content-Type": "application/json", apikey: "sb_publishable_x20gCAkWL2NsZG84wiWgGQ_hlchdMOF" },
+        body: JSON.stringify({ evento: "clic", pagina: "perfil", dispositivo: innerWidth <= 760 ? "celular" : "compu", sesion: ses, detalle: "test:" + p.nombre }) }).catch(function () {});
+    } catch (e) {}
+  }
+
+  $("empezar").addEventListener("click", function () { $("intro").hidden = true; $("test").hidden = false; i = 0; mostrar(); window.scrollTo(0, 0); });
+  $("atras").addEventListener("click", function () { if (i > 0) { i--; mostrar(); } });
+  $("repetir").addEventListener("click", function () { resp = new Array(P.length).fill(null); i = 0; $("resultado").hidden = true; $("test").hidden = false; mostrar(); window.scrollTo(0, 0); });
+  $("compartir").addEventListener("click", function () {
+    var txt = "Hice el test de competencias de Visión Alfa y me salió " + (window._perfil || "") + ". Hacelo gratis acá:";
+    var url = "https://visionalfa.github.io/perfil.html";
+    if (navigator.share) navigator.share({ title: "Mi perfil de competencias", text: txt, url: url }).catch(function () {});
+    else location.href = "https://wa.me/?text=" + encodeURIComponent(txt + " " + url);
+  });
+})();
+</script>
+<script src="js/visita.js" defer></script>
+</body>
+</html>
