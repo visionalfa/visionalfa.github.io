@@ -12,11 +12,17 @@ Deno.serve(async (req) => {
   const { producto } = await req.json().catch(() => ({ producto: null }));
   const { data: p } = await db
     .from("productos")
-    .select("id, nombre, tipo, precio")
+    .select("id, nombre, tipo, precio, precio_oferta, oferta_desde, oferta_hasta")
     .eq("id", producto)
     .eq("activo", true)
     .maybeSingle();
   if (!p) return json({ error: "Ese producto no existe" }, 400);
+
+  // Precio de oferta solo dentro de su ventana de fechas (por ejemplo, Cyber Monday).
+  const ahora = Date.now();
+  const enOferta = p.precio_oferta != null && p.oferta_desde && p.oferta_hasta &&
+    ahora >= new Date(p.oferta_desde).getTime() && ahora <= new Date(p.oferta_hasta).getTime();
+  const precio = Number(enOferta ? p.precio_oferta : p.precio);
 
   const referencia = `${user.id}|${p.id}`;
   const vuelta = `${SITE_URL}/cuenta.html`;
@@ -36,7 +42,7 @@ Deno.serve(async (req) => {
           auto_recurring: {
             frequency: 1,
             frequency_type: "months",
-            transaction_amount: Number(p.precio),
+            transaction_amount: precio,
             currency_id: "ARS",
           },
         }),
@@ -53,7 +59,7 @@ Deno.serve(async (req) => {
     const r = await mp("/checkout/preferences", {
       method: "POST",
       body: JSON.stringify({
-        items: [{ id: p.id, title: p.nombre, quantity: 1, unit_price: Number(p.precio), currency_id: "ARS" }],
+        items: [{ id: p.id, title: enOferta ? `${p.nombre} · Cyber Monday` : p.nombre, quantity: 1, unit_price: precio, currency_id: "ARS" }],
         payer: { email: user.email },
         external_reference: referencia,
         back_urls: {
