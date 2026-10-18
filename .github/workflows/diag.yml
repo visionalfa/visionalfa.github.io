@@ -1,11 +1,13 @@
-name: Revisar ventas
+name: Revisar web
 on: workflow_dispatch
 jobs:
   d:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          q="select p.id, p.producto_id, p.estado, p.monto, (select a.estado from public.accesos a where a.mp_referencia = 'pago_' || p.id) as acceso from public.pagos p order by p.creado desc limit 5;"
+          c=$(curl -sS -o r.json -w "%{http_code}" https://futhqkqfjuuemhcxzakn.supabase.co/functions/v1/panel -H "apikey: sb_publishable_x20gCAkWL2NsZG84wiWgGQ_hlchdMOF")
+          echo "::notice::panel sin sesión → $c $(cat r.json)"
+          q="select count(*) as admins from public.admins;"
           jq -n --arg q "$q" '{query:$q}' > c.json
-          r=$(curl -sS -X POST "https://api.supabase.com/v1/projects/futhqkqfjuuemhcxzakn/database/query" -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" -H "Content-Type: application/json" --data @c.json | jq -c .)
-          echo "::notice::$r"
+          echo "::notice::$(curl -sS -X POST https://api.supabase.com/v1/projects/futhqkqfjuuemhcxzakn/database/query -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" -H "Content-Type: application/json" --data @c.json)"
+          c=$(curl -sS -o p.html -w "%{http_code}" https://visionalfa.github.io/panel.html); echo "::notice::panel.html → $c"
