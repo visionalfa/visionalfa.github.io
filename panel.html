@@ -211,7 +211,16 @@ a.btn{text-decoration:none}
     $("contenido").hidden = false;
   }
 
-  VA.llamar("panel").then(pintar).catch(function (e) {
+  // Link privado: visionalfa.github.io/panel.html#k=CLAVE (la clave queda guardada en este celular).
+  var clave = null;
+  var m = location.hash.match(/k=([A-Za-z0-9_-]{32,})/);
+  if (m) { clave = m[1]; try { localStorage.setItem("va-panel-k", clave); } catch (e) {} history.replaceState(null, "", location.pathname); }
+  if (!clave) { try { clave = localStorage.getItem("va-panel-k"); } catch (e) {} }
+  var pedido = clave
+    ? fetch("https://futhqkqfjuuemhcxzakn.supabase.co/functions/v1/panel", { headers: { apikey: "sb_publishable_x20gCAkWL2NsZG84wiWgGQ_hlchdMOF", "x-panel-clave": clave } })
+        .then(function (r) { return r.json().then(function (j) { if (!r.ok) { if (r.status === 403) { try { localStorage.removeItem("va-panel-k"); } catch (e) {} } var e = new Error(j.error || "No se pudo cargar el panel."); e.status = r.status; throw e; } return j; }); })
+    : VA.llamar("panel");
+  pedido.then(pintar).catch(function (e) {
     $("actualizado").textContent = "";
     $("errorTxt").textContent = e.status === 401 ? "Para ver el panel, primero entrá con tu mail." : e.message;
     $("entrar").hidden = e.status !== 401;

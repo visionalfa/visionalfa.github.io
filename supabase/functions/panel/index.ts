@@ -14,16 +14,31 @@ function inicioDiaAR(d = new Date()): Date {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   const db = admin();
-  const user = await usuario(req, db);
-  if (!user?.email) return json({ error: "Entrá con tu mail para ver el panel." }, 401);
-  // En Gmail los puntos y lo que va después de "+" no cambian la casilla: se comparan normalizados.
-  const normal = (m: string) => {
-    const [u, d] = m.toLowerCase().trim().split("@");
-    return ["gmail.com", "googlemail.com"].includes(d) ? `${u.split("+")[0].replace(/\./g, "")}@gmail.com` : `${u}@${d}`;
-  };
-  const { data: lista } = await db.from("admins").select("email");
-  const esAdmin = (lista ?? []).some((a) => normal(a.email) === normal(user.email!));
-  if (!esAdmin) return json({ error: `Este panel es privado. Entraste como ${user.email}.` }, 403);
+
+  // Acceso 1: link privado con clave (se compara el hash, la clave nunca se guarda).
+  let permitido = false;
+  const clave = req.headers.get("x-panel-clave") ?? "";
+  if (clave.length >= 32) {
+    const h = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(clave))))
+      .map((x) => x.toString(16).padStart(2, "0")).join("");
+    const { data } = await db.from("panel_claves").select("hash").eq("hash", h).maybeSingle();
+    if (!data) return json({ error: "El link del panel no es válido o fue reemplazado." }, 403);
+    permitido = true;
+  }
+
+  // Acceso 2: sesión con un mail autorizado.
+  if (!permitido) {
+    const user = await usuario(req, db);
+    if (!user?.email) return json({ error: "Entrá con tu mail para ver el panel." }, 401);
+    // En Gmail los puntos y lo que va después de "+" no cambian la casilla: se comparan normalizados.
+    const normal = (m: string) => {
+      const [u, d] = m.toLowerCase().trim().split("@");
+      return ["gmail.com", "googlemail.com"].includes(d) ? `${u.split("+")[0].replace(/\./g, "")}@gmail.com` : `${u}@${d}`;
+    };
+    const { data: lista } = await db.from("admins").select("email");
+    const esAdmin = (lista ?? []).some((a) => normal(a.email) === normal(user.email!));
+    if (!esAdmin) return json({ error: `Este panel es privado. Entraste como ${user.email}.` }, 403);
+  }
   if (new URL(req.url).searchParams.get("check")) return json({ ok: true });
 
   const [{ data: pagos }, { data: productos }, { data: servicios }, { data: reservas }, { data: accesos }, { data: arrep }] = await Promise.all([
