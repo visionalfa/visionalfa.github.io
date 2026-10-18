@@ -265,7 +265,7 @@ a.btn{text-decoration:none}
 
   // Link privado: visionalfa.github.io/panel.html#k=CLAVE (la clave queda guardada en este celular).
   var clave = null;
-  var m = location.hash.match(/k=([A-Za-z0-9_-]{32,})/);
+  var m = location.hash.match(/k=([A-Za-z0-9_-]{32,})/) || location.search.match(/[?&]k=([A-Za-z0-9_-]{32,})/);
   if (m) { clave = m[1]; try { localStorage.setItem("va-panel-k", clave); } catch (e) {} }
   if (!clave) { try { clave = localStorage.getItem("va-panel-k"); } catch (e) {} }
   var pedido = clave
