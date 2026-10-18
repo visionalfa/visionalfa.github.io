@@ -5,6 +5,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          q="select id, activo from public.productos where id like 'prueba%';"
+          FN=https://futhqkqfjuuemhcxzakn.supabase.co/functions/v1/visita
+          c=$(curl -sS -o r.json -w "%{http_code}" -X POST $FN -H "apikey: sb_publishable_x20gCAkWL2NsZG84wiWgGQ_hlchdMOF" -H "Content-Type: application/json" -H "User-Agent: Mozilla/5.0 (iPhone)" -d '{"evento":"vista","pagina":"index","origen":"instagram","dispositivo":"celular","sesion":"prueba-sistema"}')
+          echo "::notice::visita → $c $(cat r.json)"
+          c=$(curl -sS -o /dev/null -w "%{http_code}" -X POST $FN -H "apikey: sb_publishable_x20gCAkWL2NsZG84wiWgGQ_hlchdMOF" -H "Content-Type: application/json" -H "User-Agent: Mozilla/5.0 (iPhone)" -d '{"evento":"clic","pagina":"index","dispositivo":"celular","sesion":"prueba-sistema","detalle":"comprar:ia-para-vender-mas"}')
+          q="select evento, pagina, origen, detalle from public.visitas where sesion = 'prueba-sistema'; delete from public.visitas where sesion = 'prueba-sistema';"
+          jq -n --arg q "$q" '{query:$q}' > c.json
+          echo "::notice::guardado y borrado: $(curl -sS -X POST https://api.supabase.com/v1/projects/futhqkqfjuuemhcxzakn/database/query -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" -H "Content-Type: application/json" --data @c.json)"
+          q="select count(*) as visitas_reales from public.visitas;"
           jq -n --arg q "$q" '{query:$q}' > c.json
           echo "::notice::$(curl -sS -X POST https://api.supabase.com/v1/projects/futhqkqfjuuemhcxzakn/database/query -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" -H "Content-Type: application/json" --data @c.json)"
