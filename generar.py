@@ -3,7 +3,7 @@
 from playwright.sync_api import sync_playwright
 import sys, base64, os
 
-AZUL = '#1E9BFF'; CIAN = '#5CD3FF'; NEGRO = '#07090D'; BLANCO = '#F5F8FC'
+AZUL = '#1565FF'; CIAN = '#5CD3FF'; NEGRO = '#07090D'; BLANCO = '#F5F8FC'
 
 def rayo(w=60):
     return (f'<svg width="{w}" height="{int(w*1.25)}" viewBox="0 0 40 50"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">'
@@ -26,10 +26,10 @@ body{{font-family:Inter,sans-serif;overflow:hidden;background:{NEGRO}}}
 .marca{{display:flex;align-items:center;gap:14px;font-family:'Inter Display';font-weight:900;font-style:italic;letter-spacing:-.01em;position:relative}}
 .marca small{{font-family:Inter;font-style:normal;font-weight:600;font-size:22px;letter-spacing:.18em;text-transform:uppercase;opacity:.7;margin-left:6px;align-self:center}}
 .az{{color:{AZUL}}} .azul .az{{color:{NEGRO}}}
-.eye{{font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:28px;color:{CIAN};position:relative}}
+.eye{{font-weight:600;letter-spacing:.3em;text-transform:uppercase;font-size:26px;color:{BLANCO};opacity:.85;position:relative}}
 .azul .eye{{color:{NEGRO}}}
-h1{{font-family:'Inter Display';font-weight:900;letter-spacing:-.035em;line-height:.98;font-size:108px;margin-top:22px;position:relative}}
-h1 em{{font-style:italic;color:{AZUL}}} .azul h1 em{{color:{NEGRO}}}
+h1{{font-family:'Inter Display';font-weight:900;font-style:italic;text-transform:uppercase;letter-spacing:-.02em;line-height:.9;font-size:108px;margin-top:22px;position:relative;width:128%;transform:scaleX(.78);transform-origin:left top}}
+h1 em{{font-style:italic;color:{AZUL}}} .foto h1 em{{color:#2B7BFF}} .azul h1 em{{color:{NEGRO}}}
 .sub{{font-size:38px;line-height:1.38;margin-top:30px;opacity:.9;max-width:880px;position:relative}}
 .s .sub{{font-size:44px}}
 .pie{{margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-size:29px;font-weight:600;position:relative}}
@@ -43,7 +43,7 @@ h1 em{{font-style:italic;color:{AZUL}}} .azul h1 em{{color:{NEGRO}}}
 .caja{{margin-top:46px;border-radius:30px;padding:36px 40px;font-size:36px;line-height:1.38;background:rgba(255,255,255,.06);border:2px solid rgba(92,211,255,.35);position:relative}}
 .azul .caja{{background:rgba(7,9,13,.12);border-color:rgba(7,9,13,.35)}}
 .caja strong{{color:{CIAN}}} .azul .caja strong{{color:{NEGRO}}}
-.tag{{display:inline-block;font-weight:900;font-family:'Inter Display';font-style:italic;font-size:30px;padding:10px 24px;border-radius:999px;margin-bottom:22px}}
+.tag{{display:inline-block;font-weight:900;font-family:'Inter Display';font-style:italic;text-transform:uppercase;font-size:30px;padding:10px 24px;border-radius:999px;margin-bottom:22px}}
 .mito{{background:#3A1418;color:#FF8A8A}} .verdad{{background:#0F3424;color:#6BE3A6}} .depende{{background:#3A2F0C;color:#FFD36B}}
 .num{{position:absolute;top:84px;right:84px;font-weight:700;font-size:26px;opacity:.6}}
 .grande{{font-family:'Inter Display';font-weight:900;font-style:italic;font-size:300px;line-height:.85;letter-spacing:-.05em;color:{AZUL};position:relative;text-shadow:0 0 60px rgba(30,155,255,.45)}}
@@ -53,15 +53,28 @@ h1 em{{font-style:italic;color:{AZUL}}} .azul h1 em{{color:{NEGRO}}}
 .post img{{width:100%;height:100%;display:block}}
 .hueco{{height:300px}}
 .pista{{font-size:36px;font-weight:600;opacity:.75;position:relative}}
+.foto{{background-size:cover;background-position:center top}}
+.foto::before{{display:none}}
+.foto::after{{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,9,13,.55) 0%,rgba(7,9,13,.25) 30%,rgba(7,9,13,.82) 62%,rgba(7,9,13,.97) 100%);z-index:0}}
+.foto>*{{position:relative;z-index:1}}
+.grande{{font-style:italic}}
 '''
 
+def foto(nombre):
+    ruta = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fotos', nombre)
+    return 'data:image/jpeg;base64,' + base64.b64encode(open(ruta, 'rb').read()).decode()
+
 def html(cls, body, kind='p'):
-    return f'<!doctype html><html><head><meta charset="utf-8"><style>{CSS}</style></head><body><div class="{kind} {cls}">{body}</div></body></html>'
+    estilo = ''
+    if cls.startswith('foto:'):
+        estilo = f' style="background-image:url({foto(cls[5:])})"'
+        cls = 'foto'
+    return f'<!doctype html><html><head><meta charset="utf-8"><style>{CSS}</style></head><body><div class="{kind} {cls}"{estilo}>{body}</div></body></html>'
 
 LINK = 'Link en la bio'
 posts = {
- '2026-10-19-post-que-es': ('', marca()+f'''
-<div class="eye" style="margin-top:150px">Electrofitness · EMS</div>
+ '2026-10-19-post-que-es': ('foto:entrena.jpg', marca()+f'''
+<div class="eye" style="margin-top:400px">Electrofitness · EMS</div>
 <h1>¿Qué es el<br><em>electrofitness?</em></h1>
 <p class="sub">Entrenás con un traje que envía impulsos eléctricos suaves a tus músculos mientras hacés ejercicios simples. Siempre guiado por un entrenador.</p>
 <div class="caja">Resultado: <strong>más músculos trabajando a la vez</strong>, en una sesión corta y sin cargar peso.</div>
@@ -75,8 +88,8 @@ posts = {
 <div class="it"><b>✓</b><span>Con entrenador en cada sesión</span></div>
 </div>
 <div class="pie"><span>Córdoba 340 · Cipolletti</span><span class="pill">Probalo gratis</span></div>'''),
- '2026-10-22-post-clase-gratis': ('azul', marca()+f'''
-<div class="eye" style="margin-top:130px">Para arrancar</div>
+ '2026-10-22-post-clase-gratis': ('foto:pareja.jpg', marca()+f'''
+<div class="eye" style="margin-top:430px">Para arrancar</div>
 <h1 style="font-size:120px">Tu primera clase<br><em>es gratis.</em></h1>
 <div class="lista">
 <div class="it"><b>1</b><span>Completá el formulario del link en la bio</span></div>
@@ -99,7 +112,7 @@ posts = {
 <h1 style="font-size:100px">Antes de tu<br><em>primera clase</em></h1>
 <div class="lista">
 <div class="it"><b>1</b><span>Tomá bastante agua durante el día</span></div>
-<div class="it"><b>2</b><span>Comé algo liviano 1 o 2 horas antes</span></div>
+<div class="it"><b>2</b><span>No vengas recién comido ni con el estómago vacío</span></div>
 <div class="it"><b>3</b><span>Contale al entrenador si tenés alguna lesión o condición de salud</span></div>
 <div class="it"><b>4</b><span>Traé ganas: son solo 20 minutos ⚡</span></div>
 </div>
@@ -126,7 +139,7 @@ mitos = [
  ('', marca(34)+'''<span class="num">5/6</span>
 <div style="margin-top:150px"><span class="tag depende">DEPENDE</span></div>
 <h1 style="font-size:100px">“Lo puede hacer cualquiera.”</h1>
-<p class="sub">No se recomienda durante el embarazo, con marcapasos o con epilepsia, entre otros casos. Ante cualquier duda, consultá con tu médico y contanos antes de empezar.</p>'''),
+<p class="sub">No se recomienda con cardiopatía grave, marcapasos o implantes metálicos, epilepsia, embarazo o posparto reciente, ni con heridas en la piel, entre otros casos. Por eso hacemos una evaluación previa y pedimos apto médico según cada caso.</p>'''),
  ('azul', marca()+'''<span class="num">6/6</span>
 <div class="eye" style="margin-top:200px">¿Te quedó alguna duda?</div>
 <h1 style="font-size:116px">Vení a <em>probarlo gratis.</em></h1>
@@ -155,7 +168,7 @@ def historias(out):
      '2026-10-21-a-historia': ('', marca()+f'''<div class="eye" style="margin-top:110px">Hoy en el feed</div>
 <h1>Mitos y verdades del <em>EMS</em> 🤔</h1><div class="post">{P("2026-10-21-post-mitos-1")}</div>
 <div class="cta">Deslizá el post →</div>'''),
-     '2026-10-21-b-historia': ('', marca()+'''<div class="eye" style="margin-top:140px">Te leemos</div>
+     '2026-10-21-b-historia': ('foto:pantalla.jpg', marca()+'''<div class="eye" style="margin-top:560px">Te leemos</div>
 <h1>¿Qué te gustaría saber del <em>electrofitness?</em></h1>
 <p class="sub">Dejanos tu pregunta y te respondemos por acá 👇</p><div class="hueco"></div>'''),
      '2026-10-22-a-historia': ('azul', marca()+f'''<div class="eye" style="margin-top:110px">Para arrancar</div>
@@ -166,7 +179,7 @@ def historias(out):
 <div class="lista"><div class="it"><b>1</b><span>Tocá el link de acá abajo</span></div>
 <div class="it"><b>2</b><span>Completá el formulario</span></div>
 <div class="it"><b>3</b><span>Te escribimos para coordinar</span></div></div><div class="hueco"></div>'''),
-     '2026-10-23-a-historia': ('', marca()+'''<div class="eye" style="margin-top:160px">Te esperamos</div>
+     '2026-10-23-a-historia': ('foto:pareja.jpg', marca()+'''<div class="eye" style="margin-top:640px">Te esperamos</div>
 <h1>Córdoba 340,<br><em>Cipolletti</em> 📍</h1>
 <p class="sub">Entrená inteligente: 20 minutos, máximos resultados. Escribinos por WhatsApp o reservá tu clase gratis desde el link de la bio.</p>
 <div class="cta">⚡ PowerFit Cipolletti</div>'''),
