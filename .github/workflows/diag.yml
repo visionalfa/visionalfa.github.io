@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          q="select left(email,5) || '…@' || split_part(email,'@',2) as e, length(email) as largo from public.admins; select left(email,5) || '…@' || split_part(email,'@',2) as u, last_sign_in_at from auth.users order by last_sign_in_at desc nulls last limit 5;"
+          q="select left(u.email,6) || '…' || right(split_part(u.email,'@',1),3) || '@' || split_part(u.email,'@',2) as usuario, length(u.email) as largo, u.last_sign_in_at, exists(select 1 from public.admins a where a.email = lower(u.email)) as es_admin from auth.users u order by u.last_sign_in_at desc nulls last limit 6;"
           jq -n --arg q "$q" '{query:$q}' > c.json
           echo "::notice::$(curl -sS -X POST https://api.supabase.com/v1/projects/futhqkqfjuuemhcxzakn/database/query -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" -H "Content-Type: application/json" --data @c.json)"
           q="select left(email,5) || '…@' || split_part(email,'@',2) as e from public.admins;"
