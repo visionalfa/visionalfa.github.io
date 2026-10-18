@@ -145,6 +145,7 @@ footer .in{padding-block:24px calc(24px + env(safe-area-inset-bottom,0px))}
   var params = new URLSearchParams(location.search);
   var comprar = params.get("comprar");
   var pago = params.get("pago");
+  var volver = params.get("volver");
   var $ = function (id) { return document.getElementById(id); };
 
   function mostrarMensaje(caja, tipo, texto) {
@@ -282,6 +283,16 @@ footer .in{padding-block:24px calc(24px + env(safe-area-inset-bottom,0px))}
     $("codigo-paso").hidden = true;
     $("cuenta").hidden = false;
     $("cuenta-mail").textContent = "Entraste como " + sesion.user.email;
+
+    // Si venía del panel de ventas, vuelve directo ahí.
+    if (volver === "panel") { location.replace("panel.html"); return; }
+    // Botón al panel solo para quien tiene acceso.
+    VA.llamar("panel", { query: "?check=1" }).then(function () {
+      var a = document.createElement("a");
+      a.href = "panel.html"; a.className = "btn btn-verde"; a.textContent = "📊 Ver mi panel de ventas";
+      a.style.cssText = "margin:4px 0 18px;display:inline-flex";
+      $("cuenta-mail").insertAdjacentElement("afterend", a);
+    }).catch(function () {});
 
     if (comprar) {
       mostrarMensaje($("cuenta-msj"), "info", "Te llevamos al pago con Mercado Pago…");

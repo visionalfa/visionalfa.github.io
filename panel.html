@@ -70,7 +70,7 @@ a.btn{text-decoration:none}
 
   <div id="error" hidden>
     <div class="mensaje error" id="errorTxt"></div>
-    <div class="acciones" style="margin-top:16px"><a class="btn" href="cuenta.html" id="entrar" hidden>Entrar con mi mail</a></div>
+    <div class="acciones" style="margin-top:16px"><a class="btn" href="cuenta.html?volver=panel" id="entrar" hidden>Entrar con mi mail</a></div>
   </div>
 
   <div id="contenido" hidden>
@@ -213,7 +213,7 @@ a.btn{text-decoration:none}
 
   VA.llamar("panel").then(pintar).catch(function (e) {
     $("actualizado").textContent = "";
-    $("errorTxt").textContent = e.status === 401 ? "Entrá con tu mail desde Mi cuenta y volvé a abrir el panel." : e.message;
+    $("errorTxt").textContent = e.status === 401 ? "Para ver el panel, primero entrá con tu mail." : e.message;
     $("entrar").hidden = e.status !== 401;
     $("error").hidden = false;
   });
