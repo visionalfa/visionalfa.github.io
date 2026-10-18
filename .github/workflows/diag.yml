@@ -5,9 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          q="select left(u.email,6) || '…' || right(split_part(u.email,'@',1),3) || '@' || split_part(u.email,'@',2) as usuario, length(u.email) as largo, u.last_sign_in_at, exists(select 1 from public.admins a where a.email = lower(u.email)) as es_admin from auth.users u order by u.last_sign_in_at desc nulls last limit 6;"
-          jq -n --arg q "$q" '{query:$q}' > c.json
-          echo "::notice::$(curl -sS -X POST https://api.supabase.com/v1/projects/futhqkqfjuuemhcxzakn/database/query -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" -H "Content-Type: application/json" --data @c.json)"
-          q="select left(email,5) || '…@' || split_part(email,'@',2) as e from public.admins;"
-          jq -n --arg q "$q" '{query:$q}' > c.json
-          echo "::notice::admins $(curl -sS -X POST https://api.supabase.com/v1/projects/futhqkqfjuuemhcxzakn/database/query -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" -H "Content-Type: application/json" --data @c.json)"
+          c=$(curl -sS -o r.json -w "%{http_code}" https://futhqkqfjuuemhcxzakn.supabase.co/functions/v1/panel -H "apikey: sb_publishable_x20gCAkWL2NsZG84wiWgGQ_hlchdMOF" -H "x-panel-clave: X_ARFx4rjTsrbP7krBksvPjEXRLGaEEW38z-VkNbCD0")
+          echo "::notice::clave buena → $c $(jq -c '{resumen:.resumen.total, ventas:(.ventas|length), error}' r.json)"
+          c=$(curl -sS -o r.json -w "%{http_code}" https://futhqkqfjuuemhcxzakn.supabase.co/functions/v1/panel -H "apikey: sb_publishable_x20gCAkWL2NsZG84wiWgGQ_hlchdMOF" -H "x-panel-clave: claveinventadaclaveinventadaclaveinventada")
+          echo "::notice::clave mala → $c $(cat r.json)"
