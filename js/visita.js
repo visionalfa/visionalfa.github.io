@@ -49,6 +49,7 @@
     else if (/perfil\.html/.test(href)) d = "test";
     else if (/recursos\.html|cv\.html/.test(href)) d = "gratis";
     else if (/wa\.me|whatsapp/.test(href)) d = "whatsapp";
+    else if (a.classList.contains("js-mail")) d = "mail:" + a.dataset.u;
     if (d) enviar("clic", d);
   }, true);
 })();

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Equipo · Visión Alfa</title>
-<meta name="description" content="El equipo interdisciplinario de Visión Alfa: emprendimiento, orientación vocacional, coaching para equipos y asuntos públicos.">
+<meta name="description" content="El equipo interdisciplinario de Visión Alfa: emprendimiento, orientación vocacional, coaching para equipos, asuntos públicos y procesos químicos en oil &amp; gas.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,6 +27,8 @@ main{padding-block:56px 80px}
 .i2{background:var(--mostaza);color:var(--verde)}
 .i3{background:#2E5A40;color:var(--papel)}
 .i4{background:var(--suave);color:var(--verde)}
+.i5{background:#C98F17;color:var(--papel)}
+.mail-dir{font-size:14.5px;color:var(--gris);word-break:break-all}
 .persona h2{font-size:25px;margin:0}
 .rol{margin:2px 0 0;color:var(--gris);font-size:15.5px;font-weight:500}
 .persona p{margin:0}
@@ -70,7 +72,7 @@ main{padding-block:56px 80px}
   <p>Emprender y crecer no es solo vender. A veces hace falta elegir un camino, ordenar un equipo o entender el entorno donde trabaja tu empresa. Por eso sumé profesionales de distintas áreas, cada uno experto en lo suyo.</p>
 </div>
 <ul class="areas" aria-label="Áreas">
-  <li>Emprendimiento y ventas</li><li>Orientación vocacional</li><li>Coaching para equipos</li><li>Asuntos públicos e inversión social</li>
+  <li>Emprendimiento y ventas</li><li>Orientación vocacional</li><li>Coaching para equipos</li><li>Asuntos públicos e inversión social</li><li>Procesos químicos en oil &amp; gas</li>
 </ul>
 
 <div class="equipo">
@@ -121,6 +123,17 @@ main{padding-block:56px 80px}
     </div>
   </article>
 
+  <article class="persona">
+    <div class="cab"><div class="ini i5" aria-hidden="true">MM</div><div><h2>Marcelo Mikulján</h2><p class="rol">Procesos y tratamientos químicos · Industria del oil &amp; gas</p></div></div>
+    <p>Especialista en procesos y tratamientos químicos aplicados a la industria del petróleo y el gas.</p>
+    <p class="para"><b>Para quién:</b> empresas, operadoras y proveedores del sector que necesitan asesoramiento técnico en procesos y tratamientos químicos.</p>
+    <div class="servicio">
+      <div class="que">Consultoría técnica<small>Por hora · coordinás el día y el horario por mail</small></div>
+      <div class="lado"><span class="precio">$60.000</span><a class="btn btn-chico js-mail" data-u="marcelo_mkj" data-d="hotmail.com" data-asunto="Consulta desde Visión Alfa: quiero agendar una cita" href="#">Escribirle</a></div>
+    </div>
+    <p class="mail-dir js-mail-txt" data-u="marcelo_mkj" data-d="hotmail.com"></p>
+  </article>
+
 </div>
 
 <div class="destaca">
@@ -130,7 +143,7 @@ main{padding-block:56px 80px}
   </div>
   <a class="btn" href="mailto:visionalfa.arg@gmail.com?subject=Quiero%20saber%20con%20qui%C3%A9n%20empezar">Escribime</a>
 </div>
-<p class="nota-final">Todas las sesiones son por videollamada y se pagan al reservar con Mercado Pago. Horarios de Argentina.</p>
+<p class="nota-final">Las sesiones con reserva online son por videollamada y se pagan al reservar con Mercado Pago. Con Marcelo Mikulján coordinás directamente por mail. Horarios de Argentina.</p>
 
 </div></main>
 <footer><div class="in ancho">
@@ -140,6 +153,13 @@ main{padding-block:56px 80px}
   <a href="arrepentimiento.html">Botón de arrepentimiento</a>
   <a href="https://www.argentina.gob.ar/produccion/defensadelconsumidor/formulario" target="_blank" rel="noopener">Defensa de las y los Consumidores. Para reclamos ingresá acá</a>
 </div></footer>
+<script>
+document.querySelectorAll(".js-mail").forEach(function (a) {
+  var m = a.dataset.u + "@" + a.dataset.d;
+  a.href = "mailto:" + m + "?subject=" + encodeURIComponent(a.dataset.asunto || "");
+});
+document.querySelectorAll(".js-mail-txt").forEach(function (p) { p.textContent = "Mail: " + p.dataset.u + "@" + p.dataset.d; });
+</script>
 <script src="js/visita.js" defer></script>
 </body>
 </html>
