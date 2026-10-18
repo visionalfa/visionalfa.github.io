@@ -89,13 +89,9 @@ posts = {
 </div>
 <div class="pie"><span>Córdoba 340 · Cipolletti</span><span class="pill">Probalo gratis</span></div>'''),
  '2026-10-22-post-clase-gratis': ('foto:pareja.jpg', marca()+f'''
-<div class="eye" style="margin-top:430px">Para arrancar</div>
+<div class="eye" style="margin-top:440px">Para arrancar</div>
 <h1 style="font-size:120px">Tu primera clase<br><em>es gratis.</em></h1>
-<div class="lista">
-<div class="it"><b>1</b><span>Completá el formulario del link en la bio</span></div>
-<div class="it"><b>2</b><span>Te escribimos por WhatsApp para coordinar el horario</span></div>
-<div class="it"><b>3</b><span>Venís y entrenás 20 minutos con tu entrenador</span></div>
-</div>
+<p class="sub">Elegís el horario que te queda cómodo desde el link de la bio y venís. Somos grupos chiquitos, de hasta 3 personas, así que la clase es a tu medida.</p>
 <div class="pie"><span>Sin compromiso</span><span class="pill">Reservá tu clase</span></div>'''),
  '2026-10-23-post-para-quien': ('', marca()+f'''
 <div class="eye" style="margin-top:120px">¿Es para mí?</div>
@@ -176,12 +172,10 @@ def historias(out):
 <div class="cta">Mirá cómo reservar</div>'''),
      '2026-10-22-b-historia': ('', marca()+'''<div class="eye" style="margin-top:140px">Sin compromiso</div>
 <h1>Reservá tu <em>clase de prueba</em> gratis</h1>
-<div class="lista"><div class="it"><b>1</b><span>Tocá el link de acá abajo</span></div>
-<div class="it"><b>2</b><span>Completá el formulario</span></div>
-<div class="it"><b>3</b><span>Te escribimos para coordinar</span></div></div><div class="hueco"></div>'''),
+<p class="sub">Tocás el link, elegís tu horario y listo. Te esperamos 💙</p><div class="hueco"></div>'''),
      '2026-10-23-a-historia': ('foto:pareja.jpg', marca()+'''<div class="eye" style="margin-top:640px">Te esperamos</div>
 <h1>Córdoba 340,<br><em>Cipolletti</em> 📍</h1>
-<p class="sub">Entrená inteligente: 20 minutos, máximos resultados. Escribinos por WhatsApp o reservá tu clase gratis desde el link de la bio.</p>
+<p class="sub">Clases de 20 minutos, en grupos de hasta 3 personas. Reservá tu clase gratis desde el link de la bio.</p>
 <div class="cta">⚡ PowerFit Cipolletti</div>'''),
      '2026-10-23-b-historia': ('azul', marca()+'''<div class="eye" style="margin-top:140px">Viernes ⚡</div>
 <h1>¿Cuántas ganas tenés de <em>arrancar</em> a entrenar?</h1>
