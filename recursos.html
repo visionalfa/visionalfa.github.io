@@ -211,5 +211,6 @@ document.querySelectorAll("button.copiar").forEach(function (b) {
 });
 function respaldo(t) { var a = document.createElement("textarea"); a.value = t; a.style.position = "fixed"; a.style.opacity = "0"; document.body.appendChild(a); a.select(); try { document.execCommand("copy"); } catch (e) {} document.body.removeChild(a); }
 </script>
+<script src="js/visita.js" defer></script>
 </body>
 </html>

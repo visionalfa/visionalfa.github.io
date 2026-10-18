@@ -16,5 +16,8 @@ verify_jwt = false
 [functions.panel]
 verify_jwt = false
 
+[functions.visita]
+verify_jwt = false
+
 [functions.arrepentimiento]
 verify_jwt = false

@@ -109,6 +109,42 @@ Deno.serve(async (req) => {
     dias.push({ dia: new Date(d0.getTime() - ZONA_OFFSET_H * 3600e3).toISOString().slice(0, 10), total: v.reduce((a, b) => a + b.monto, 0), cantidad: v.length });
   }
 
+  // Visitas (últimos 30 días)
+  const desde30 = new Date(hoy.getTime() - 29 * 86400e3);
+  const { data: vis } = await db.from("visitas").select("creada, evento, pagina, origen, dispositivo, sesion, detalle")
+    .gte("creada", desde30.toISOString()).order("creada", { ascending: false }).limit(20000);
+  const vistas = (vis ?? []).filter((v) => v.evento === "vista");
+  const clics = (vis ?? []).filter((v) => v.evento === "clic");
+  const unicos = (arr: Fila[]) => new Set(arr.map((v) => v.sesion)).size;
+  const desdeF = (d: Date) => vistas.filter((v) => new Date(v.creada) >= d);
+  const contar = (arr: Fila[], k: string, unicoPorSesion = false) => {
+    const m = new Map<string, Set<string> | number>();
+    arr.forEach((v) => {
+      const key = v[k] ?? "-";
+      if (unicoPorSesion) { const s = (m.get(key) as Set<string>) ?? new Set<string>(); s.add(v.sesion); m.set(key, s); }
+      else m.set(key, ((m.get(key) as number) ?? 0) + 1);
+    });
+    return [...m.entries()].map(([nombre, x]) => ({ nombre, cantidad: typeof x === "number" ? x : x.size }))
+      .sort((a, b) => b.cantidad - a.cantidad).slice(0, 10);
+  };
+  // El origen de cada visitante es el de su primera vista (llegada a la web)
+  const primeras = new Map<string, Fila>();
+  [...vistas].reverse().forEach((v) => { if (!primeras.has(v.sesion)) primeras.set(v.sesion, v); });
+  const visDias = dias.map((d) => {
+    const d0 = new Date(Date.parse(d.dia + "T00:00:00-03:00")), d1 = new Date(d0.getTime() + 86400e3);
+    return unicos(vistas.filter((v) => { const f = new Date(v.creada); return f >= d0 && f < d1; }));
+  });
+  const visitas = {
+    hoy: { visitantes: unicos(desdeF(hoy)), paginas: desdeF(hoy).length },
+    semana: { visitantes: unicos(desdeF(hace7)), paginas: desdeF(hace7).length },
+    mes: { visitantes: unicos(vistas), paginas: vistas.length },
+    porDia: visDias,
+    origenes: contar([...primeras.values()], "origen"),
+    paginas: contar(vistas, "pagina", true),
+    clics: contar(clics, "detalle", true),
+    dispositivos: contar([...primeras.values()], "dispositivo"),
+  };
+
   const { data: usuarios } = await db.auth.admin.listUsers({ page: 1, perPage: 1 });
   const activos = (accesos ?? []).filter((a) => a.estado === "activo");
 
@@ -124,5 +160,6 @@ Deno.serve(async (req) => {
       vitalicios: activos.filter((a) => a.producto_id === "vitalicio").length,
     },
     arrepentimientos: arrep ?? [],
+    visitas,
   });
 });
