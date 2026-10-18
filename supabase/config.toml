@@ -13,5 +13,8 @@ verify_jwt = false
 [functions.agenda]
 verify_jwt = false
 
+[functions.panel]
+verify_jwt = false
+
 [functions.arrepentimiento]
 verify_jwt = false

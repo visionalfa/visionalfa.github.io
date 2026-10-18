@@ -52,3 +52,4 @@ jobs:
           supabase functions deploy leer       --no-verify-jwt --project-ref "$PROJECT_REF"
           supabase functions deploy arrepentimiento --no-verify-jwt --project-ref "$PROJECT_REF"
           supabase functions deploy agenda     --no-verify-jwt --project-ref "$PROJECT_REF"
+          supabase functions deploy panel      --no-verify-jwt --project-ref "$PROJECT_REF"

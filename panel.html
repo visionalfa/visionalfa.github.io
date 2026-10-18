@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Panel de ventas · Visión Alfa</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/legal.css">
+<style>
+[hidden]{display:none!important}
+.in.ancho{max-width:1040px}
+main{padding-block:36px 64px}
+h1{font-size:clamp(30px,6vw,44px)}
+h2{font-size:22px;margin:40px 0 14px}
+.sub{color:var(--gris);margin:0 0 20px;font-size:15px}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.tile{background:var(--blanco);border:1px solid var(--linea);border-radius:18px;padding:16px 18px}
+.tile .k{font-size:14px;color:var(--gris);font-weight:500}
+.tile .v{font-family:var(--titulos);font-weight:800;font-size:28px;color:var(--verde);line-height:1.1;margin-top:6px;letter-spacing:-.02em}
+.tile .c{font-size:14px;color:var(--gris);margin-top:2px}
+.tile.dest{background:var(--verde);border-color:var(--verde)}
+.tile.dest .k,.tile.dest .c{color:var(--suave)}
+.tile.dest .v{color:var(--mostaza)}
+.caja{background:var(--blanco);border:1px solid var(--linea);border-radius:18px;padding:18px 20px;margin:0}
+.grafico{position:relative}
+.grafico svg{display:block;max-width:100%;height:auto}
+.tip{position:absolute;pointer-events:none;background:var(--tinta);color:var(--papel);font-size:13px;padding:7px 10px;border-radius:9px;white-space:nowrap;transform:translate(-50%,-100%);margin-top:-8px}
+.barras{display:flex;flex-direction:column;gap:12px}
+.fila .t{display:flex;justify-content:space-between;gap:12px;font-size:15px;margin-bottom:5px}
+.fila .t b{color:var(--verde)}
+.fila .t span{color:var(--gris);white-space:nowrap}
+.pista{height:10px;background:var(--suave);border-radius:999px;overflow:hidden}
+.pista i{display:block;height:100%;background:var(--verde);border-radius:999px}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th{text-align:left;font-weight:600;color:var(--gris);font-size:13px;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 8px 0;border-bottom:1px solid var(--linea)}
+td{padding:10px 10px 10px 0;border-bottom:1px solid var(--linea);vertical-align:top}
+td.n{text-align:right;white-space:nowrap;font-weight:600;color:var(--verde)}
+th.n{text-align:right}
+.tabla{overflow-x:auto}
+.res{display:flex;flex-direction:column;gap:10px}
+.r{background:var(--blanco);border:1px solid var(--linea);border-left:6px solid var(--mostaza);border-radius:14px;padding:12px 16px;font-size:15px}
+.r b{color:var(--verde)}
+.r .q{color:var(--gris);font-size:14px;margin-top:2px}
+.r a{color:var(--verde);font-weight:600}
+.vacio{color:var(--gris);font-size:15px}
+.acciones{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn-sec{background:transparent;color:var(--verde);border:2px solid var(--verde)}
+a.btn{text-decoration:none}
+@media (max-width:720px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.tile .v{font-size:23px}.ocultar-movil{display:none}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+<nav class="nav" aria-label="Principal">
+  <div class="in ancho">
+    <a class="marca" href="index.html">
+      <svg width="34" height="26" viewBox="0 8 64 48" aria-hidden="true"><path d="M4 14 L17 50 L30 14" fill="none" stroke="#F4F3EE" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 50 L47 14 L60 50" fill="none" stroke="#E3A82B" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      visión alfa
+    </a>
+    <a class="volver" href="cuenta.html">Mi cuenta</a>
+  </div>
+</nav>
+<main><div class="in ancho">
+  <h1>Panel de ventas</h1>
+  <p class="sub" id="actualizado">Cargando…</p>
+
+  <div id="error" hidden>
+    <div class="mensaje error" id="errorTxt"></div>
+    <div class="acciones" style="margin-top:16px"><a class="btn" href="cuenta.html" id="entrar" hidden>Entrar con mi mail</a></div>
+  </div>
+
+  <div id="contenido" hidden>
+    <div class="tiles">
+      <div class="tile dest"><div class="k">Hoy</div><div class="v" id="tHoy">–</div><div class="c" id="cHoy"></div></div>
+      <div class="tile"><div class="k">Últimos 7 días</div><div class="v" id="tSem">–</div><div class="c" id="cSem"></div></div>
+      <div class="tile"><div class="k">Este mes</div><div class="v" id="tMes">–</div><div class="c" id="cMes"></div></div>
+      <div class="tile"><div class="k">Desde el inicio</div><div class="v" id="tTot">–</div><div class="c" id="cTot"></div></div>
+    </div>
+
+    <h2>Ventas por día · últimos 30 días</h2>
+    <div class="caja grafico" id="grafico"><div class="tip" id="tip" hidden></div></div>
+
+    <h2>Próximas sesiones</h2>
+    <div class="res" id="reservas"></div>
+
+    <h2>Qué se vende más</h2>
+    <div class="caja barras" id="productos"></div>
+
+    <h2>Últimas ventas</h2>
+    <div class="caja tabla">
+      <table>
+        <thead><tr><th>Fecha</th><th>Producto</th><th class="ocultar-movil">Cliente</th><th class="n">Monto</th></tr></thead>
+        <tbody id="ventas"></tbody>
+      </table>
+    </div>
+
+    <h2>Clientes</h2>
+    <div class="tiles">
+      <div class="tile"><div class="k">Cuentas creadas</div><div class="v" id="kCuentas">–</div></div>
+      <div class="tile"><div class="k">Membresías activas</div><div class="v" id="kMemb">–</div></div>
+      <div class="tile"><div class="k">Accesos de por vida</div><div class="v" id="kVit">–</div></div>
+      <div class="tile"><div class="k">Pagos devueltos</div><div class="v" id="kDev">–</div></div>
+    </div>
+
+    <div id="arrepBloque" hidden>
+      <h2>Pedidos de arrepentimiento</h2>
+      <div class="res" id="arrep"></div>
+    </div>
+
+    <p class="sub" style="margin-top:30px">El detalle de cada cobro y cuándo se libera la plata lo ves en la app de Mercado Pago → Actividad.</p>
+  </div>
+</div></main>
+<script src="js/va.js"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var ZONA = "America/Argentina/Buenos_Aires";
+  var plata = function (n) { return "$" + Math.round(n).toLocaleString("es-AR"); };
+  var fFecha = new Intl.DateTimeFormat("es-AR", { timeZone: ZONA, day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", hour12: false });
+  var fDia = new Intl.DateTimeFormat("es-AR", { timeZone: ZONA, weekday: "short", day: "numeric", month: "short" });
+  var fCorta = new Intl.DateTimeFormat("es-AR", { timeZone: ZONA, day: "numeric", month: "short" });
+  var fHora = new Intl.DateTimeFormat("es-AR", { timeZone: ZONA, hour: "2-digit", minute: "2-digit", hour12: false });
+  function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+  function cant(n) { return n === 1 ? "1 venta" : n + " ventas"; }
+
+  function grafico(dias) {
+    var caja0 = $("grafico"); var W = Math.max(280, caja0.clientWidth - 40), H = W < 500 ? 200 : 260, pl = 58, pr = 6, pt = 12, pb = 30;
+    var max = Math.max.apply(null, dias.map(function (d) { return d.total; }).concat([1]));
+    var paso = Math.pow(10, Math.floor(Math.log10(max))); var tope = Math.ceil(max / paso) * paso; if (tope < 1000) tope = 1000;
+    var bw = (W - pl - pr) / dias.length;
+    var ns = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(ns, "svg"); svg.setAttribute("viewBox", "0 0 " + W + " " + H); svg.setAttribute("width", W); svg.setAttribute("height", H); svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", "Ventas por día en los últimos 30 días");
+    function add(tag, at, txt) { var e = document.createElementNS(ns, tag); for (var k in at) e.setAttribute(k, at[k]); if (txt) e.textContent = txt; svg.appendChild(e); return e; }
+    [0, 0.5, 1].forEach(function (f) {
+      var y = pt + (H - pt - pb) * (1 - f);
+      add("line", { x1: pl, x2: W - pr, y1: y, y2: y, stroke: "#DAD8CF", "stroke-width": 1 });
+      add("text", { x: pl - 8, y: y + 4, "text-anchor": "end", "font-size": 12, fill: "#4A5A50" }, f === 0 ? "$0" : plata(tope * f));
+    });
+    var tip = $("tip"), caja = $("grafico");
+    dias.forEach(function (d, i) {
+      var h = (H - pt - pb) * d.total / tope, x = pl + i * bw + (bw < 14 ? 1 : 2), w = Math.max(3, bw - (bw < 14 ? 2 : 4)), y = H - pb - h;
+      if (d.total > 0) add("rect", { x: x, y: y, width: w, height: h, rx: Math.min(4, w / 2), fill: "#1F3D2B" });
+      var hit = add("rect", { x: pl + i * bw, y: pt, width: bw, height: H - pt - pb, fill: "transparent" });
+      var fecha = new Date(d.dia + "T12:00:00-03:00");
+      function mostrar() {
+        var r = caja.getBoundingClientRect(), sr = svg.getBoundingClientRect(), k = sr.width / W;
+        tip.textContent = fDia.format(fecha) + " · " + (d.cantidad ? plata(d.total) + " (" + cant(d.cantidad) + ")" : "sin ventas");
+        tip.style.left = (sr.left - r.left + (x + w / 2) * k) + "px"; tip.style.top = (sr.top - r.top + Math.min(y, H - pb - 4) * k) + "px"; tip.hidden = false;
+      }
+      hit.addEventListener("mouseenter", mostrar); hit.addEventListener("touchstart", mostrar, { passive: true });
+      hit.addEventListener("mouseleave", function () { tip.hidden = true; });
+      var cada = W < 500 ? 10 : 7; if (i % cada === 0) add("text", { x: pl + i * bw + bw / 2, y: H - 9, "text-anchor": i === 0 ? "start" : "middle", "font-size": 12, fill: "#4A5A50" }, fCorta.format(fecha).replace(/\./g, ""));
+    });
+    caja.appendChild(svg);
+  }
+
+  function pintar(d) {
+    var r = d.resumen;
+    [["Hoy", r.hoy], ["Sem", r.semana], ["Mes", r.mes], ["Tot", r.total]].forEach(function (p) {
+      $("t" + p[0]).textContent = plata(p[1].total); $("c" + p[0]).textContent = cant(p[1].cantidad);
+    });
+    grafico(d.dias);
+
+    var rs = $("reservas");
+    if (!d.reservas.length) rs.appendChild(el("p", "vacio", "No hay sesiones reservadas por ahora."));
+    d.reservas.forEach(function (x) {
+      var c = el("div", "r"), ini = new Date(x.inicio);
+      var t = el("div"); var b = el("b", null, fDia.format(ini) + " · " + fHora.format(ini) + " hs"); t.appendChild(b); t.appendChild(document.createTextNode(" · " + x.servicio));
+      var q = el("div", "q", x.nombre + " · " + x.email + " · ");
+      var wa = el("a", null, "WhatsApp"); wa.href = "https://wa.me/" + String(x.whatsapp || "").replace(/\D/g, ""); wa.target = "_blank"; wa.rel = "noopener"; q.appendChild(wa);
+      c.appendChild(t); c.appendChild(q);
+      if (x.tema) c.appendChild(el("div", "q", "Tema: " + x.tema));
+      rs.appendChild(c);
+    });
+
+    var pr = $("productos"), maxp = Math.max.apply(null, d.porProducto.map(function (p) { return p.total; }).concat([1]));
+    if (!d.porProducto.length) pr.appendChild(el("p", "vacio", "Todavía no hay ventas."));
+    d.porProducto.forEach(function (p) {
+      var f = el("div", "fila"), t = el("div", "t"); t.appendChild(el("b", null, p.producto)); t.appendChild(el("span", null, plata(p.total) + " · " + cant(p.cantidad)));
+      var pista = el("div", "pista"), i = el("i"); i.style.width = Math.max(2, p.total / maxp * 100) + "%"; pista.appendChild(i);
+      f.appendChild(t); f.appendChild(pista); pr.appendChild(f);
+    });
+
+    var tb = $("ventas");
+    if (!d.ventas.length) { var tr0 = el("tr"), td0 = el("td", "vacio", "Todavía no hay ventas."); td0.colSpan = 4; tr0.appendChild(td0); tb.appendChild(tr0); }
+    d.ventas.forEach(function (v) {
+      var tr = el("tr");
+      tr.appendChild(el("td", null, fFecha.format(new Date(v.fecha))));
+      tr.appendChild(el("td", null, v.producto));
+      tr.appendChild(el("td", "ocultar-movil", v.cliente));
+      tr.appendChild(el("td", "n", plata(v.monto)));
+      tb.appendChild(tr);
+    });
+
+    $("kCuentas").textContent = d.clientes.cuentas == null ? "–" : d.clientes.cuentas;
+    $("kMemb").textContent = d.clientes.membresias; $("kVit").textContent = d.clientes.vitalicios; $("kDev").textContent = r.devueltos;
+
+    if (d.arrepentimientos.length) {
+      $("arrepBloque").hidden = false;
+      d.arrepentimientos.forEach(function (a) {
+        var c = el("div", "r"); var t = el("div"); t.appendChild(el("b", null, a.codigo)); t.appendChild(document.createTextNode(" · " + a.nombre));
+        c.appendChild(t); c.appendChild(el("div", "q", a.email + " · " + fFecha.format(new Date(a.creado)))); $("arrep").appendChild(c);
+      });
+    }
+    $("actualizado").textContent = "Actualizado " + fFecha.format(new Date()) + " hs";
+    $("contenido").hidden = false;
+  }
+
+  VA.llamar("panel").then(pintar).catch(function (e) {
+    $("actualizado").textContent = "";
+    $("errorTxt").textContent = e.status === 401 ? "Entrá con tu mail desde Mi cuenta y volvé a abrir el panel." : e.message;
+    $("entrar").hidden = e.status !== 401;
+    $("error").hidden = false;
+  });
+})();
+</script>
+</body>
+</html>

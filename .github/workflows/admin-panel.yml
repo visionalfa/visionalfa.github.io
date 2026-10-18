@@ -1,0 +1,37 @@
+name: Acceso al panel de ventas
+
+# Agrega o quita un mail que puede ver el panel de ventas (visionalfa.github.io/panel.html).
+on:
+  workflow_dispatch:
+    inputs:
+      email:
+        description: "Mail"
+        required: true
+      accion:
+        description: "Dar o quitar acceso"
+        required: true
+        type: choice
+        options: [dar, quitar]
+
+jobs:
+  admin:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      PROJECT_REF: futhqkqfjuuemhcxzakn
+      EMAIL: ${{ inputs.email }}
+      ACCION: ${{ inputs.accion }}
+    steps:
+      - name: Aplicar
+        run: |
+          email=$(printf '%s' "$EMAIL" | tr 'A-Z' 'a-z' | tr -d ' ')
+          echo "::add-mask::$email"
+          if ! printf '%s' "$email" | grep -Eq '^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$'; then echo "::error::El mail no es válido"; exit 1; fi
+          if [ "$ACCION" = "dar" ]; then sql="insert into public.admins (email) values ('$email') on conflict do nothing;"
+          else sql="delete from public.admins where email = '$email';"; fi
+          jq -n --arg q "$sql" '{query: $q}' > consulta.json
+          codigo=$(curl -sS -o respuesta.json -w "%{http_code}" -X POST \
+            "https://api.supabase.com/v1/projects/$PROJECT_REF/database/query" \
+            -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -H "Content-Type: application/json" --data @consulta.json)
+          if [ "$codigo" -ge 300 ]; then echo "::error::Supabase respondio $codigo"; exit 1; fi
+          echo "::notice::Listo: acceso al panel actualizado"
