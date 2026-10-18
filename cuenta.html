@@ -37,8 +37,10 @@ h1{font-size:clamp(36px,6vw,52px)}
 .lead{font-size:19px;color:var(--gris);max-width:560px}
 form{display:flex;flex-direction:column;gap:12px;max-width:460px}
 label{font-weight:600;color:var(--verde)}
-input[type=email]{font:inherit;font-size:18px;padding:14px 16px;border-radius:14px;border:2px solid var(--linea);background:var(--blanco);color:var(--tinta);min-height:54px;width:100%}
-input[type=email]:focus{border-color:var(--verde);outline:none}
+input[type=email],input.codigo{font:inherit;font-size:18px;padding:14px 16px;border-radius:14px;border:2px solid var(--linea);background:var(--blanco);color:var(--tinta);min-height:54px;width:100%}
+input[type=email]:focus,input.codigo:focus{border-color:var(--verde);outline:none}
+input.codigo{font-family:var(--titulos);font-size:30px;font-weight:800;letter-spacing:0.35em;text-align:center;color:var(--verde);padding-left:calc(16px + 0.35em)}
+.enlaces{display:flex;gap:20px;flex-wrap:wrap}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 26px;border-radius:999px;font-family:var(--texto);font-size:17px;font-weight:600;text-decoration:none;border:0;cursor:pointer}
 .btn-verde{background:var(--verde);color:var(--papel)}
 .btn-verde:hover{background:var(--verde-hondo)}
@@ -82,18 +84,35 @@ footer .in{padding-block:24px calc(24px + env(safe-area-inset-bottom,0px))}
   <div class="in">
     <p id="cargando" class="nota">Cargando tu cuenta…</p>
 
-    <!-- Sin sesión -->
+    <!-- Sin sesión: paso 1, pedir el mail -->
     <section id="entrar" class="bloque" hidden aria-labelledby="t-entrar">
       <div class="eyebrow">Mi cuenta</div>
       <h1 id="t-entrar">Entrá con tu mail</h1>
-      <p class="lead" id="entrar-texto">Te mandamos un link a tu mail para entrar. Sin contraseñas.</p>
+      <p class="lead" id="entrar-texto">Te mandamos un código de 6 números a tu mail para entrar. Sin contraseñas.</p>
       <form id="form-entrar" novalidate>
         <label for="email">Tu mail</label>
         <input type="email" id="email" name="email" autocomplete="email" inputmode="email" placeholder="nombre@gmail.com" required>
-        <button class="btn btn-verde" type="submit" id="btn-entrar">Enviarme el link</button>
+        <button class="btn btn-verde" type="submit" id="btn-entrar">Enviarme el código</button>
       </form>
       <div id="entrar-msj" hidden></div>
       <p class="nota">Usá el mismo mail con el que compraste.</p>
+    </section>
+
+    <!-- Sin sesión: paso 2, escribir el código -->
+    <section id="codigo-paso" class="bloque" hidden aria-labelledby="t-codigo">
+      <div class="eyebrow">Mi cuenta</div>
+      <h1 id="t-codigo">Escribí el código</h1>
+      <p class="lead">Te mandamos un código de 6 números a <strong id="codigo-mail"></strong>. Copialo del mail y pegalo acá. Si no lo ves, revisá spam o promociones.</p>
+      <form id="form-codigo" novalidate>
+        <label for="codigo">Código</label>
+        <input class="codigo" type="text" id="codigo" name="codigo" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="6" placeholder="······" required>
+        <button class="btn btn-verde" type="submit" id="btn-codigo">Entrar</button>
+      </form>
+      <div id="codigo-msj" hidden></div>
+      <div class="enlaces">
+        <button class="salir" type="button" id="reenviar">Reenviar el código</button>
+        <button class="salir" type="button" id="cambiar-mail">Usar otro mail</button>
+      </div>
     </section>
 
     <!-- Con sesión -->
@@ -138,15 +157,58 @@ footer .in{padding-block:24px calc(24px + env(safe-area-inset-bottom,0px))}
     history.replaceState(null, "", location.pathname);
   }
 
-  // --- Sin sesión: pedir el mail ---
+  // --- Sin sesión: pedir el mail y después el código ---
+  // El mail pendiente se guarda para que, si la persona va a Gmail y vuelve, siga en el paso del código.
+  var CLAVE_PENDIENTE = "va-mail-pendiente";
+  function guardarPendiente(email) {
+    try { if (email) localStorage.setItem(CLAVE_PENDIENTE, JSON.stringify({ email: email, t: Date.now() })); else localStorage.removeItem(CLAVE_PENDIENTE); } catch (e) {}
+  }
+  function leerPendiente() {
+    try {
+      var d = JSON.parse(localStorage.getItem(CLAVE_PENDIENTE) || "null");
+      if (d && d.email && Date.now() - d.t < 60 * 60 * 1000) return d.email;
+    } catch (e) {}
+    return null;
+  }
+
+  var emailActual = "";
+  var formsListos = false;
+
+  async function enviarCodigo(email) {
+    var r = await VA.sb.auth.signInWithOtp({ email: email, options: { shouldCreateUser: true } });
+    return !r.error;
+  }
+
+  function pasoCodigo(email) {
+    emailActual = email;
+    guardarPendiente(email);
+    $("entrar").hidden = true;
+    $("codigo-paso").hidden = false;
+    $("codigo-mail").textContent = email;
+    $("codigo").value = "";
+    setTimeout(function () { $("codigo").focus(); }, 50);
+  }
+
+  function pasoMail() {
+    guardarPendiente(null);
+    $("codigo-paso").hidden = true;
+    $("codigo-msj").hidden = true;
+    $("entrar").hidden = false;
+    $("email").value = emailActual;
+  }
+
   function pantallaEntrar() {
     $("cargando").hidden = true;
     $("cuenta").hidden = true;
-    $("entrar").hidden = false;
-    if (comprar) $("entrar-texto").textContent = "Para comprar, primero entrá con tu mail. Así tu compra queda guardada en tu cuenta y la podés leer cuando quieras.";
+    if (comprar) $("entrar-texto").textContent = "Para comprar, primero entrá con tu mail. Te mandamos un código de 6 números y así tu compra queda guardada en tu cuenta.";
+    var pendiente = leerPendiente();
+    if (pendiente) pasoCodigo(pendiente); else $("entrar").hidden = false;
+    if (formsListos) return;
+    formsListos = true;
+
     $("form-entrar").addEventListener("submit", async function (e) {
       e.preventDefault();
-      var email = $("email").value.trim();
+      var email = $("email").value.trim().toLowerCase();
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         mostrarMensaje($("entrar-msj"), "error", "Revisá el mail: parece que le falta algo.");
         return;
@@ -154,16 +216,60 @@ footer .in{padding-block:24px calc(24px + env(safe-area-inset-bottom,0px))}
       var boton = $("btn-entrar");
       boton.disabled = true;
       boton.textContent = "Enviando…";
-      var destino = location.origin + location.pathname + (comprar ? "?comprar=" + encodeURIComponent(comprar) : "");
-      var r = await VA.sb.auth.signInWithOtp({ email: email, options: { emailRedirectTo: destino } });
+      var ok = await enviarCodigo(email);
       boton.disabled = false;
-      boton.textContent = "Enviarme el link";
-      if (r.error) {
+      boton.textContent = "Enviarme el código";
+      if (!ok) {
         mostrarMensaje($("entrar-msj"), "error", "No pudimos mandar el mail. Esperá un minuto y probá de nuevo.");
         return;
       }
-      mostrarMensaje($("entrar-msj"), "ok", "Listo. Te mandamos un link a " + email + ". Abrilo desde este mismo dispositivo para entrar. Si no lo ves, revisá la carpeta de spam.");
+      $("entrar-msj").hidden = true;
+      pasoCodigo(email);
     });
+
+    $("codigo").addEventListener("input", function () {
+      var limpio = this.value.replace(/\D/g, "").slice(0, 6);
+      if (this.value !== limpio) this.value = limpio;
+      if (limpio.length === 6) $("form-codigo").requestSubmit();
+    });
+
+    $("form-codigo").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      var token = $("codigo").value.replace(/\D/g, "");
+      if (token.length !== 6) {
+        mostrarMensaje($("codigo-msj"), "error", "El código tiene 6 números. Revisalo en el mail.");
+        return;
+      }
+      var boton = $("btn-codigo");
+      if (boton.disabled) return;
+      boton.disabled = true;
+      boton.textContent = "Entrando…";
+      var r = await VA.sb.auth.verifyOtp({ email: emailActual, token: token, type: "email" });
+      boton.disabled = false;
+      boton.textContent = "Entrar";
+      if (r.error || !r.data.session) {
+        var vencido = r.error && /expired|invalid/i.test(r.error.message || "");
+        mostrarMensaje($("codigo-msj"), "error", vencido
+          ? "Ese código no es válido o ya venció. Tocá “Reenviar el código” y usá el más nuevo."
+          : "No pudimos entrar. Probá de nuevo en un momento.");
+        return;
+      }
+      guardarPendiente(null);
+      pantallaCuenta(r.data.session);
+    });
+
+    $("reenviar").addEventListener("click", async function () {
+      var boton = this;
+      boton.disabled = true;
+      var ok = await enviarCodigo(emailActual);
+      boton.disabled = false;
+      guardarPendiente(emailActual);
+      mostrarMensaje($("codigo-msj"), ok ? "ok" : "error", ok
+        ? "Te mandamos un código nuevo. Usá el último que te llegó."
+        : "Esperá un minuto antes de pedir otro código.");
+    });
+
+    $("cambiar-mail").addEventListener("click", pasoMail);
   }
 
   // --- Con sesión: mostrar la biblioteca ---
@@ -173,6 +279,7 @@ footer .in{padding-block:24px calc(24px + env(safe-area-inset-bottom,0px))}
     mostrada = true;
     $("cargando").hidden = true;
     $("entrar").hidden = true;
+    $("codigo-paso").hidden = true;
     $("cuenta").hidden = false;
     $("cuenta-mail").textContent = "Entraste como " + sesion.user.email;
 

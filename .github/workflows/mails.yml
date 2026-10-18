@@ -29,12 +29,12 @@ jobs:
           clave=$(printf '%s' "$GMAIL_APP_PASSWORD" | tr -d ' ')
           jq -n \
             --arg remitente "$REMITENTE" --arg clave "$clave" \
-            --arg s1 "Confirmá tu mail para entrar a Visión Alfa" \
+            --arg s1 "Tu código para entrar a Visión Alfa" \
             --rawfile b1 supabase/templates/confirmacion.html \
-            --arg s2 "Tu link para entrar a Visión Alfa" \
+            --arg s2 "Tu código para entrar a Visión Alfa" \
             --rawfile b2 supabase/templates/ingreso.html \
             '{smtp_host: "smtp.gmail.com", smtp_port: "465", smtp_user: $remitente, smtp_pass: $clave,
-              smtp_admin_email: $remitente, smtp_sender_name: "Visión Alfa", smtp_max_frequency: 30,
+              smtp_admin_email: $remitente, smtp_sender_name: "Visión Alfa", smtp_max_frequency: 30, mailer_otp_length: 6, mailer_otp_exp: 3600,
               mailer_subjects_confirmation: $s1, mailer_templates_confirmation_content: $b1,
               mailer_subjects_magic_link: $s2, mailer_templates_magic_link_content: $b2}' > cuerpo.json
           codigo=$(curl -sS -o respuesta.json -w "%{http_code}" -X PATCH \
