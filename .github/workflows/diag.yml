@@ -4,8 +4,4 @@ jobs:
   d:
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          c=$(curl -sS -o r.json -w "%{http_code}" https://futhqkqfjuuemhcxzakn.supabase.co/functions/v1/panel -H "apikey: sb_publishable_x20gCAkWL2NsZG84wiWgGQ_hlchdMOF" -H "x-panel-clave: X_ARFx4rjTsrbP7krBksvPjEXRLGaEEW38z-VkNbCD0")
-          echo "::notice::clave buena → $c $(jq -c '{resumen:.resumen.total, ventas:(.ventas|length), error}' r.json)"
-          c=$(curl -sS -o r.json -w "%{http_code}" https://futhqkqfjuuemhcxzakn.supabase.co/functions/v1/panel -H "apikey: sb_publishable_x20gCAkWL2NsZG84wiWgGQ_hlchdMOF" -H "x-panel-clave: claveinventadaclaveinventadaclaveinventada")
-          echo "::notice::clave mala → $c $(cat r.json)"
+      - run: echo ok
