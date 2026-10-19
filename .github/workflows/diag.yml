@@ -5,19 +5,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          FN=https://futhqkqfjuuemhcxzakn.supabase.co/functions/v1/agenda
-          K="apikey: sb_publishable_x20gCAkWL2NsZG84wiWgGQ_hlchdMOF"
-          sql() { jq -n --arg q "$1" '{query:$q}' > c.json; curl -sS -X POST https://api.supabase.com/v1/projects/futhqkqfjuuemhcxzakn/database/query -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" -H "Content-Type: application/json" --data @c.json; }
-          echo "::notice::servicio: $(curl -sS "$FN?servicio=web-automatizada" -H "$K" | jq -c '.servicio|{nombre,precio,incluye_ebook,reuniones_incluidas}')"
-          E=prueba.acompanamiento@example.com
-          # 1) Cliente nuevo: tiene que pedir pago
-          ini=$(curl -sS "$FN?servicio=web-automatizada" -H "$K" | jq -r '.turnos[-1]')
-          jq -n --arg i "$ini" --arg e "$E" '{accion:"reservar", servicio:"web-automatizada", inicio:$i, nombre:"Prueba del sistema", email:$e, whatsapp:"0000 0000 0000"}' > r.json
-          echo "::notice::cliente nuevo → $(curl -sS -X POST $FN -H "$K" -H 'Content-Type: application/json' --data @r.json | jq -c '{tieneLinkDePago:(.url!=null), incluida, error}')"
-          sql "update public.reservas set estado='vencida' where email='$E' and estado='pendiente';" >/dev/null
-          # 2) Simulo que ya pagó (reserva pasada con pago) y reservo otra: tiene que confirmarse sin pago
-          sql "insert into public.reservas (inicio, fin, servicio_id, agenda, nombre, email, whatsapp, estado, pago_id, monto) values (now() - interval '30 days', now() - interval '30 days' + interval '2 hours', 'web-automatizada', 'florentina', 'Prueba del sistema', '$E', '0000', 'confirmada', 'prueba', 500000);" >/dev/null
-          echo "::notice::ya pagó → $(curl -sS -X POST $FN -H "$K" -H 'Content-Type: application/json' --data @r.json | jq -c '{tieneLinkDePago:(.url!=null), incluida, error}')"
-          echo "::notice::en la base: $(sql "select estado, monto, pago_id from public.reservas where email='$E' order by creada;")"
-          sql "delete from public.reservas where email='$E';" >/dev/null
-          echo "::notice::limpio: $(sql "select count(*) from public.reservas where email='$E';")"
+          echo "::notice::actividad → $(curl -sS https://futhqkqfjuuemhcxzakn.supabase.co/functions/v1/actividad -H 'apikey: sb_publishable_x20gCAkWL2NsZG84wiWgGQ_hlchdMOF')"
