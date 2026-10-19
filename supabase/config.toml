@@ -21,3 +21,6 @@ verify_jwt = false
 
 [functions.arrepentimiento]
 verify_jwt = false
+
+[functions.actividad]
+verify_jwt = false

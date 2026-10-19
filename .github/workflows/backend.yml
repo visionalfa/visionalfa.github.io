@@ -54,3 +54,4 @@ jobs:
           supabase functions deploy agenda     --no-verify-jwt --project-ref "$PROJECT_REF"
           supabase functions deploy panel      --no-verify-jwt --project-ref "$PROJECT_REF"
           supabase functions deploy visita     --no-verify-jwt --project-ref "$PROJECT_REF"
+          supabase functions deploy actividad  --no-verify-jwt --project-ref "$PROJECT_REF"
