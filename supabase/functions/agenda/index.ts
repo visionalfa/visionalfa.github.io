@@ -7,13 +7,13 @@
 // POST {accion:"cancelar"} → cancela con el token que llega en el mail
 import { admin, cors, json, mp, SITE_URL } from "../_shared/comun.ts";
 import { AVISOS, enviar, escapar, plantilla } from "../_shared/mail.ts";
-import { cuando, ESPERA_PAGO_MIN, liberarVencidas, mailProfesional } from "../_shared/reservas.ts";
+import { confirmarIncluida, cuando, ESPERA_PAGO_MIN, liberarVencidas, mailProfesional } from "../_shared/reservas.ts";
 
 const OFFSET_AR = 3;                   // Argentina = UTC-3, sin horario de verano
 const ANTICIPACION_MS = 24 * 3600e3;   // mínimo un día de anticipación
 const DIAS_ADELANTE = 21;              // cuántos días se muestran
 const MAX_POR_PERSONA = 3;             // reservas futuras por mail y por servicio
-const CAMPOS_SERVICIO = "id, agenda, profesional, nombre, descripcion, precio, duracion, hora_desde, hora_hasta, dias, modalidad, incluye_ebook";
+const CAMPOS_SERVICIO = "id, agenda, profesional, nombre, descripcion, precio, duracion, hora_desde, hora_hasta, dias, modalidad, incluye_ebook, reuniones_incluidas";
 
 type DB = ReturnType<typeof admin>;
 // deno-lint-ignore no-explicit-any
@@ -114,7 +114,7 @@ Deno.serve(async (req) => {
       if (!esToken(token)) return json({ error: "El link no es válido." }, 400);
       await liberarVencidas(db);
       const { data } = await db.from("reservas")
-        .select("inicio, estado, nombre, email, vence, servicio_id, servicios(nombre, profesional, duracion, incluye_ebook)")
+        .select("inicio, estado, nombre, email, vence, servicio_id, monto, servicios(nombre, profesional, duracion, incluye_ebook, reuniones_incluidas)")
         .eq("token", token).maybeSingle();
       if (!data) return json({ error: "No encontramos esa reserva." }, 404);
       return json({ ...data, cuando: cuando(data.inicio) });
@@ -140,10 +140,13 @@ Deno.serve(async (req) => {
     if (data.estado !== "confirmada") return json({ ok: true, ya: true });
     if (new Date(data.inicio).getTime() < Date.now()) return json({ error: "Ese turno ya pasó." }, 400);
     const conTiempo = new Date(data.inicio).getTime() - Date.now() >= 24 * 3600e3;
+    const incluida = !data.pago_id && !Number(data.monto);
     await db.from("reservas").update({ estado: "cancelada" }).eq("id", data.id);
     const c = cuando(data.inicio);
     const sv = data.servicios ?? {};
-    const nota = conTiempo
+    const nota = incluida
+      ? "Era una reunión incluida en su acompañamiento: no hay pago para devolver."
+      : conTiempo
       ? "Canceló con más de 24 horas: corresponde devolverle el pago o pasarla a otro horario."
       : "Canceló con menos de 24 horas de anticipación.";
     await enviar({
@@ -207,6 +210,14 @@ Deno.serve(async (req) => {
   if ((confirmadas ?? 0) >= MAX_POR_PERSONA) {
     return json({ error: "Ya tenés varios turnos reservados. Si necesitás otro, escribinos a visionalfa.arg@gmail.com." }, 400);
   }
+  // Acompañamiento ya pagado: las próximas reuniones se confirman sin cobrar de nuevo.
+  let yaPago = false;
+  if (s.reuniones_incluidas) {
+    const { count } = await db.from("reservas").select("id", { count: "exact", head: true })
+      .eq("email", email).eq("servicio_id", s.id).eq("estado", "confirmada").not("pago_id", "is", null);
+    yaPago = (count ?? 0) > 0;
+  }
+
   // Si dejó un pago a medias en esta agenda, se libera ese horario y se toma el nuevo.
   await db.from("reservas").update({ estado: "vencida" }).eq("email", email).eq("agenda", s.agenda).eq("estado", "pendiente");
 
@@ -221,6 +232,12 @@ Deno.serve(async (req) => {
     }
     console.error(error);
     return json({ error: "No pudimos guardar la reserva. Probá de nuevo." }, 500);
+  }
+
+  if (yaPago) {
+    const ok = await confirmarIncluida(db, r.id);
+    if (!ok) return json({ error: "No pudimos confirmar la reunión. Probá de nuevo." }, 500);
+    return json({ incluida: true, token: r.token });
   }
 
   const url = await linkDePago(r, s);

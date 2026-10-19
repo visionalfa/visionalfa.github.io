@@ -60,6 +60,16 @@ export async function confirmarPorPago(db: SupabaseClient, reservaId: string, pa
   return true;
 }
 
+/** Reunión incluida en un acompañamiento ya pagado: se confirma sin cobrar. */
+export async function confirmarIncluida(db: SupabaseClient, reservaId: string): Promise<boolean> {
+  const { data: r, error } = await db.from("reservas")
+    .update({ estado: "confirmada", monto: 0, vence: null }).eq("id", reservaId).eq("estado", "pendiente")
+    .select("*, servicios(*)").maybeSingle();
+  if (error || !r) { console.error("confirmarIncluida", error); return false; }
+  await mailsConfirmacion(r, false, await mailProfesional(db, r.agenda));
+  return true;
+}
+
 /** Habilita un ebook al mail de la reserva (crea la cuenta si todavía no existe). */
 async function darEbook(db: SupabaseClient, email: string, productoId: string, pagoId: string): Promise<boolean> {
   try {
@@ -111,20 +121,29 @@ async function mailsConfirmacion(r: Reserva, conEbook: boolean, profesionalMail:
   const linkCancelar = `${SITE_URL}/agenda.html?cancelar=${r.token}`;
   const wa = String(r.whatsapp ?? "").replace(/\D/g, "");
   const monto = Number(r.monto ?? sv.precio ?? PRECIO_ASESORIA).toLocaleString("es-AR");
+  const incluida = !r.pago_id && !Number(r.monto);
+  const todos = sv.incluye_ebook === "vitalicio";
   const ebookTxt = conEbook
-    ? `Ya tenés habilitado el ebook incluido: entrá a ${SITE_URL}/cuenta.html con este mail para leerlo.`
+    ? (todos
+      ? `Ya tenés acceso ilimitado a todos los ebooks: entrá a ${SITE_URL}/cuenta.html con este mail para leerlos.`
+      : `Ya tenés habilitado el ebook incluido: entrá a ${SITE_URL}/cuenta.html con este mail para leerlo.`)
     : "";
+  const proximas = sv.reuniones_incluidas
+    ? `Las próximas reuniones las reservás desde ${SITE_URL}/agenda.html?servicio=${sv.id} con este mismo mail: no se cobran de nuevo.`
+    : "";
+  const tituloAviso = incluida ? "Nueva reunión del acompañamiento" : "Nueva reserva pagada";
+  const pagoTxt = incluida ? "Incluida en el acompañamiento (sin cargo)" : `$${monto} · Mercado Pago, operación ${r.pago_id}`;
 
   await enviar({
     para: AVISOS, responderA: r.email,
-    asunto: `Nueva reserva pagada · ${prof} · ${r.nombre} · ${c}`,
-    texto: `Nueva reserva pagada\n\nServicio: ${nombreSv} (${dur})\nCon: ${prof}\nCuándo: ${c}\nNombre: ${r.nombre}\nMail: ${r.email}\nWhatsApp: ${r.whatsapp}\nPago: $${monto} (Mercado Pago, operación ${r.pago_id})\nTema: ${r.tema || "(no indicó)"}${conEbook ? "\nEbook incluido: habilitado" : ""}\n\nRespondé este mail para mandarle el link de la videollamada.`,
-    html: plantilla("Nueva reserva pagada", `
+    asunto: `${tituloAviso} · ${prof} · ${r.nombre} · ${c}`,
+    texto: `${tituloAviso}\n\nServicio: ${nombreSv} (${dur})\nCon: ${prof}\nCuándo: ${c}\nNombre: ${r.nombre}\nMail: ${r.email}\nWhatsApp: ${r.whatsapp}\nPago: ${pagoTxt}\nTema: ${r.tema || "(no indicó)"}${conEbook ? "\nEbook incluido: habilitado" : ""}\n\nRespondé este mail para mandarle el link de la videollamada.`,
+    html: plantilla(tituloAviso, `
 <p style="font-size:18px;margin:0 0 6px"><strong>${escapar(c)}</strong> · ${dur}</p>
 <p style="margin:0 0 16px">${escapar(nombreSv)} · con <strong>${escapar(prof)}</strong></p>
 <p style="margin:0"><strong>Nombre:</strong> ${escapar(r.nombre)}<br><strong>Mail:</strong> ${escapar(r.email)}<br>
 <strong>WhatsApp:</strong> <a href="https://wa.me/${wa}">${escapar(r.whatsapp ?? "")}</a><br>
-<strong>Pago:</strong> $${monto} · Mercado Pago, operación ${escapar(String(r.pago_id))}${conEbook ? "<br><strong>Ebook incluido:</strong> habilitado" : ""}</p>
+<strong>Pago:</strong> ${escapar(pagoTxt)}${conEbook ? `<br><strong>${todos ? "Acceso a todos los ebooks" : "Ebook incluido"}:</strong> habilitado` : ""}</p>
 <p><strong>Tema:</strong><br>${escapar(r.tema || "(no indicó)").replace(/\n/g, "<br>")}</p>
 <p style="color:#6B7069;font-size:14px">Respondé este mail para mandarle el link de la videollamada. El archivo adjunto lo agrega a tu calendario.</p>`),
     ics: ics(r.id, r.inicio, `${nombreSv} con ${r.nombre}`, `Profesional: ${prof}\nMail: ${r.email} · WhatsApp: ${r.whatsapp}\nTema: ${r.tema ?? ""}`, horas),
@@ -136,10 +155,10 @@ async function mailsConfirmacion(r: Reserva, conEbook: boolean, profesionalMail:
     await enviar({
       para: profesionalMail, responderA: r.email,
       asunto: `Nueva sesión reservada: ${r.nombre} · ${c}`,
-      texto: `Hola, ${primerNombre}:\n\nTenés una nueva sesión reservada y pagada desde Visión Alfa.\n\nServicio: ${nombreSv} (${dur})\nCuándo: ${c} (hora de Argentina)\nNombre: ${r.nombre}\nMail: ${r.email}\nWhatsApp: ${r.whatsapp}\nTema: ${r.tema || "(no indicó)"}\n\nRespondé este mail para escribirle directamente y mandale el link de la videollamada.\n\nVisión Alfa`,
+      texto: `Hola, ${primerNombre}:\n\nTenés una nueva sesión reservada desde Visión Alfa.\n\nServicio: ${nombreSv} (${dur})\nCuándo: ${c} (hora de Argentina)\nNombre: ${r.nombre}\nMail: ${r.email}\nWhatsApp: ${r.whatsapp}\nTema: ${r.tema || "(no indicó)"}\n\nRespondé este mail para escribirle directamente y mandale el link de la videollamada.\n\nVisión Alfa`,
       html: plantilla("Nueva sesión reservada", `
 <p>Hola, ${escapar(primerNombre)}:</p>
-<p>Tenés una nueva sesión reservada y pagada desde Visión Alfa.</p>
+<p>Tenés una nueva sesión reservada desde Visión Alfa.</p>
 <p style="font-size:18px;margin:0 0 6px"><strong>${escapar(c)}</strong> · ${dur}</p>
 <p style="margin:0 0 16px">${escapar(nombreSv)}</p>
 <p style="margin:0"><strong>Nombre:</strong> ${escapar(r.nombre)}<br><strong>Mail:</strong> ${escapar(r.email)}<br>
@@ -153,14 +172,15 @@ async function mailsConfirmacion(r: Reserva, conEbook: boolean, profesionalMail:
   await enviar({
     para: r.email,
     asunto: `Tu turno con ${prof}: ${c}`,
-    texto: `Hola, ${r.nombre}:\n\nRecibimos tu pago y tu turno quedó confirmado.\n\n${nombreSv} con ${prof}\n${c} (hora de Argentina) · ${dur}\n\nAntes del encuentro te escribimos con el link de la videollamada.\n${ebookTxt}\n\nSi no podés asistir, cancelá con al menos 24 horas de anticipación desde acá: ${linkCancelar}\n\n¡Nos vemos!\nVisión Alfa`,
+    texto: `Hola, ${r.nombre}:\n\n${incluida ? "Tu reunión quedó confirmada (está incluida en tu acompañamiento)." : "Recibimos tu pago y tu turno quedó confirmado."}\n\n${nombreSv} con ${prof}\n${c} (hora de Argentina) · ${dur}\n\nAntes del encuentro te escribimos con el link de la videollamada.\n${ebookTxt}\n${proximas}\n\nSi no podés asistir, cancelá con al menos 24 horas de anticipación desde acá: ${linkCancelar}\n\n¡Nos vemos!\nVisión Alfa`,
     html: plantilla("¡Tu turno está confirmado!", `
 <p>Hola, ${escapar(r.nombre)}:</p>
-<p>Recibimos tu pago. Te esperamos el:</p>
+<p>${incluida ? "Tu reunión está confirmada (incluida en tu acompañamiento)." : "Recibimos tu pago."} Te esperamos el:</p>
 <p style="font-size:18px"><strong>${escapar(c)}</strong> (hora de Argentina)<br>${escapar(nombreSv)} con ${escapar(prof)} · ${dur}</p>
 <p>Antes del encuentro te escribimos con el link de la videollamada. El archivo adjunto lo agrega a tu calendario.</p>
-${conEbook ? `<p style="background:#F4F3EE;border-radius:12px;padding:14px 16px"><strong>Tu ebook ya está habilitado.</strong> Entrá a <a href="${SITE_URL}/cuenta.html" style="color:#1F3D2B">Mi cuenta</a> con este mail para leerlo.</p>` : ""}
-<p>Si no podés asistir, <a href="${linkCancelar}" style="color:#1F3D2B">cancelá desde acá</a> con al menos 24 horas de anticipación y te devolvemos el pago o te pasamos a otro horario.</p>
+${conEbook ? `<p style="background:#F4F3EE;border-radius:12px;padding:14px 16px"><strong>${todos ? "Ya tenés acceso ilimitado a todos los ebooks." : "Tu ebook ya está habilitado."}</strong> Entrá a <a href="${SITE_URL}/cuenta.html" style="color:#1F3D2B">Mi cuenta</a> con este mail para ${todos ? "leerlos" : "leerlo"}.</p>` : ""}
+${proximas ? `<p><strong>Las próximas reuniones no se cobran de nuevo.</strong> Reservalas desde <a href="${SITE_URL}/agenda.html?servicio=${escapar(String(sv.id))}" style="color:#1F3D2B">la agenda</a> con este mismo mail.</p>` : ""}
+<p>Si no podés asistir, <a href="${linkCancelar}" style="color:#1F3D2B">cancelá desde acá</a> con al menos 24 horas de anticipación${incluida ? " y elegí otro horario cuando quieras" : " y te devolvemos el pago o te pasamos a otro horario"}.</p>
 <p>¡Nos vemos!<br>Visión Alfa</p>`),
     ics: ics(r.id, r.inicio, `${nombreSv} · Visión Alfa`, `Con ${prof}. Videollamada de ${dur}. El link llega por mail.`, horas),
   });

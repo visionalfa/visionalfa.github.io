@@ -51,6 +51,7 @@ a.btn{text-decoration:none}
   <h1 id="svNombre">Reservá tu turno</h1>
   <p id="svDesc"></p>
   <div class="datos" id="svDatos"></div>
+  <p class="nota" id="svIncluidas" hidden style="background:var(--blanco);border:1px solid var(--linea);border-left:5px solid var(--mostaza);border-radius:12px;padding:12px 16px;margin-top:14px"><strong>Pagás una sola vez.</strong> La primera reunión se paga al reservar. Las siguientes las reservás acá mismo con el mismo mail y no se cobran de nuevo.</p>
 
   <div class="paso"><span class="n">1</span>Elegí el día</div>
   <p class="cargando" id="cargando">Buscando horarios disponibles…</p>
@@ -80,7 +81,7 @@ a.btn{text-decoration:none}
         <textarea id="tema" name="tema" maxlength="1000"></textarea>
       </label>
       <div class="trampa" aria-hidden="true"><label>No completar <input name="sitio" tabindex="-1" autocomplete="off"></label></div>
-      <p class="nota">Te guardamos el horario <strong>30 minutos</strong> mientras pagás. El turno queda confirmado cuando se aprueba el pago.</p>
+      <p class="nota" id="notaPago">Te guardamos el horario <strong>30 minutos</strong> mientras pagás. El turno queda confirmado cuando se aprueba el pago.</p>
       <button class="btn" type="submit" id="enviar">Ir a pagar</button>
       <p class="nota" style="margin:0">Pagás con Mercado Pago: tarjeta de crédito o débito, o dinero en cuenta.</p>
     </form>
@@ -142,14 +143,16 @@ a.btn{text-decoration:none}
     $("svDesc").textContent = sv.descripcion || "";
     var dur = sv.duracion === 1 ? "1 hora" : sv.duracion + " horas";
     var dd = $("svDatos"); dd.innerHTML = "";
-    [[dur, " · " + sv.modalidad.toLowerCase()], [plata(sv.precio), " con Mercado Pago"], [rangoDias(sv.dias) + " de ", sv.hora_desde + " a " + sv.hora_hasta + " hs"]]
+    [[dur + (sv.reuniones_incluidas ? " por reunión" : ""), " · " + sv.modalidad.toLowerCase()], [plata(sv.precio), sv.reuniones_incluidas ? " · pago único" : " con Mercado Pago"], [rangoDias(sv.dias) + " de ", sv.hora_desde + " a " + sv.hora_hasta + " hs"]]
       .forEach(function (p, i) {
         var sp = document.createElement("span"); var b = document.createElement("b");
         if (i === 2) { sp.appendChild(document.createTextNode(p[0])); b.textContent = p[1]; sp.appendChild(b); }
         else { b.textContent = p[0]; sp.appendChild(b); sp.appendChild(document.createTextNode(p[1])); }
         dd.appendChild(sp);
       });
-    textoPagar = "Ir a pagar " + plata(sv.precio);
+    textoPagar = sv.reuniones_incluidas ? "Continuar" : "Ir a pagar " + plata(sv.precio);
+    $("svIncluidas").hidden = !sv.reuniones_incluidas;
+    if (sv.reuniones_incluidas) $("notaPago").innerHTML = "Si es tu primera reunión, te guardamos el horario <strong>30 minutos</strong> mientras pagás. Si ya pagaste el acompañamiento, la reunión se confirma al instante.";
     if (!$("enviar").disabled) $("enviar").textContent = textoPagar;
   }
 
@@ -221,13 +224,14 @@ a.btn{text-decoration:none}
     if (f.nombre.value.trim().length < 2) { mostrarError("Completá tu nombre."); f.nombre.focus(); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.value.trim())) { mostrarError("Revisá el mail: parece que le falta algo."); f.email.focus(); return; }
     if (f.whatsapp.value.replace(/\D/g, "").length < 8) { mostrarError("Dejanos un WhatsApp con código de área."); f.whatsapp.focus(); return; }
-    boton.disabled = true; boton.textContent = "Preparando el pago…";
+    boton.disabled = true; boton.textContent = "Un momento…";
     llamar("POST", "", {
       accion: "reservar", servicio: SERVICIO, inicio: elegido,
       nombre: f.nombre.value.trim(), email: f.email.value.trim(),
       whatsapp: f.whatsapp.value.trim(), tema: f.tema.value.trim(), sitio: f.sitio.value
     }).then(function (j) {
-      location.href = j.url;
+      if (j.incluida) location.href = "agenda.html?r=" + encodeURIComponent(j.token) + "&pago=incluida";
+      else location.href = j.url;
     }).catch(function (err) {
       boton.disabled = false; boton.textContent = textoPagar;
       mostrarError(err.message);
@@ -256,11 +260,17 @@ a.btn{text-decoration:none}
         var p2 = document.createElement("p"); p2.style.margin = "4px 0 0";
         p2.textContent = (sv.nombre || "") + (sv.profesional ? " con " + sv.profesional : "");
         c.appendChild(p1); c.appendChild(p2); $("vCaja").appendChild(c);
-        $("vTexto").textContent = "Recibimos tu pago. Te mandamos la confirmación a " + r.email + " y antes del encuentro te escribimos con el link de la videollamada." +
-          (sv.incluye_ebook ? " El ebook incluido ya está habilitado: entrá a Mi cuenta con ese mail para leerlo." : "") +
+        var incluida = Number(r.monto) === 0;
+        var todos = sv.incluye_ebook === "vitalicio";
+        $("vTexto").textContent = (incluida ? "Esta reunión está incluida en tu acompañamiento: no se cobra." : "Recibimos tu pago.") +
+          " Te mandamos la confirmación a " + r.email + " y antes del encuentro te escribimos con el link de la videollamada." +
+          (sv.incluye_ebook && !incluida ? (todos ? " Ya tenés acceso ilimitado a todos los ebooks: entrá a Mi cuenta con ese mail para leerlos." : " El ebook incluido ya está habilitado: entrá a Mi cuenta con ese mail para leerlo.") : "") +
+          (sv.reuniones_incluidas && !incluida ? " Las próximas reuniones las reservás desde esta misma agenda con ese mail, sin volver a pagar." : "") +
           " Si no ves el mail, revisá spam o promociones.";
-        if (sv.incluye_ebook) boton("Ir a Mi cuenta", false, "cuenta.html");
-        boton("Volver a la web", !!sv.incluye_ebook, "index.html");
+        var conCuenta = sv.incluye_ebook && !incluida;
+        if (conCuenta) boton("Ir a Mi cuenta", false, "cuenta.html");
+        if (sv.reuniones_incluidas) boton("Reservar otra reunión", !conCuenta ? false : true, "agenda.html?servicio=" + encodeURIComponent(r.servicio_id));
+        boton("Volver a la web", true, "index.html");
         return;
       }
       if (r.estado === "pagada_sin_turno") {
@@ -311,7 +321,7 @@ a.btn{text-decoration:none}
       $("cancTexto").className = "";
       var faltan = new Date(r.inicio) - new Date();
       $("cancTexto").textContent = "Hola, " + r.nombre + ". Tu turno" + (r.servicios ? " de " + r.servicios.nombre + " con " + r.servicios.profesional : "") + " es el " + r.cuando + ". ¿Querés cancelarla? El horario queda libre para otra persona. " +
-        (faltan >= 864e5 ? "Como faltan más de 24 horas, te escribimos para devolverte el pago o pasarte a otro horario." : "Faltan menos de 24 horas: te escribimos por mail para ver cómo seguimos.");
+        (Number(r.monto) === 0 ? "Como es una reunión incluida en tu acompañamiento, después podés reservar otra cuando quieras." : faltan >= 864e5 ? "Como faltan más de 24 horas, te escribimos para devolverte el pago o pasarte a otro horario." : "Faltan menos de 24 horas: te escribimos por mail para ver cómo seguimos.");
       $("cancBoton").hidden = false;
     }).catch(function (e) { $("cancTexto").className = ""; $("cancTexto").textContent = e.message; });
     $("cancBoton").addEventListener("click", function () {
