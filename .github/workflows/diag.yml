@@ -5,6 +5,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          sql() { jq -n --arg q "$1" '{query:$q}' > c.json; curl -sS -X POST https://api.supabase.com/v1/projects/futhqkqfjuuemhcxzakn/database/query -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" -H "Content-Type: application/json" --data @c.json; }
-          echo "::notice::reservas: $(sql "select r.servicio_id, r.estado, r.monto, r.pago_id, to_char(r.inicio at time zone 'America/Argentina/Buenos_Aires','DD/MM HH24:MI') as turno, to_char(r.creada at time zone 'America/Argentina/Buenos_Aires','DD/MM HH24:MI') as creada, left(r.nombre,1)||'.' as ini from public.reservas r where r.creada > now() - interval '3 days' and r.email not like '%example.com' order by r.creada desc limit 15;")"
-          echo "::notice::pagos: $(sql "select producto_id, estado, monto, to_char(creado at time zone 'America/Argentina/Buenos_Aires','DD/MM HH24:MI') as cuando, left(coalesce(detalle->>'external_reference',''),40) as ref from public.pagos where creado > now() - interval '3 days' order by creado desc limit 15;")"
+          sql() { jq -n --arg q "$1" '{query:$q}' > c.json; curl -sS -X POST https://api.supabase.com/v1/projects/futhqkqfjuuemhcxzakn/database/query -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" -H "Content-Type: application/json" --data @c.json | jq -c . | tr -d '\n'; }
+          R=$(sql "select servicio_id, estado, monto, (pago_id is not null) as con_pago, to_char(inicio - interval '3 hours','DD/MM HH24:MI') as turno, to_char(creada - interval '3 hours','DD/MM HH24:MI') as creada, nombre = 'Prueba del sistema' as es_prueba from public.reservas where creada > now() - interval '3 days' order by creada desc limit 15")
+          echo "::notice title=reservas::$R"
+          P=$(sql "select producto_id, estado, monto, to_char(creado - interval '3 hours','DD/MM HH24:MI') as cuando from public.pagos where creado > now() - interval '3 days' order by creado desc limit 15")
+          echo "::notice title=pagos::$P"
