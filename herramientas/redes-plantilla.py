@@ -80,7 +80,7 @@ posts={
 <div class="item"><b>✓</b><span>Todas las reuniones que hagan falta</span></div>
 <div class="item"><b>✓</b><span>Acceso ilimitado a todos los ebooks</span></div>
 </div>
-<div class="pie"><span>Pago único · reservá en la web</span><span class="pill">$500.000</span></div>'''),
+<div class="pie"><span>Pago único · reservá en la web</span><span class="pill">$250.000</span></div>'''),
 }
 out=sys.argv[1]
 with sync_playwright() as pw:
