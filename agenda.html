@@ -51,7 +51,7 @@ a.btn{text-decoration:none}
   <h1 id="svNombre">Reservá tu turno</h1>
   <p id="svDesc"></p>
   <div class="datos" id="svDatos"></div>
-  <p class="nota" id="svIncluidas" hidden style="background:var(--blanco);border:1px solid var(--linea);border-left:5px solid var(--mostaza);border-radius:12px;padding:12px 16px;margin-top:14px"><strong>Pagás una sola vez.</strong> La primera reunión se paga al reservar. Las siguientes las reservás acá mismo con el mismo mail y no se cobran de nuevo.</p>
+  <p class="nota" id="svIncluidas" hidden style="background:var(--blanco);border:1px solid var(--linea);border-left:5px solid var(--mostaza);border-radius:12px;padding:12px 16px;margin-top:14px"><strong>Pagás una sola vez.</strong> Incluye 8 horas de reuniones (4 encuentros de 2 horas). La primera reunión se paga al reservar; las siguientes las reservás acá mismo con el mismo mail y no se cobran de nuevo.</p>
 
   <div class="paso"><span class="n">1</span>Elegí el día</div>
   <p class="cargando" id="cargando">Buscando horarios disponibles…</p>
@@ -265,7 +265,7 @@ a.btn{text-decoration:none}
         $("vTexto").textContent = (incluida ? "Esta reunión está incluida en tu acompañamiento: no se cobra." : "Recibimos tu pago.") +
           " Te mandamos la confirmación a " + r.email + " y antes del encuentro te escribimos con el link de la videollamada." +
           (sv.incluye_ebook && !incluida ? (todos ? " Ya tenés acceso ilimitado a todos los ebooks: entrá a Mi cuenta con ese mail para leerlos." : " El ebook incluido ya está habilitado: entrá a Mi cuenta con ese mail para leerlo.") : "") +
-          (sv.reuniones_incluidas && !incluida ? " Las próximas reuniones las reservás desde esta misma agenda con ese mail, sin volver a pagar." : "") +
+          (sv.reuniones_incluidas && !incluida ? " Las próximas reuniones" + (sv.horas_incluidas ? " (hasta completar las " + sv.horas_incluidas + " horas incluidas)" : "") + " las reservás desde esta misma agenda con ese mail, sin volver a pagar." : "") +
           " Si no ves el mail, revisá spam o promociones.";
         var conCuenta = sv.incluye_ebook && !incluida;
         if (conCuenta) boton("Ir a Mi cuenta", false, "cuenta.html");

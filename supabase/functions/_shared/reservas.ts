@@ -129,7 +129,7 @@ async function mailsConfirmacion(r: Reserva, conEbook: boolean, profesionalMail:
       : `Ya tenés habilitado el ebook incluido: entrá a ${SITE_URL}/cuenta.html con este mail para leerlo.`)
     : "";
   const proximas = sv.reuniones_incluidas
-    ? `Las próximas reuniones las reservás desde ${SITE_URL}/agenda.html?servicio=${sv.id} con este mismo mail: no se cobran de nuevo.`
+    ? `Las próximas reuniones${sv.horas_incluidas ? ` (hasta completar las ${sv.horas_incluidas} horas incluidas)` : ""} las reservás desde ${SITE_URL}/agenda.html?servicio=${sv.id} con este mismo mail: no se cobran de nuevo.`
     : "";
   const tituloAviso = incluida ? "Nueva reunión del acompañamiento" : "Nueva reserva pagada";
   const pagoTxt = incluida ? "Incluida en el acompañamiento (sin cargo)" : `$${monto} · Mercado Pago, operación ${r.pago_id}`;
@@ -179,7 +179,7 @@ async function mailsConfirmacion(r: Reserva, conEbook: boolean, profesionalMail:
 <p style="font-size:18px"><strong>${escapar(c)}</strong> (hora de Argentina)<br>${escapar(nombreSv)} con ${escapar(prof)} · ${dur}</p>
 <p>Antes del encuentro te escribimos con el link de la videollamada. El archivo adjunto lo agrega a tu calendario.</p>
 ${conEbook ? `<p style="background:#F4F3EE;border-radius:12px;padding:14px 16px"><strong>${todos ? "Ya tenés acceso ilimitado a todos los ebooks." : "Tu ebook ya está habilitado."}</strong> Entrá a <a href="${SITE_URL}/cuenta.html" style="color:#1F3D2B">Mi cuenta</a> con este mail para ${todos ? "leerlos" : "leerlo"}.</p>` : ""}
-${proximas ? `<p><strong>Las próximas reuniones no se cobran de nuevo.</strong> Reservalas desde <a href="${SITE_URL}/agenda.html?servicio=${escapar(String(sv.id))}" style="color:#1F3D2B">la agenda</a> con este mismo mail.</p>` : ""}
+${proximas ? `<p><strong>Las próximas reuniones no se cobran de nuevo${sv.horas_incluidas ? ` (hasta completar las ${sv.horas_incluidas} horas incluidas)` : ""}.</strong> Reservalas desde <a href="${SITE_URL}/agenda.html?servicio=${escapar(String(sv.id))}" style="color:#1F3D2B">la agenda</a> con este mismo mail.</p>` : ""}
 <p>Si no podés asistir, <a href="${linkCancelar}" style="color:#1F3D2B">cancelá desde acá</a> con al menos 24 horas de anticipación${incluida ? " y elegí otro horario cuando quieras" : " y te devolvemos el pago o te pasamos a otro horario"}.</p>
 <p>¡Nos vemos!<br>Visión Alfa</p>`),
     ics: ics(r.id, r.inicio, `${nombreSv} · Visión Alfa`, `Con ${prof}. Videollamada de ${dur}. El link llega por mail.`, horas),

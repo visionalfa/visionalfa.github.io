@@ -5,8 +5,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
+          FN=https://futhqkqfjuuemhcxzakn.supabase.co/functions/v1/agenda
+          K="apikey: sb_publishable_x20gCAkWL2NsZG84wiWgGQ_hlchdMOF"
           sql() { jq -n --arg q "$1" '{query:$q}' > c.json; curl -sS -X POST https://api.supabase.com/v1/projects/futhqkqfjuuemhcxzakn/database/query -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" -H "Content-Type: application/json" --data @c.json | jq -c . | tr -d '\n'; }
-          R=$(sql "select servicio_id, estado, monto, (pago_id is not null) as con_pago, to_char(inicio - interval '3 hours','DD/MM HH24:MI') as turno, to_char(creada - interval '3 hours','DD/MM HH24:MI') as creada, nombre = 'Prueba del sistema' as es_prueba from public.reservas where creada > now() - interval '3 days' order by creada desc limit 15")
-          echo "::notice title=reservas::$R"
-          P=$(sql "select producto_id, estado, monto, to_char(creado - interval '3 hours','DD/MM HH24:MI') as cuando from public.pagos where creado > now() - interval '3 days' order by creado desc limit 15")
-          echo "::notice title=pagos::$P"
+          echo "::notice title=servicio::$(curl -sS "$FN?servicio=web-automatizada" -H "$K" | jq -c '.servicio|{nombre,precio,horas_incluidas}')"
+          E=prueba.limite@example.com
+          # 4 reuniones ya usadas (1 pagada + 3 incluidas), en el pasado para no ocupar horarios
+          for d in 40 30 20 10; do p="null"; [ $d = 40 ] && p="'prueba'"; sql "insert into public.reservas (inicio, fin, servicio_id, agenda, nombre, email, whatsapp, estado, pago_id, monto) values (now() - interval '$d days', now() - interval '$d days' + interval '2 hours', 'web-automatizada', 'florentina', 'Prueba del sistema', '$E', '0000', 'confirmada', $p, 0);" >/dev/null; done
+          ini=$(curl -sS "$FN?servicio=web-automatizada" -H "$K" | jq -r '.turnos[-1]')
+          jq -n --arg i "$ini" --arg e "$E" '{accion:"reservar", servicio:"web-automatizada", inicio:$i, nombre:"Prueba del sistema", email:$e, whatsapp:"0000 0000 0000"}' > r.json
+          echo "::notice title=quinta reunion::$(curl -sS -X POST $FN -H "$K" -H 'Content-Type: application/json' --data @r.json | jq -c '{incluida, error, link:(.url!=null)}')"
+          sql "delete from public.reservas where email='$E';" >/dev/null
+          echo "::notice title=limpio::$(sql "select count(*) from public.reservas where email='$E'")"

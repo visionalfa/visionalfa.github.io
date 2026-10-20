@@ -77,7 +77,7 @@ posts={
 <div class="lista">
 <div class="item"><b>✓</b><span>Ventas y cobros con Mercado Pago</span></div>
 <div class="item"><b>✓</b><span>Agenda online y mails automáticos</span></div>
-<div class="item"><b>✓</b><span>Todas las reuniones que hagan falta</span></div>
+<div class="item"><b>✓</b><span>8 horas de reuniones conmigo</span></div>
 <div class="item"><b>✓</b><span>Acceso ilimitado a todos los ebooks</span></div>
 </div>
 <div class="pie"><span>Pago único · reservá en la web</span><span class="pill">$250.000</span></div>'''),

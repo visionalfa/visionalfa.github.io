@@ -13,7 +13,7 @@ const OFFSET_AR = 3;                   // Argentina = UTC-3, sin horario de vera
 const ANTICIPACION_MS = 24 * 3600e3;   // mínimo un día de anticipación
 const DIAS_ADELANTE = 21;              // cuántos días se muestran
 const MAX_POR_PERSONA = 3;             // reservas futuras por mail y por servicio
-const CAMPOS_SERVICIO = "id, agenda, profesional, nombre, descripcion, precio, duracion, hora_desde, hora_hasta, dias, modalidad, incluye_ebook, reuniones_incluidas";
+const CAMPOS_SERVICIO = "id, agenda, profesional, nombre, descripcion, precio, duracion, hora_desde, hora_hasta, dias, modalidad, incluye_ebook, reuniones_incluidas, horas_incluidas";
 
 type DB = ReturnType<typeof admin>;
 // deno-lint-ignore no-explicit-any
@@ -114,7 +114,7 @@ Deno.serve(async (req) => {
       if (!esToken(token)) return json({ error: "El link no es válido." }, 400);
       await liberarVencidas(db);
       const { data } = await db.from("reservas")
-        .select("inicio, estado, nombre, email, vence, servicio_id, monto, servicios(nombre, profesional, duracion, incluye_ebook, reuniones_incluidas)")
+        .select("inicio, estado, nombre, email, vence, servicio_id, monto, servicios(nombre, profesional, duracion, incluye_ebook, reuniones_incluidas, horas_incluidas)")
         .eq("token", token).maybeSingle();
       if (!data) return json({ error: "No encontramos esa reserva." }, 404);
       return json({ ...data, cuando: cuando(data.inicio) });
@@ -216,6 +216,13 @@ Deno.serve(async (req) => {
     const { count } = await db.from("reservas").select("id", { count: "exact", head: true })
       .eq("email", email).eq("servicio_id", s.id).eq("estado", "confirmada").not("pago_id", "is", null);
     yaPago = (count ?? 0) > 0;
+    if (yaPago && s.horas_incluidas) {
+      const { count: usadas } = await db.from("reservas").select("id", { count: "exact", head: true })
+        .eq("email", email).eq("servicio_id", s.id).eq("estado", "confirmada");
+      if ((usadas ?? 0) * Number(s.duracion) >= Number(s.horas_incluidas)) {
+        return json({ error: `Ya reservaste las ${s.horas_incluidas} horas incluidas en tu acompañamiento. Si necesitás más tiempo, podés reservar una asesoría de 1 hora o escribirnos a visionalfa.arg@gmail.com.` }, 400);
+      }
+    }
   }
 
   // Si dejó un pago a medias en esta agenda, se libera ese horario y se toma el nuevo.
