@@ -53,7 +53,7 @@ H={
 '21-a': ('verde', '<div class="eye">Hoy en el feed</div><h1>Te presento<br><em>al equipo</em> 🤝</h1>'+img('03-equipo.png')+'<div class="cta">Link en la bio → Equipo</div>'),
 '21-b': ('papel', '<div class="eye">Orientación vocacional</div><h1>¿No sabés<br>qué estudiar?</h1><p class="sub">O tenés un hijo o una hija que termina el secundario. <b>Carla Tanzi</b>, psicóloga, acompaña el proceso con sesiones semanales por videollamada.</p>'+hueco('Reservá acá 👇', 360)),
 # Jueves 22
-'22-a': ('papel', '<div class="eye">Del 1 al 🔥</div><h1>¿Cuánto sabés<br>lo que <em>ganás</em><br>por cada venta?</h1><p class="sub">Muchos ponen el precio mirando a la competencia y no saben cuánto les queda.</p>'+hueco('Movelo 👇', 360)),
+'22-a': ('papel', '<div class="eye">Del 1 al 🔥</div><h1>¿Qué tan claro<br>tenés cuánto <em>ganás</em><br>por cada venta?</h1><p class="sub">Muchos ponen el precio mirando a la competencia y no saben cuánto les queda.</p>'+hueco('Movelo 👇', 360)),
 '22-b': ('mostaza', '<div class="eye">Post nuevo · Gratis</div><h1>¿Buscás tu<br><em>primer trabajo?</em></h1>'+img('04-cv.png')+'<div class="cta">Armá tu CV · Link en la bio</div>', ('#1F3D2B','#F4F3EE')),
 # Viernes 23
 '23-a': ('verde', '<div class="eye">¿Te gusta lo que ves?</div><h1>Mi web vende<br><em>sola</em> 🤖</h1><div class="lista"><div class="it"><i>✓</i><span>Cobra con Mercado Pago</span></div><div class="it"><i>✓</i><span>Entrega los ebooks al instante</span></div><div class="it"><i>✓</i><span>Agenda turnos y manda los mails</span></div></div><div class="caja" style="margin-top:60px">Te ayudo a crear la tuya: <b>8 horas de reuniones conmigo</b> + acceso ilimitado a todos los ebooks.</div><div class="cta">$250.000 · Link en la bio</div>'),
