@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- Página para la gente que llega del anuncio de Instagram: un solo ebook, una sola acción. -->
+<meta name="robots" content="noindex">
+<meta name="description" content="IA para vender más: la guía práctica de Visión Alfa para usar inteligencia artificial en tu emprendimiento, sin saber de tecnología.">
+<meta property="og:title" content="IA para vender más · Visión Alfa">
+<meta property="og:description" content="10 capítulos, más de 40 prompts listos para copiar y un plan de 7 días. $25.000, pago único.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://visionalfa.github.io/ia.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>IA para vender más · Visión Alfa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --verde:#1F3D2B; --mostaza:#E3A82B; --papel:#F4F3EE; --tinta:#16231B;
+  --gris:#4A5A50; --linea:#DAD8CF; --blanco:#FFFFFF;
+  --titulos:'Bricolage Grotesque','Arial Black',system-ui,sans-serif;
+  --texto:'Instrument Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--texto);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;padding-bottom:84px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+h1,h2,h3{font-family:var(--titulos);font-weight:800;letter-spacing:-0.025em;line-height:1.05;margin:0;text-wrap:balance}
+p{margin:0}
+a{color:inherit}
+a:focus-visible,button:focus-visible{outline:3px solid var(--mostaza);outline-offset:3px;border-radius:6px}
+.in{max-width:760px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.eyebrow{font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:54px;padding:0 28px;border-radius:999px;font-weight:600;font-size:17px;text-decoration:none;text-align:center}
+.btn-mostaza{background:var(--mostaza);color:var(--verde)}
+.btn-linea{border:2px solid currentColor}
+
+/* Arriba: solo la marca, sin menú, para no abrir otros caminos */
+.top{background:var(--verde);color:var(--papel);padding-top:env(safe-area-inset-top,0px)}
+.top .in{display:flex;align-items:center;min-height:58px}
+.marca{display:flex;align-items:center;gap:10px;font-family:var(--titulos);font-weight:800;font-size:20px;letter-spacing:-0.03em;text-decoration:none}
+
+/* Primera pantalla: qué es, para quién, cuánto sale y el botón */
+.hero{background:var(--verde);color:var(--papel);padding:26px 0 44px}
+.hero .eyebrow{color:var(--mostaza)}
+.hero h1{font-size:clamp(34px,8.6vw,56px);margin:12px 0 16px}
+.hero h1 em{font-style:normal;color:var(--mostaza)}
+.hero .bajada{font-size:18px;color:#DCE3DA;max-width:34em}
+.precio{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px;margin:24px 0 18px}
+.precio strong{font-family:var(--titulos);font-size:36px;letter-spacing:-0.02em}
+.precio span{color:#C9D3C8;font-size:15px}
+.precio .antes{text-decoration:line-through;color:#9FB09F;font-size:20px}
+.acciones{display:flex;flex-wrap:wrap;gap:12px}
+.chico{font-size:14.5px;color:#C9D3C8;margin-top:14px}
+
+section{padding:48px 0;border-bottom:1px solid var(--linea)}
+section h2{font-size:clamp(28px,6.4vw,38px);color:var(--verde);margin:8px 0 18px}
+section .eyebrow{color:var(--gris)}
+.lista{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.lista li{position:relative;padding-left:30px}
+.lista li::before{content:"";position:absolute;left:0;top:.5em;width:16px;height:8px;border-left:3px solid var(--mostaza);border-bottom:3px solid var(--mostaza);transform:rotate(-45deg)}
+.no li::before{border:0;width:14px;height:3px;background:var(--gris);transform:none;top:.75em}
+
+.indice{list-style:none;padding:0;margin:0;counter-reset:cap}
+.indice li{counter-increment:cap;display:flex;gap:14px;padding:12px 0;border-top:1px solid var(--linea)}
+.indice li:first-child{border-top:0}
+.indice li::before{content:counter(cap,decimal-leading-zero);font-family:var(--titulos);font-weight:800;color:var(--mostaza);min-width:28px}
+
+.ejemplo{background:var(--blanco);border:1px solid var(--linea);border-radius:16px;padding:20px;font-size:16px}
+.ejemplo p+p{margin-top:10px}
+.ejemplo b{color:var(--verde)}
+.nota{font-size:14.5px;color:var(--gris);margin-top:12px}
+
+.quien{display:flex;gap:18px;align-items:flex-start}
+.avatar{flex:none;width:64px;height:64px;border-radius:50%;background:var(--verde);color:var(--mostaza);display:flex;align-items:center;justify-content:center;font-family:var(--titulos);font-weight:800;font-size:24px}
+.quien p+p{margin-top:12px}
+
+.pasos{list-style:none;padding:0;margin:0;display:grid;gap:16px;counter-reset:paso}
+.pasos li{counter-increment:paso;display:flex;gap:14px}
+.pasos li::before{content:counter(paso);flex:none;width:32px;height:32px;border-radius:50%;background:var(--verde);color:var(--papel);display:flex;align-items:center;justify-content:center;font-weight:600}
+
+details{border-top:1px solid var(--linea);padding:14px 0}
+details:first-of-type{border-top:0}
+summary{cursor:pointer;font-weight:600;color:var(--verde)}
+details p{margin-top:8px;color:var(--gris)}
+
+.final{background:var(--verde);color:var(--papel);border:0;text-align:left}
+.final h2{color:var(--papel)}
+.final .wa{display:inline-block;margin-top:18px;color:#DCE3DA}
+
+footer{padding:28px 0 20px;font-size:14px;color:var(--gris)}
+footer nav{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:8px}
+
+/* Botón fijo abajo en el celular, aparece cuando el de arriba ya no se ve */
+.fijo{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(244,243,238,.96);border-top:1px solid var(--linea);padding:12px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;align-items:center;justify-content:space-between;gap:12px;transform:translateY(110%);transition:transform .3s}
+.fijo.ver{transform:none}
+.fijo span{font-size:15px;line-height:1.3}
+.fijo b{font-family:var(--titulos);font-size:19px;color:var(--verde)}
+.fijo .btn{min-height:48px;padding:0 20px;font-size:16px;flex:none}
+@media (prefers-reduced-motion:reduce){.fijo{transition:none}}
+@media (min-width:900px){body{padding-bottom:0}.fijo{display:none}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="in">
+    <a class="marca" href="./" aria-label="Visión Alfa, inicio">
+      <svg width="34" height="26" viewBox="0 8 64 48" aria-hidden="true"><path d="M4 14 L17 50 L30 14" fill="none" stroke="#F4F3EE" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 50 L47 14 L60 50" fill="none" stroke="#E3A82B" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      visión alfa
+    </a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="in">
+    <p class="eyebrow">Ebook · IA para vender más</p>
+    <h1>Usá la IA para <em>vender más</em> en tu emprendimiento.</h1>
+    <p class="bajada">Una guía práctica para conseguir clientes, crear contenido para redes y responder mensajes con inteligencia artificial. Pensada para gente que no es experta en tecnología.</p>
+    <div class="precio" id="precio">
+      <strong data-precio>$25.000</strong>
+      <span>pago único · lo leés apenas se acredita</span>
+    </div>
+    <div class="acciones" id="arriba">
+      <a class="btn btn-mostaza" href="cuenta.html?comprar=ia-para-vender-mas" data-comprar="ia-para-vender-mas">Quiero el ebook</a>
+      <a class="btn btn-linea" href="#adentro">Ver qué tiene adentro</a>
+    </div>
+    <p class="chico">10 capítulos · más de 40 prompts listos para copiar · plan de acción de 7 días</p>
+  </div>
+</div>
+
+<section>
+  <div class="in">
+    <p class="eyebrow">Para quién es</p>
+    <h2>Te sirve si vendés y querés que la IA te ahorre trabajo</h2>
+    <ul class="lista">
+      <li>Tenés un emprendimiento o vendés algo, y te gustaría usar la IA pero no sabés por dónde empezar.</li>
+      <li>Vendés por WhatsApp o Instagram y querés responder mejor y más rápido.</li>
+      <li>Te cuesta sentarte a crear contenido para redes.</li>
+      <li>No querés pagar herramientas: todo funciona con las versiones gratuitas.</li>
+    </ul>
+    <h3 style="font-size:20px;color:var(--verde);margin:28px 0 12px">No es para vos si...</h3>
+    <ul class="lista no">
+      <li>Ya usás la IA todos los días y tenés tus ventas automatizadas.</li>
+      <li>Buscás algo técnico o de programación.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="adentro">
+  <div class="in">
+    <p class="eyebrow">Qué tiene adentro</p>
+    <h2>10 capítulos, cada uno con ejercicios</h2>
+    <ol class="indice">
+      <li>Cómo hablarle a la IA: el método RCTF</li>
+      <li>Conocé a tu cliente mejor que nadie</li>
+      <li>Tu propuesta de valor en una frase</li>
+      <li>Contenido para redes en minutos</li>
+      <li>Vender por WhatsApp e Instagram</li>
+      <li>Automatizá sin programar</li>
+      <li>Precios, promociones y ofertas</li>
+      <li>Los límites de la IA: qué no delegar nunca</li>
+      <li>Plan de acción de 7 días</li>
+      <li>Banco de prompts listos para copiar</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <div class="in">
+    <p class="eyebrow">Un ejemplo</p>
+    <h2>Así se ve un prompt armado con el método</h2>
+    <div class="ejemplo">
+      <p><b>Rol:</b> Sos vendedora de una tienda de ropa de Neuquén que vende por Instagram.</p>
+      <p><b>Contexto:</b> Una clienta me preguntó el precio de una campera y no me contestó más.</p>
+      <p><b>Tarea:</b> Escribime un mensaje para retomar la charla sin ser insistente.</p>
+      <p><b>Formato:</b> Un mensaje corto de WhatsApp, en tono cercano y con voseo.</p>
+    </div>
+    <p class="nota">En el ebook tenés más de 40 como este, listos para copiar y adaptar a tu negocio.</p>
+  </div>
+</section>
+
+<section>
+  <div class="in">
+    <p class="eyebrow">Quién lo escribió</p>
+    <div class="quien">
+      <div class="avatar" aria-hidden="true">FC</div>
+      <div>
+        <h2 style="margin-top:0">Hola, soy Flor</h2>
+        <p>Trabajo en consumo masivo, del lado comercial, y recorro comercios de la Patagonia todos los días. Soy licenciada en Relaciones Públicas (UADE) e hice un MBA en España.</p>
+        <p>Esta web la armé yo con inteligencia artificial: cobra, entrega los ebooks y agenda turnos sola. En este ebook te cuento cómo uso la IA para vender, con ejemplos concretos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="in">
+    <p class="eyebrow">Cómo es la compra</p>
+    <h2>Tres pasos y lo estás leyendo</h2>
+    <ol class="pasos">
+      <li><span>Ponés tu mail y te llega un código de 6 números. Así el ebook queda guardado en tu cuenta.</span></li>
+      <li><span>Pagás con Mercado Pago: tarjeta de crédito o débito, dinero en cuenta y más. Con crédito podés pagar en cuotas.</span></li>
+      <li><span>Apenas se acredita, lo leés desde Mi cuenta, en el celular o en la compu.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <div class="in">
+    <p class="eyebrow">Preguntas</p>
+    <h2>Preguntas frecuentes</h2>
+    <details><summary>¿Necesito saber de tecnología?</summary><p>No. Todo se explica paso a paso y los prompts están listos para copiar y pegar.</p></details>
+    <details><summary>¿Tengo que pagar alguna herramienta de IA?</summary><p>No. Todo funciona con las versiones gratuitas de las herramientas de IA más conocidas.</p></details>
+    <details><summary>¿Se actualiza?</summary><p>Sí. Reviso el ebook todos los meses y la versión nueva te queda disponible en tu cuenta, sin pagar de nuevo.</p></details>
+    <details><summary>¿Es un pago único o una suscripción?</summary><p>Pago único. Lo comprás una vez y es tuyo.</p></details>
+  </div>
+</section>
+
+<section class="final">
+  <div class="in">
+    <h2>Empezá con el plan de 7 días</h2>
+    <div class="precio"><strong data-precio>$25.000</strong><span>pago único</span></div>
+    <a class="btn btn-mostaza" href="cuenta.html?comprar=ia-para-vender-mas" data-comprar="ia-para-vender-mas">Quiero el ebook</a>
+    <br>
+    <a class="wa" href="https://wa.me/5492994541687?text=Hola%20Flor%2C%20tengo%20una%20consulta%20sobre%20el%20ebook%20IA%20para%20vender%20m%C3%A1s">¿Tenés una duda antes de comprar? Escribime por WhatsApp</a>
+  </div>
+</section>
+
+<footer>
+  <div class="in">
+    <p>© Visión Alfa · <a href="./">Ver todos los ebooks</a> · Instagram <a href="https://www.instagram.com/visionalfa.arg">@visionalfa.arg</a></p>
+    <nav>
+      <a href="terminos.html">Términos y condiciones</a>
+      <a href="privacidad.html">Privacidad</a>
+      <a href="arrepentimiento.html">Botón de arrepentimiento</a>
+      <a href="https://www.argentina.gob.ar/produccion/defensadelconsumidor/formulario">Defensa de las y los Consumidores</a>
+    </nav>
+  </div>
+</footer>
+
+<div class="fijo" id="fijo" aria-hidden="true">
+  <span>IA para vender más<br><b data-precio>$25.000</b></span>
+  <a class="btn btn-mostaza" href="cuenta.html?comprar=ia-para-vender-mas" data-comprar="ia-para-vender-mas" tabindex="-1">Quiero el ebook</a>
+</div>
+
+<script>
+// Precio de Cyber Monday (2 al 4/11, hora de Argentina), sin reloj: el checkout aplica el mismo precio.
+(function () {
+  var t = Date.now();
+  if (t < Date.parse("2026-11-02T00:00:00-03:00") || t > Date.parse("2026-11-04T23:59:59-03:00")) return;
+  document.querySelectorAll("[data-precio]").forEach(function (el) {
+    el.textContent = "$17.500";
+    if (el.closest(".precio")) {
+      var antes = document.createElement("span"); antes.className = "antes"; antes.textContent = "$25.000";
+      el.parentNode.insertBefore(antes, el);
+    }
+  });
+  var bajada = document.querySelector("#precio span:last-child");
+  if (bajada) bajada.textContent = "precio de Cyber Monday, hasta el 4 de noviembre";
+})();
+
+// Botón fijo abajo: aparece cuando el botón de arriba sale de la pantalla.
+(function () {
+  var fijo = document.getElementById("fijo"), arriba = document.getElementById("arriba");
+  if (!("IntersectionObserver" in window)) return;
+  new IntersectionObserver(function (e) {
+    var ver = !e[0].isIntersecting && e[0].boundingClientRect.top < 0;
+    fijo.classList.toggle("ver", ver); fijo.setAttribute("aria-hidden", ver ? "false" : "true");
+    fijo.querySelector("a").tabIndex = ver ? 0 : -1;
+  }).observe(arriba);
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
+<script src="js/va.js"></script>
+<script src="js/visita.js" defer></script>
+<script>
+// Hasta dónde lee la gente (anónimo): se registra una vez por sección vista.
+(function () {
+  try { if (localStorage.getItem("va-panel-k")) return; } catch (e) {}
+  if (!("IntersectionObserver" in window)) return;
+  var URL_FN = "https://futhqkqfjuuemhcxzakn.supabase.co/functions/v1/visita";
+  var CLAVE = "sb_publishable_x20gCAkWL2NsZG84wiWgGQ_hlchdMOF";
+  var marcas = { adentro: "indice", final: "final" };
+  var obs = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      obs.unobserve(e.target);
+      var sesion = ""; try { sesion = sessionStorage.getItem("va-s") || ""; } catch (err) {}
+      var d = "leyo:" + (e.target.id ? marcas[e.target.id] : "final");
+      fetch(URL_FN, { method: "POST", keepalive: true, headers: { "Content-Type": "application/json", apikey: CLAVE },
+        body: JSON.stringify({ evento: "clic", pagina: "ia", origen: null, dispositivo: innerWidth <= 760 ? "celular" : "compu", sesion: sesion, detalle: d }) }).catch(function () {});
+    });
+  }, { threshold: 0.3 });
+  obs.observe(document.getElementById("adentro"));
+  obs.observe(document.querySelector(".final"));
+})();
+</script>
+</body>
+</html>
