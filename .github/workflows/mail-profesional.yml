@@ -9,7 +9,7 @@ on:
         description: "Profesional"
         required: true
         type: choice
-        options: [carla, marcelo, juliana, florentina]
+        options: [carla, marcelo, juliana, florentina, caro]
       email:
         description: "Mail personal (vacío = dejar de enviarle avisos)"
         required: false
@@ -21,11 +21,11 @@ jobs:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       PROJECT_REF: futhqkqfjuuemhcxzakn
       AGENDA: ${{ inputs.agenda }}
-      EMAIL: ${{ inputs.email }}
     steps:
       - name: Guardar
         run: |
-          email=$(printf '%s' "$EMAIL" | tr 'A-Z' 'a-z' | tr -d ' ')
+          # El mail se lee del evento (no de env) para que no aparezca en el log público antes de ocultarlo.
+          email=$(jq -r '.inputs.email // ""' "$GITHUB_EVENT_PATH" | tr 'A-Z' 'a-z' | tr -d ' ')
           [ -n "$email" ] && echo "::add-mask::$email"
           if ! printf '%s' "$AGENDA" | grep -Eq '^[a-z]+$'; then echo "::error::Profesional inválido"; exit 1; fi
           if [ -z "$email" ]; then
