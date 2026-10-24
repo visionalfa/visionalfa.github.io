@@ -9,7 +9,7 @@ on:
         description: "Profesional"
         required: true
         type: choice
-        options: [carla, marcelo, juliana, florentina, caro]
+        options: [carla, marcelo, juliana, florentina, caro, silvana]
       email:
         description: "Mail personal (vacío = dejar de enviarle avisos)"
         required: false

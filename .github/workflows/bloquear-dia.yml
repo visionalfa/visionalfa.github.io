@@ -16,7 +16,7 @@ on:
         description: "Agenda de quién"
         required: true
         type: choice
-        options: [todas, florentina, carla, marcelo, juliana, caro]
+        options: [todas, florentina, carla, marcelo, juliana, caro, silvana]
       motivo:
         description: "Motivo (opcional, solo para vos)"
         required: false
