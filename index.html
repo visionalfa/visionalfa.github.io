@@ -244,9 +244,13 @@ footer .legales{display:flex;flex-wrap:wrap;gap:8px 20px;width:100%;font-size:14
   <span class="cy-txt" id="cyTxt"></span>
   <span class="cy-reloj" id="cyReloj" aria-live="off"></span>
 </a>
+<a class="cy-charla" id="cyCharla" href="https://wa.me/5492994541687?text=Hola%20Flor%2C%20quiero%20coordinar%20la%20charla%20gratis%20de%2030%20minutos%20para%20un%20diagn%C3%B3stico%20de%20mi%20emprendimiento." hidden>¿Tenés dudas antes de comprar? <b>Charlemos 30 minutos gratis por WhatsApp</b> y vemos qué te sirve →</a>
 <style>
 .cyber{display:flex;align-items:center;justify-content:center;gap:10px 16px;flex-wrap:wrap;background:var(--mostaza);color:var(--verde);text-decoration:none;padding:10px 16px;font-weight:600;font-size:15.5px;line-height:1.3;text-align:center;position:relative;z-index:6}
 .cyber[hidden]{display:none}
+.cy-charla{display:block;background:var(--papel);color:var(--verde);text-decoration:none;text-align:center;font-size:14.5px;line-height:1.35;padding:9px 16px;border-bottom:1px solid var(--linea);position:relative;z-index:6}
+.cy-charla[hidden]{display:none}
+.cy-charla b{font-weight:700;text-decoration:underline;text-underline-offset:3px}
 .cy-tag{background:var(--verde);color:var(--mostaza);border-radius:999px;padding:4px 12px;font-weight:800;font-size:13px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
 .cy-txt b{font-weight:800}
 .cy-reloj{font-family:var(--titulos);font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -266,6 +270,7 @@ footer .legales{display:flex;flex-wrap:wrap;gap:8px 20px;width:100%;font-size:14
   var t0 = ahora(); if (t0 < AVISO || t0 > FIN) return;
   var caja = document.getElementById("cyber"), reloj = document.getElementById("cyReloj"), txt = document.getElementById("cyTxt");
   caja.hidden = false;
+  document.getElementById("cyCharla").hidden = false;
   var enVivo = t0 >= INICIO;
   if (!enVivo) {
     txt.innerHTML = "Del <b>2 al 4 de noviembre</b>: ebooks a $17.500 y acceso de por vida a $60.000";
