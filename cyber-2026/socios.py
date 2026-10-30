@@ -19,6 +19,16 @@ P.CSS += '''
 .claro .socio{background:#fff;border:2px solid #1565FF;color:#0B0D12}.claro .socio .pct{color:#1565FF}
 .foto .socio{background:rgba(7,9,13,.55);border:2px solid #2B7BFF;color:#fff}.foto .socio .pct{color:#2B7BFF}
 '''
+FR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'fotos-reales')
+for _k in ('st_6650_caminando','st_4028_puente','st_6649_traje','st_4031_mancuernas'):
+    P.F[_k] = (lambda r: (lambda: P.foto(r)))(os.path.join(FR, _k + '.jpg'))
+# fotos nuevas para no repetir siempre las mismas
+FOTOS = {
+ '2026-10-30-post-se-viene-cyber': ('st_6650_caminando', '62% 30%'),
+ '2026-11-02-post-suscripciones-4': ('st_4028_puente', '50% 45%'),
+ '2026-11-03-post-whatsapp': ('st_6649_traje', '50% 35%'),
+ '2026-11-03-a-historia': ('st_4031_mancuernas', '50% 25%'),
+}
 SOCIO = f'<div class="socio"><img src="{ESCUDO}"><span><b>¿Sos socio/a del Club Cipolletti?</b>Tenés <b style="display:inline">10% off</b> en tu primer mes presentando el carnet.</span></div>'
 
 def antes(c, marca):  # inserta antes de la primera aparición de marca
@@ -52,6 +62,7 @@ with sync_playwright() as pw:
         pg = b.new_page(viewport={'width': 1080, 'height': h})
         for k, f in mods.items():
             est, cuerpo, img, pos = tabla[k]
+            if k in FOTOS: img, pos = FOTOS[k]
             pg.set_content(P.html(P.pieza(tipo, est, f(cuerpo), img, pos))); pg.wait_for_timeout(150)
             pg.locator('.pz').screenshot(path=f'{out}/{k}-club.png')
             sz = pg.evaluate("(()=>{const z=document.querySelector('.pz');return [z.scrollHeight,z.clientHeight]})()")
