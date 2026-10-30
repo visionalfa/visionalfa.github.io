@@ -64,7 +64,7 @@ POSTS = {
 }
 
 HIST = {
- '2026-11-06-a-historia': ('claro', '<div class="eye" style="margin-top:120px">Encuesta</div><h1>¿20 minutos<br><em>alcanzan?</em></h1>' + H + '<div class="linea"></div>', None, None),
+ '2026-11-06-a-historia': ('claro', '<div class="eye" style="margin-top:120px">Encuesta</div><h1>¿Ya probaste<br><em>electro<br>fitness?</em></h1>' + H + '<div class="linea"></div>', None, None),
  '2026-11-06-b-historia': ('foto', H + '<div class="eye">Así queda el traje</div><h1>Listo para<br><em>arrancar</em></h1><p class="sub">Vos venís con ropa cómoda. El traje te lo ponemos acá.</p>', 'ft_6726_selfie_traje', '45% 40%'),
  '2026-11-09-a-historia': ('foto', H + '<div class="eye">Lunes</div><h1>Arrancamos<br>la <em>semana</em></h1><p class="sub">¿Y vos? La primera clase es gratis.</p>', 'ft_6725_discos', '50% 30%'),
  '2026-11-09-b-historia': ('azul', '<div class="eye" style="margin-top:120px">Contanos</div><h1>¿Qué te<br>gustaría<br><em>saber?</em></h1>' + H, None, None),
