@@ -1,0 +1,22 @@
+name: club-logo-fetch
+on:
+  push:
+    branches: [club-logo-fetch]
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: powerfit-redes
+      - run: |
+          mkdir -p club
+          curl -sSL -A "Mozilla/5.0" -o club/escudo-freebie.png "https://cdn.freebiesupply.com/logos/large/2x/club-cipolletti-logo-png-transparent.png" || true
+          curl -sSL -A "Mozilla/5.0" -o club/escudo-wikimedia.png "https://upload.wikimedia.org/wikipedia/commons/9/9e/Club_cipolletti.png" || true
+          curl -sSL -A "Mozilla/5.0" -o club/escudo-cdnlogo.svg "https://static.cdnlogo.com/logos/c/93/club-cipolletti.svg" || true
+          curl -sSL -A "Mozilla/5.0" -o club/escudo-facebook.jpg "https://lookaside.fbsbx.com/lookaside/crawler/media/?media_id=885677574836335" || true
+          ls -la club; file club/*
+          git config user.name "Claude"; git config user.email "noreply@anthropic.com"
+          git add club && git commit -m "PowerFit: escudos Club Cipolletti (descarga)" && git push origin powerfit-redes
