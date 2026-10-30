@@ -126,7 +126,7 @@ TABLA = '''<table>
 <tr><td>1 vez<small>por semana</small></td><td>$150.000</td><td>$255.000</td><td>$360.000</td></tr>
 <tr><td>2 veces<small>por semana</small></td><td>$180.000</td><td>$306.000</td><td>$432.000</td></tr>
 <tr><td>3 veces<small>por semana</small></td><td>$230.000</td><td>$391.000</td><td>$552.000</td></tr>
-</table><p class="nota">Los descuentos son pagando con suscripción por Mercado Pago. Promociones no acumulables.</p>'''
+</table><p class="nota">Los descuentos son pagando con suscripción por Mercado Pago. Promociones no acumulables.<br>Podés cancelar la suscripción cuando quieras; lo ya abonado no se reintegra.</p>'''
 
 # ---------- POSTEOS ----------
 POSTS = {

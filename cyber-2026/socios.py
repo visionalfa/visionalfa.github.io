@@ -17,7 +17,7 @@ P.CSS += '''
 .hist .socio{font-size:32px;padding:26px 32px}.hist .socio img{height:112px}
 .azul .socio{background:rgba(7,9,13,.24);border:2px solid rgba(255,255,255,.55);color:#fff}.azul .socio .pct{color:#fff}
 .claro .socio{background:#fff;border:2px solid #1565FF;color:#0B0D12}.claro .socio .pct{color:#1565FF}
-.post td{padding:21px 0}.hist td{padding:28px 0}
+.post td{padding:18px 0}.hist td{padding:25px 0}
 .foto .socio{background:rgba(7,9,13,.55);border:2px solid #2B7BFF;color:#fff}.foto .socio .pct{color:#2B7BFF}
 '''
 FR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'fotos-reales')
