@@ -2,6 +2,7 @@
 
 Formato: carrusel de 5 placas (tapa oscura · 3 placas claras con un beneficio cada una · cierre oscuro con la clase de prueba gratis).
 Día: miércoles 12:14 (reemplaza el posteo de ese día). Primera entrega: domingo 15/11/2026.
+Ilustraciones: la tapa y cada placa llevan una ilustración de línea de ilus.py (dibujos propios en SVG, estilo PowerFit). Si el tema necesita una nueva (pelota, bici, guantes, etc.), dibujala en ilus.py con el mismo estilo y revisá que se entienda.
 Fuente técnica: manual i-motion PRO V25 (programas individuales, automáticos y recovery). No prometer resultados
 exactos ni hablar de tratar enfermedades: siempre "puede ayudar", "complementa", y que la profe arma el plan después
 de la evaluación previa (y con apto médico cuando haga falta).
