@@ -45,7 +45,7 @@ def pieza(tipo, estilo, cuerpo, img=None, pos='center'):
         return f'<div class="pz {tipo} oscuro">{bg}{P.marca()}{cuerpo}</div>'
     return _pieza(tipo, estilo, cuerpo, img, pos)
 
-SOCIO = f'<div class="socio"><img src="{ESCUDO}"><span><b>¿Sos socio/a del Club Cipolletti?</b>Tenés <b style="display:inline">10% off</b> en tu primer mes presentando el carnet.</span></div>'
+SOCIO = f'<div class="socio"><img src="{ESCUDO}"><span><b>¿Sos socio/a del Club Cipolletti?</b>Tenés <b style="display:inline">10% off</b> en tu primer mes presentando el carnet.<small style="display:block;opacity:.75;font-size:.8em;margin-top:4px">No acumulable con otras promociones.</small></span></div>'
 H = '<div class="hueco"></div>'
 PIE = '<div class="pie"><span>Córdoba 340 · Cipolletti</span><span class="boton">{}</span></div>'
 
@@ -55,7 +55,7 @@ POSTS = {
  '2026-11-09-post-para-hombres': ('foto', H + '<div class="eye">Una duda que llega seguido</div><h1>¿Es solo para<br><em>mujeres?</em></h1><p class="sub">Para nada. Viene gente muy distinta, y la profe arma el entrenamiento según cada persona.</p>', 'ft_6731_barra_sonrisa', '50% 22%'),
  '2026-11-10-post-se-cobra-solo': ('foto', H + '<h1>Tu plan<br>se cobra<br><em>solo</em></h1><p class="sub">Cada 2 meses, 15% menos. Cada 3 meses, 20% menos. Pedinos el link por WhatsApp.</p>' + SOCIO, 'ft_6735_kettle_noche', '50% 48%'),
  '2026-11-11-post-no-entrenas-sola': ('foto', H + '<div class="eye">Grupos de hasta 3</div><h1>No entrenás<br><em>sola</em></h1><p class="sub">La profe está al lado toda la clase: te corrige, ajusta la intensidad y te acompaña a tu ritmo.</p>', 'ft_6723_profe_explica', '50% 28%'),
- '2026-11-12-post-club-cipolletti': ('azul', f'<div class="eye" style="margin-top:70px">Beneficio para socios</div><div style="display:flex;justify-content:center;margin-top:40px"><img class="escudo-xl" src="{ESCUDO}"></div><h1 style="font-size:124px;margin-top:40px">¿Sos socio/a del<br><em>Club Cipolletti?</em></h1><p class="sub">Tenés 10% off en tu primer mes presentando el carnet.</p>' + H, None, None),
+ '2026-11-12-post-club-cipolletti': ('azul', f'<div class="eye" style="margin-top:70px">Beneficio para socios</div><div style="display:flex;justify-content:center;margin-top:40px"><img class="escudo-xl" src="{ESCUDO}"></div><h1 style="font-size:124px;margin-top:40px">¿Sos socio/a del<br><em>Club Cipolletti?</em></h1><p class="sub">Tenés 10% off en tu primer mes presentando el carnet.<br><span style="font-size:.7em;opacity:.8">No acumulable con otras promociones.</span></p>' + H, None, None),
  '2026-11-13-post-preguntas-1': ('oscuro', '<div class="eye" style="margin-top:300px">Antes de tu primera clase</div><h1>Lo que más<br>nos<br><em>preguntan</em></h1>' + H + '<div class="pie"><span>Deslizá</span><span class="boton">Ver respuestas →</span></div>', None, None),
  '2026-11-13-post-preguntas-2': ('claro', '<div class="faq-n" style="margin-top:220px">01</div><h1 style="font-size:132px">¿Necesito<br><em>experiencia?</em></h1><p class="sub">No. La profe te va guiando desde el primer minuto, aunque nunca hayas entrenado.</p>' + H + '<div class="linea"></div>', None, None),
  '2026-11-13-post-preguntas-3': ('claro', '<div class="faq-n" style="margin-top:220px">02</div><h1 style="font-size:132px">¿Qué tengo<br>que <em>traer?</em></h1><p class="sub">Ropa cómoda y zapatillas. Del resto nos encargamos nosotras.</p>' + H + '<div class="linea"></div>', None, None),
@@ -74,7 +74,7 @@ HIST = {
  '2026-11-11-b-historia': ('claro', '<div class="eye" style="margin-top:120px">Para arrancar</div><h1>Reservá tu<br>clase<br><em>gratis</em></h1><p class="sub">Tocá el link, completá el formulario y elegí tu horario.</p>' + H + '<div class="linea"></div>', None, None),
  '2026-11-12-a-historia': ('azul', '<div class="eye" style="margin-top:120px">Encuesta</div><h1>¿Cuándo<br>entrenás<br><em>mejor?</em></h1>' + H, None, None),
  '2026-11-12-b-historia': ('foto', H + '<div class="eye">En cada clase</div><h1>La profe<br><em>ajusta todo</em></h1><p class="sub">La intensidad se va regulando durante la clase. Vos vas a tu ritmo.</p>', 'ft_6728_kettle_profe', '40% 25%'),
- '2026-11-13-a-historia': ('azul', f'<div class="eye" style="margin-top:100px">Beneficio para socios</div><div style="display:flex;justify-content:center;margin-top:40px"><img class="escudo-xl" src="{ESCUDO}"></div><h1 style="font-size:130px;margin-top:40px">Socios del<br><em>Club Cipolletti</em></h1><p class="sub">10% off en tu primer mes presentando el carnet.</p>' + H, None, None),
+ '2026-11-13-a-historia': ('azul', f'<div class="eye" style="margin-top:100px">Beneficio para socios</div><div style="display:flex;justify-content:center;margin-top:40px"><img class="escudo-xl" src="{ESCUDO}"></div><h1 style="font-size:130px;margin-top:40px">Socios del<br><em>Club Cipolletti</em></h1><p class="sub">10% off en tu primer mes presentando el carnet.<br><span style="font-size:.7em;opacity:.8">No acumulable con otras promociones.</span></p>' + H, None, None),
  '2026-11-13-b-historia': ('oscuro', '<div class="eye" style="margin-top:120px">La semana que viene</div><h1>¿Arrancás<br><em>con nosotras?</em></h1>' + H, None, None),
 }
 
