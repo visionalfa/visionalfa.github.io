@@ -144,19 +144,19 @@ def cta(t):
 HIST = [
 # Lunes 9: 10:30 automática, 19:30 interactiva
 ('2026-11-09-a-historia-descripcion', 'papel', '<div class="eye">Post nuevo</div><h1>Un prompt para la<br><em>descripción</em> de<br>tu producto</h1>' + foto(f'{OUT}/2026-11-09-post-descripcion-ia.png', 560, 700) + cta('Copialo y probalo 📌')),
-('2026-11-09-b-historia-encuesta-ia', 'verde', f'''{ilu('encuesta', 380)}<div class="eye">Encuesta</div><h1>¿Ya usaste IA<br>para escribir<br><em>tus textos?</em></h1><p class="sub">Descripciones, respuestas, historias…</p>''' + hueco('Votá 👇', 380)),
+('2026-11-09-b-historia-tip-ia', 'verde', f'''{ilu('robot', 340)}<div class="eye">Probalo esta semana</div><h1>3 textos que le<br>podés pedir <em>a la IA</em></h1>''' + lista([('1','La descripción de un producto'),('2','La respuesta a una consulta que te hacen siempre'),('3','Ideas de historias para tu semana')]) + '<p class="pista">Después revisalo y dejalo con tus palabras.</p>'),
 # Martes 10: 12:00 interactiva, 18:30 automática
-('2026-11-10-a-historia-encuesta-equipo', 'mostaza', f'''{ilu('checklist', 380)}<div class="eye">Te leo</div><h1>¿Hoy trabajás<br><em>sola o solo</em> en<br>tu emprendimiento?</h1>''' + hueco('Votá 👇', 400)),
+('2026-11-10-a-historia-tareas', 'mostaza', f'''{ilu('checklist', 360)}<div class="eye">Antes de contratar</div><h1>Primer paso:<br>escribí <em>qué tareas</em><br>va a hacer</h1><p class="sub">Con esa lista armás el perfil del puesto, la búsqueda y las preguntas de la entrevista.</p>''' + '<p class="pista">A las 18 subo la lista completa.</p>'),
 ('2026-11-10-b-historia-contratar', 'verde', '<div class="eye">Post nuevo</div><h1>Antes de sumar<br>a tu <em>primera persona</em></h1>' + foto(f'{OUT}/2026-11-10-post-primera-contratacion.png', 560, 700) + cta('Guardalo 📌')),
 # Miércoles 11: 10:30 automática, 19:30 interactiva
 ('2026-11-11-a-historia-conoce-a-flor', 'verde', '<div class="eye">Post nuevo</div><h1>Para que me<br><em>conozcas</em> 👋</h1>' + foto(f'{OUT}/2026-11-11-post-conoce-a-flor.png', 560, 700) + cta('Pasá por el feed')),
-('2026-11-11-b-historia-pregunta-web', 'papel', f'''{ilu('pantallas', 380)}<div class="eye">Preguntame</div><h1>¿Qué querés<br>saber de cómo<br>armé <em>mi web con IA?</em></h1>''' + hueco('Escribime acá 👇', 380)),
+('2026-11-11-b-historia-web-sola', 'papel', f'''{ilu('pantallas', 360)}<div class="eye">Así armé mi web con IA</div><h1>Lo que hoy<br>hace <em>sola</em></h1>''' + lista([('1','Cobra con Mercado Pago'),('2','Agenda las reuniones'),('3','Manda los mails de confirmación')]) + '<p class="pista">La armé en unas 8 horas, aprendiendo en el camino.</p>'),
 # Jueves 12: 12:00 interactiva, 18:30 automática
-('2026-11-12-a-historia-quiz-bio', 'mostaza', f'''{ilu('celular', 320)}<div class="eye">Quiz</div><h1>¿Qué no puede<br>faltar en tu <em>bio</em><br>de Instagram?</h1>''' + hueco('Elegí 👇', 420)),
+('2026-11-12-a-historia-bio-clave', 'mostaza', f'''{ilu('celular', 300)}<div class="eye">Revisá tu perfil</div><h1>Lo que no puede<br>faltar en tu <em>bio</em></h1><div class="caja"><b>Qué vendés</b> y <b>cómo te compran</b>. Una frase linda sola no alcanza.</div>''' + '<p class="pista">A las 18 subo cómo armarla en 4 líneas.</p>'),
 ('2026-11-12-b-historia-bio', 'papel', '<div class="eye">Post nuevo</div><h1>Tu bio en<br><em>4 líneas</em></h1>' + foto(f'{OUT}/2026-11-12-post-bio-instagram.png', 560, 700) + cta('Revisá la tuya 📌')),
 # Viernes 13: 10:30 automática, 19:30 interactiva
 ('2026-11-13-a-historia-asesoria', 'verde', '<div class="eye">Asesoría conmigo</div><h1>Traé tu traba,<br>la vemos <em>juntos</em></h1>' + foto(f'{OUT}/2026-11-13-post-asesoria.png', 560, 700) + cta('$60.000 la hora · Link en la bio')),
-('2026-11-13-b-historia-slider-ia', 'papel', f'''{ilu('robot', 360)}<div class="eye">Del 0 al 🤖</div><h1>¿Cuánto usás la<br><em>IA</em> en tu<br>emprendimiento?</h1>''' + hueco('Movelo 👇', 380)),
+('2026-11-13-b-historia-prompt-finde', 'papel', f'''{ilu('robot', 320)}<div class="eye">Para el finde</div><h1>Pedile a la IA<br>tus <em>historias</em><br>de la semana</h1><div class="caja">“Vendo <b>[producto]</b>. Dame 5 ideas de historias de Instagram para la semana que viene: una por día, cortas y con voseo.”</div>'''),
 ]
 
 # ---------- REELS 1080x1920, 30 fps ----------
