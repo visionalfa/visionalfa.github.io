@@ -76,7 +76,7 @@ p.sub{font-size:38px;line-height:1.36;font-weight:500;max-width:880px;position:r
 .foto{background:#07090D;color:#fff}
 .foto .img{position:absolute;inset:0;background-size:cover;z-index:0}
 .foto .velo{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(7,9,13,.62) 0%,rgba(7,9,13,.05) 22%,rgba(7,9,13,0) 40%,rgba(7,9,13,.78) 64%,rgba(7,9,13,.96) 100%)}
-.foto .tinte{position:absolute;inset:0;z-index:1;background:linear-gradient(200deg,rgba(21,101,255,.28),rgba(21,101,255,0) 45%);mix-blend-mode:multiply}
+.foto .tinte{display:none} /* sin tinte azul: dejaba las fotos verdosas (pedido de Flor 9/11) */
 .foto h1 em{font-style:italic;color:#2B7BFF;text-shadow:0 0 50px rgba(21,101,255,.45)}
 .foto .eye{color:#8EB6FF}
 .foto .boton{background:#1565FF;color:#fff;box-shadow:0 0 40px rgba(21,101,255,.55)}

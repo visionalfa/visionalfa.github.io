@@ -14,11 +14,11 @@ for nombre, segs in REELS.items():
         p = f'{out}/_{nombre}_{i}.mp4'; cp = f'{out}/capas/{capa}.png'
         base = 'scale=1188:2112:force_original_aspect_ratio=increase,crop=1188:2112,'
         if tipo == 'foto':
-            vf = f"[0:v]{base}crop=1080:1920:x='(iw-ow)/2':y='(ih-oh)*t/{D}',eq=contrast=1.07:saturation=0.9,format=yuv420p[b];[b][1:v]overlay=0:0"
+            vf = f"[0:v]{base}crop=1080:1920:x='(iw-ow)/2':y='(ih-oh)*t/{D}',eq=contrast=1.04:saturation=1.0,format=yuv420p[b];[b][1:v]overlay=0:0"
             run(['ffmpeg','-y','-loop','1','-t',str(D),'-i',f'{FR}/{src}.jpg','-i',cp,'-filter_complex',vf,'-r','30','-t',str(D),'-c:v','libx264','-pix_fmt','yuv420p','-an',p])
         elif tipo == 'video':
             f, ss = src.split(':')
-            vf = f"[0:v]setpts=1.15*PTS,{base}crop=1080:1920,eq=contrast=1.07:saturation=0.9,fps=30,format=yuv420p,tpad=stop_mode=clone:stop_duration=3[b];[b][1:v]overlay=0:0"
+            vf = f"[0:v]setpts=1.15*PTS,{base}crop=1080:1920,eq=contrast=1.04:saturation=1.0,fps=30,format=yuv420p,tpad=stop_mode=clone:stop_duration=3[b];[b][1:v]overlay=0:0"
             run(['ffmpeg','-y','-ss',ss,'-i',f'{vids}/{f}','-i',cp,'-filter_complex',vf,'-t',str(D),'-c:v','libx264','-pix_fmt','yuv420p','-an',p])
         else:
             run(['ffmpeg','-y','-loop','1','-t',str(D),'-i',cp,'-vf','format=yuv420p','-r','30','-c:v','libx264','-pix_fmt','yuv420p','-an',p])

@@ -12,7 +12,7 @@ P = importlib.util.module_from_spec(sp); sp.loader.exec_module(P)
 
 FR = os.path.join(RAIZ, 'fotos-reales')
 for n in os.listdir(FR):
-    if n.startswith('ft_'):
+    if n.startswith(('ft_', 'wa_')):
         P.F[n[:-4]] = (lambda r: (lambda: P.foto(r)))(os.path.join(FR, n))
 
 _e = Image.open(os.path.join(RAIZ, 'club', 'escudo-club-cipolletti.png')).convert('RGBA')
