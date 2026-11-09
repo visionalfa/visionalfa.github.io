@@ -1,10 +1,11 @@
 # Ideas de las imágenes hechas con otra IA (Drive, powerfit_mujeres_01-07 y powerfit_hombres_01-07, 9/11/2026)
 
-DECISIÓN DE FLOR (9/11): se pueden mezclar en el feed, a la gente le gusta. Cómo usarlas:
-- Como mucho 1 pieza IA por semana, mezclada con las de fotos reales.
-- Usar la imagen solo como fondo, con NUESTRO texto y logo (rayo + POWERFIT + CIPOLLETTI), tapando el texto y el logo "POWERFIT EMS" que traen.
-- En Metricool marcar instagramData.isAiGenerated = true. Nunca presentarlas como clientas/es o resultados reales.
-- Resolución actual ~500 px: pedirle a Flor que las exporte en 1080x1350 (posteo) o 1080x1920 (historia). Mientras tanto, solo en historias y con degradé fuerte.
+DECISIÓN DE FLOR (9/11, actualizada): publicarlas TAL COMO ESTÁN (imagen original, sin rediseñar), mezcladas en el feed.
+- Como mucho 1 por semana, intercalada con piezas de fotos reales. Contar su estilo como "oscuro" para la mezcla de la grilla.
+- Subir el PNG original del Drive al repo (carpeta ia/) y usar esa URL. En Metricool: instagramData.isAiGenerated = true.
+- powerfit_mujeres_06 (POSTPARTO) NO se publica: el posparto reciente es contraindicación del fabricante.
+- El texto del posteo sí sigue las reglas de siempre: "puede ayudar", evaluación previa, y en las de menopausia, adultos mayores
+  o salud agregar "consultá con tu médico". Nunca decir que son clientas/es o resultados reales.
 
 Temas aprovechables:
 - "¿Solo 20 minutos?": todo el cuerpo a la vez, profe al lado (sin el "90% de tus músculos").
