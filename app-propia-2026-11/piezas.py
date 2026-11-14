@@ -40,7 +40,7 @@ POSTS = {
  '2026-11-14-post-app-4': ('foto', H + '<div class="eye">¿Cómo entro?</div><h1>Revisá<br>tu <em>mail</em></h1><p class="sub">Te mandamos el link por mail y por WhatsApp. Entrá con el mismo mail que nos diste. ¿No te llegó? Escribinos.</p>' + PIE.format('WhatsApp →'), 'dr_3cc2_plancha_dos', '50% 45%'),
 }
 HIST = {
- '2026-11-14-historia-app': ('foto', H + '<div class="eye">Desde el lunes 16</div><h1>Tus turnos<br>en nuestra<br><em>app</em></h1><p class="sub">Revisá tu mail: ahí está el link para entrar.</p>', 'ft_6736_grupo3', '55% 40%'),
+ '2026-11-14-historia-app': ('foto', H + '<div class="eye">Desde el lunes 16</div><h1>Tus turnos<br>en nuestra<br><em>app</em></h1><p class="sub">Revisá tu mail: ahí está el link para entrar.</p>', 'ft_6729_abdominales', '45% 55%'),
  '2026-11-16-a-historia-app': ('oscuro', '<div class="eye" style="margin-top:70px">Hoy arranca</div><h1 style="font-size:150px">Reservá<br>desde la <em>app</em></h1><p class="sub">Entrá con el link que te mandamos.</p><div style="margin-top:24px">' + CEL('cel-inicio.png') + '</div>', None, None),
  '2026-11-16-b-historia-app': ('claro', '<div class="eye" style="margin-top:40px">Un tip</div><h1>Guardala<br>en tu <em>celu</em></h1><div class="pasos"><div><b>iPhone</b>Abrila en Safari, tocá Compartir y después “Agregar a inicio”.</div><div><b>Android</b>Abrila en Chrome, tocá los tres puntitos y después “Agregar a pantalla principal”.</div></div><p class="sub">Así la abrís como cualquier app, con un toque.</p>', None, None),
 }
