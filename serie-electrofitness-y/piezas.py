@@ -39,6 +39,13 @@ TEMAS = {
    placa(3, 'Y para<br>después:<br><em>recuperar</em>', 'Después de una salida larga, una sesión suave puede ayudar a que las piernas se sientan más livianas.', 'Los programas de recuperación como <b>Capillary</b> y <b>Drenaje</b> trabajan con impulsos suaves que activan la circulación.', 'bateria'),
    cierre('No reemplaza<br>tus <em>salidas</em>', 'Las complementa. 20 minutos, una o dos veces por semana, y la profe arma el plan según cómo venís corriendo.'),
  ],
+ 'futbol': [
+   tapa('fútbol', 'Si jugás los fines de semana o entrenás con tu equipo, esto te puede ayudar a llegar mejor a cada partido.', 'arco'),
+   placa(1, 'Fuerza<br>para el<br><em>arranque</em>', 'Piques, saltos y cambios de dirección salen de piernas, glúteos y abdomen fuertes. Trabajarlos puede ayudarte a sentirte más firme en cada jugada.', 'El equipo i-motion tiene un programa automático de <b>Preparación Fútbol</b>, pensado para trabajar la resistencia y la fuerza explosiva.', 'sentadilla'),
+   placa(2, 'Llegar entero<br>al <em>segundo<br>tiempo</em>', 'Trabajar la resistencia muscular puede ayudar a que el cansancio en las piernas llegue más tarde.', 'Ese programa combina fuerza y <b>resistencia</b>. La profe decide cómo sumarlo a tu clase según tu evaluación previa.', 'pelota'),
+   placa(3, 'Y después<br>del partido:<br><em>aflojar</em>', 'Una sesión suave después de jugar puede ayudar a que el cuerpo se sienta más suelto.', 'Entre los programas recovery está <b>Contracturas</b>, con impulsos suaves para la tensión muscular. Si tenés una molestia o una lesión, primero consultá con tu médico.', 'bateria'),
+   cierre('No reemplaza<br>la <em>cancha</em>', 'La complementa. 20 minutos, una o dos veces por semana, y la profe arma el plan después de la evaluación previa.'),
+ ],
 }
 
 if __name__ == '__main__':

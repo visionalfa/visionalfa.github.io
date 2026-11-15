@@ -56,4 +56,26 @@ def pesa(c='#1565FF', f='#DCE7FF'):
   <g transform="translate(102 104) scale(1.5)" style="color:{c}">{RAYO}</g>
   <path d="M28 70l-14-6M26 100H10M172 70l14-6M174 100h16" stroke-width="6" opacity=".6"/>''', c=c, f=f)
 
-ILUS = {'pesa': pesa, 'corredor': corredor, 'sentadilla': sentadilla, 'cronometro': cronometro, 'bateria': bateria}
+
+def pelota(c='#1565FF', f='#DCE7FF'):
+    # pelota de fútbol clásica (pentágono central + costuras) con líneas de movimiento
+    return _svg(f'''
+  <ellipse cx="112" cy="184" rx="58" ry="8" fill="{f}" stroke="none"/>
+  <circle cx="112" cy="104" r="66" fill="{f}"/>
+  <path d="M112 80 L134 96 L126 122 L98 122 L90 96 Z" fill="{c}" stroke-width="5"/>
+  <path d="M112 80 L112 46 M134 96 L166 84 M126 122 L144 150 M98 122 L80 150 M90 96 L58 84" stroke-width="5"/>
+  <path d="M112 46 L88 40 M112 46 L136 40 M166 84 L172 110 M144 150 L128 168 M80 150 L96 168 M58 84 L52 110" stroke-width="5" opacity=".7"/>
+  <g stroke-width="6" opacity=".55"><path d="M10 70h26M4 100h28M14 130h22"/></g>''', c=c, f=f)
+
+def arco(c='#1565FF', f='#DCE7FF'):
+    # arco de fútbol con red y pelota entrando + rayo
+    return _svg(f'''
+  <path d="M10 178h180" stroke-width="6" opacity=".6"/>
+  <path d="M30 176 V52 H170 V176" stroke-width="9"/>
+  <path d="M30 52 L50 72 H150 L170 52 M50 72 V176 M150 72 V176" stroke-width="4" opacity=".7"/>
+  <g stroke-width="3" opacity=".45"><path d="M70 72v104M90 72v104M110 72v104M130 72v104M50 96h100M50 120h100M50 144h100"/></g>
+  <circle cx="118" cy="140" r="24" fill="{f}" stroke-width="6"/>
+  <path d="M118 128 L128 136 L124 148 L112 148 L108 136 Z" fill="{c}" stroke="none"/>
+  <g transform="translate(176 20)" style="color:{c}">{RAYO}</g>''', vb='0 0 200 200', c=c, f=f)
+
+ILUS = {'pesa': pesa, 'corredor': corredor, 'sentadilla': sentadilla, 'cronometro': cronometro, 'bateria': bateria, 'pelota': pelota, 'arco': arco}

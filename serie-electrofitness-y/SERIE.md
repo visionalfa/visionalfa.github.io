@@ -10,7 +10,7 @@ de la evaluación previa (y con apto médico cuando haga falta).
 | # | Tema | Base en el manual | Estado |
 |---|------|-------------------|--------|
 | 1 | Running | Programas RESISTENCIA (resistencia a la fatiga, capacidad aeróbica), FUERZA/GLÚTEOS, recovery CAPILLARY y DRENAJE | hecho 15/11 |
-| 2 | Fútbol | Programa automático PREPARACIÓN FÚTBOL (resistencia y fuerza explosiva), recovery CONTRACTURAS | pendiente |
+| 2 | Fútbol | Programa automático PREPARACIÓN FÚTBOL (resistencia y fuerza explosiva), recovery CONTRACTURAS | hecho 18/11 |
 | 3 | Menopausia | FUERZA (fuerza y resistencia muscular), SUELO PÉLVICO (estabilidad y control de la zona), sesiones cortas; siempre con consulta médica | pendiente |
 | 4 | En pareja / con amigas | Grupos de hasta 3, cada traje con su intensidad (cada persona tiene su propio panel y programa) | pendiente |
 | 5 | Ciclismo / spinning | Programa automático BIKE (spinning, elíptica, remo), GLÚTEOS, RESISTENCIA | pendiente |
